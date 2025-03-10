@@ -91,8 +91,7 @@ struct LoginSheetView: View {
                             .padding()
 
                         Text("Login")
-                            .font(.title)
-                            .bold()
+                            .font(RelayTypography.titleLarge)
                             .padding()
                         
                         Group {

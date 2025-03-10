@@ -137,8 +137,8 @@ struct SignupSheetView: View {
                             .padding()
 
                         Text("Create account")
+                            .font(RelayTypography.titleLarge)
                             .font(.title)
-                            .bold()
                             .padding()
                         
                         Group {
@@ -234,7 +234,6 @@ struct SignupSheetView: View {
                                 }
                             } label: {
                                 Text("Create account")
-                                    .bold()
                                     .frame(maxWidth: .infinity, maxHeight: 35)
                             }
                             .disabled(!acceptTermsConditions)

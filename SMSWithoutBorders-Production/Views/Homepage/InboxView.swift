@@ -111,8 +111,15 @@ struct NoMessagesInbox: View {
                     .padding(.bottom, 7)
 
                 Text("No messages in inbox")
+                    .font(RelayTypography.headlineSmall)
+                    .foregroundStyle(Color("AccentColor"))
+                
+                Text("Your incoming messages would show up here once you paste them to get them decrypted.")
+                    .multilineTextAlignment(.center)
+                    .font(.footnote)
                     .foregroundStyle(Color("AccentColor"))
             }
+            .padding()
 
             Spacer()
 
@@ -122,14 +129,11 @@ struct NoMessagesInbox: View {
                 } label: {
                     Text("Paste new incoming message")
                 }
-                .tint(Color("SecondaryColor"))
-                .foregroundStyle(Color("AccentColor"))
                 .buttonStyle(.borderedProminent)
                 .controlSize(.large)
                 .padding(.bottom, 50)
             }
         }
-        .navigationTitle("Inbox")
     }
 }
 
@@ -205,7 +209,6 @@ struct MessagesPresentInbox: View {
             }
             .padding()
         }
-        .navigationTitle("Inbox")
     }
 
     func getImageForPlatform(name: String) -> Image {
@@ -254,6 +257,7 @@ struct InboxView: View {
                     )
                 }
             }
+            .navigationTitle("Inbox")
         }
     }
 }

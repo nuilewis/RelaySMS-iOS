@@ -49,12 +49,12 @@ struct CreateAccountSheetView: View {
                 .scaledToFit()
                 .frame(width: 75, height: 75)
 
-            Text("This is a brief summary of what happens")
+            Text("Create Account")
                 .font(RelayTypography.titleLarge)
                 .multilineTextAlignment(.center)
                 .padding()
 
-            Text("This is precise information for what happens")
+            Text("With an account you can save your online platforms to use them without an internet connection.")
             Spacer().frame(height: 32)
             Button(action: {
                 parentSheetShown.toggle()
@@ -65,7 +65,13 @@ struct CreateAccountSheetView: View {
             .buttonStyle(.borderedProminent)
             .clipShape(.capsule)
             .controlSize(.large)
-            .padding(.bottom, 10)
+            .padding()
+            
+            Text("An SMS would be sent to your phone number to verify you own the number.")
+                .multilineTextAlignment(.center)
+                .font(.footnote)
+                .foregroundStyle(.gray)
+                .padding(.bottom, 10)
         }
         .padding([.leading, .trailing], 16)
     }
@@ -82,22 +88,32 @@ struct LoginAccountSheetView: View {
                 .scaledToFit()
                 .frame(width: 75, height: 75)
 
-            Text("This is a brief summary of what happens")
-                .font(.title2)
+            Text("Login")
+                .font(RelayTypography.titleLarge)
                 .multilineTextAlignment(.center)
                 .padding()
 
-            Text("This is precise information for what happens")
-
+            Text("Access your account to save or use your online platforms without an internet connection.")
+            Spacer().frame(height: 32)
+            
             Button(action: {
                 parentSheetShown.toggle()
                 loginSheetRequested.toggle()
             }) {
-                Text("Continue")
+                Text("Continue").frame(maxWidth: .infinity)
             }
-            .buttonStyle(.bordered)
+            .buttonStyle(.borderedProminent)
+            .clipShape(.capsule)
+            .controlSize(.large)
             .padding()
+            
+            Text("An SMS would be sent to your phone number to verify you own the number.")
+                .multilineTextAlignment(.center)
+                .font(.footnote)
+                .foregroundStyle(.gray)
+                .padding(.bottom, 10)
         }
+        .padding([.leading, .trailing], 16)
     }
 }
 
@@ -157,7 +173,7 @@ struct LoginWithInternetView: View {
                 sheetCreateAccountIsPresented.toggle()
             }) {
 
-                Label("Sign Up", systemImage: "person.crop.circle.badge.plus")
+                Label("Create account", systemImage: "person.crop.circle.badge.plus")
                     .frame(maxWidth: .infinity)
 
             }

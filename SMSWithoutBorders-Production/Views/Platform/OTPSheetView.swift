@@ -71,7 +71,7 @@ struct OTPView: View {
     var body: some View {
         VStack {
             Text("Verify your Phone number")
-                .bold()
+                .font(RelayTypography.titleLarge)
                 .padding()
                 .font(.title2)
             

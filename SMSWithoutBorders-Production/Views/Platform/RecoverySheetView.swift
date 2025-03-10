@@ -87,8 +87,8 @@ struct RecoverySheetView: View {
                             .padding()
 
                         Text("Forgot password?")
+                            .font(RelayTypography.titleLarge)
                             .font(.title)
-                            .bold()
                             .padding()
                         
                         Group {

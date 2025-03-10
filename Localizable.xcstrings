@@ -96,6 +96,9 @@
         }
       }
     },
+    "Access your account to save or use your online platforms without an internet connection." : {
+
+    },
     "Account" : {
       "localizations" : {
         "ar" : {
@@ -372,6 +375,9 @@
           }
         }
       }
+    },
+    "An SMS would be sent to your phone number to verify you own the number." : {
+
     },
     "Bcc " : {
       "localizations" : {
@@ -1159,7 +1165,6 @@
       }
     },
     "Create Account" : {
-      "extractionState" : "stale",
       "localizations" : {
         "ar" : {
           "stringUnit" : {
@@ -1783,6 +1788,7 @@
     },
     "Gateway Clients" : {
       "comment" : "Noun",
+      "extractionState" : "stale",
       "localizations" : {
         "ar" : {
           "stringUnit" : {
@@ -4782,6 +4788,7 @@
       }
     },
     "Sign Up" : {
+      "extractionState" : "stale",
       "localizations" : {
         "ar" : {
           "stringUnit" : {
@@ -5605,6 +5612,9 @@
         }
       }
     },
+    "With an account you can save your online platforms to use them without an internet connection." : {
+
+    },
     "You are being logged out!" : {
       "localizations" : {
         "ar" : {
@@ -5837,6 +5847,9 @@
           }
         }
       }
+    },
+    "Your incoming messages would show up here once you paste them to get them decrypted." : {
+
     },
     "Your phone number is your primary account!" : {
       "localizations" : {
