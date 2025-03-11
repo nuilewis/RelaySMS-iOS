@@ -1878,6 +1878,9 @@
         }
       }
     },
+    "From account: %@" : {
+
+    },
     "From: %@" : {
       "localizations" : {
         "ar" : {
