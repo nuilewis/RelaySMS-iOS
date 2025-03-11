@@ -87,7 +87,6 @@ struct MessagingView: View {
     @State private var encryptedFormattedContent = ""
     @State private var fromAccount = ""
     @State private var pickedNumber: String?
-    @State private var showMessages = false
     @State private var isMessaging = false
     @State private var isShowingMessages = false
     @State var dissmissRequested: Bool = false
@@ -106,17 +105,26 @@ struct MessagingView: View {
         
         if message != nil {
             _messages = FetchRequest<MessageEntity>(
-                sortDescriptors: [],
+                sortDescriptors: [NSSortDescriptor(
+                    keyPath: \MessageEntity.date,
+                    ascending: true)
+                ],
                 predicate: NSPredicate(
                     format: "platformName == %@ and toAccount == %@ and fromAccount == %@",
                     platformName, message!.toAccount, message!.fromAccount))
             print("toAccount: \(message!.toAccount), fromAccount: \(message!.fromAccount)")
         }
         else {
+            print("Yes nil")
             _messages = FetchRequest<MessageEntity>(
-                sortDescriptors: [],
+                sortDescriptors: [NSSortDescriptor(
+                    keyPath: \MessageEntity.date,
+                    ascending: true)
+                ],
                 predicate: NSPredicate(
-                    format: "platformName == %@", platformName))
+                    format: "platformName == %@", platformName)
+            )
+            
         }
 
         print("Searching platform: \(platformName)")
@@ -157,22 +165,29 @@ struct MessagingView: View {
                     Spacer()
                 }
                 else {
-                    List{
-                        if message != nil || showMessages {
-                            ForEach(messages, id: \.id) { inbox in
-                                Button(action: {}) {
-                                    VStack {
-                                        Text(inbox.body!)
-                                            .frame(maxWidth: .infinity, alignment: .trailing)
-                                        Text(Date(timeIntervalSince1970: TimeInterval(inbox.date)), style: .time)
-                                            .font(.caption)
-                                            .foregroundStyle(.secondary)
-                                            .frame(maxWidth: .infinity, alignment: .trailing)
-                                    }
+                    VStack {
+                        Text("Click the message to re-use for sending...")
+                        .font(.caption)
+                        .multilineTextAlignment(.leading)
+                        .frame(maxWidth: .infinity, alignment: .trailing)
+                    
+                        List(messages, id: \.id) { inbox in
+                            Button {
+                                messageBody = inbox.body ?? ""
+                            } label: {
+                                VStack {
+                                    Text(inbox.body!)
+                                        .frame(maxWidth: .infinity, alignment: .trailing)
+                                    Text(Date(timeIntervalSince1970: TimeInterval(inbox.date)), style: .time)
+                                        .font(.caption)
+                                        .foregroundStyle(.secondary)
+                                        .frame(maxWidth: .infinity, alignment: .trailing)
                                 }
+                                .padding()
                             }
                         }
                     }
+                    .padding()
                 }
                 
                 HStack {
@@ -199,7 +214,6 @@ struct MessagingView: View {
                                     receiver: messageContact,
                                     message: messageBody)
                                 
-                                messageBody = ""
                                 isMessaging = false
                                 isShowingMessages.toggle()
                             } catch {
@@ -211,7 +225,7 @@ struct MessagingView: View {
                             .resizable()
                             .frame(width: 25.0, height: 25.0)
                     }
-                    .disabled(!isMessaging &&  fromAccount.isEmpty)
+                    .disabled(isMessaging || fromAccount.isEmpty || messageBody.isEmpty)
                     .sheet(isPresented: $isShowingMessages) {
                         SMSComposeMessageUIView(
                             recipients: [defaultGatewayClientMsisdn],
@@ -249,6 +263,7 @@ struct MessagingView: View {
         .task {
             if message != nil {
                 self.messageContact = message!.toAccount
+                self.fromAccount = message!.fromAccount
             } else {
                 DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
                     requestToChooseAccount = true
@@ -278,13 +293,10 @@ struct MessagingView: View {
                 DispatchQueue.main.async {
                     do {
                         try context.save()
+                        messageBody = ""
                     } catch {
                         print("Failed to save message entity: \(error)")
                     }
-                }
-                
-                if message == nil {
-                    showMessages = true
                 }
             })
             break

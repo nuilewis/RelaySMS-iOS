@@ -788,6 +788,9 @@
         }
       }
     },
+    "Click the message to re-use for sending..." : {
+
+    },
     "Click to paste..." : {
       "localizations" : {
         "ar" : {
