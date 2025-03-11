@@ -83,15 +83,18 @@ struct OnboardingWelcomeView: View {
                 Text("Learn how it works")
                     .frame(maxWidth: .infinity)
             }
-            .buttonStyle(.borderedProminent)
-            .controlSize(.large)
-            .clipShape(Capsule())
-            .padding()
+            .buttonStyle(.relayButton(variant: .primary))
+            .padding([.leading, .trailing, .bottom], 16)
 
             Button {
+                if let url = URL(string: "https://smswithoutborders.com/privacy-policy") {
+                    UIApplication.shared.open(url)
+                }
             } label: {
-                Text("Read our privacy policy")
+                Text("Read our privacy policy").font(RelayTypography.bodySmall)
             }
+            .buttonStyle(.relayButton(variant:.text))
+            .padding(.bottom, 24)
         }
     }
 }

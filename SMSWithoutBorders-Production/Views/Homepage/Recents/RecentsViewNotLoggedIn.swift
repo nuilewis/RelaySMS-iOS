@@ -19,6 +19,7 @@ struct ComposeNewMessageSheetView: View {
                 .frame(width: 75, height: 75)
 
             Text("This is a brief summary of what happens")
+                .multilineTextAlignment(.center)
                 .font(.title2)
                 .multilineTextAlignment(.center)
                 .padding()
@@ -31,7 +32,7 @@ struct ComposeNewMessageSheetView: View {
             }) {
                 Text("Continue")
             }
-            .buttonStyle(.bordered)
+            .buttonStyle(.relayButton(variant: .primary))
             .tint(.primary)
             .padding()
         }
@@ -54,7 +55,7 @@ struct CreateAccountSheetView: View {
                 .multilineTextAlignment(.center)
                 .padding()
 
-            Text("With an account you can save your online platforms to use them without an internet connection.")
+            Text("With an account you can save your online platforms to use them without an internet connection.").multilineTextAlignment(.center)
             Spacer().frame(height: 32)
             Button(action: {
                 parentSheetShown.toggle()
@@ -144,7 +145,7 @@ struct SendFirstMessageView: View {
                 .multilineTextAlignment(.center)
             Text("your_phonenumber@relaysms.me")
                 .font(.caption2)
-                .foregroundStyle(Color("AccentColor"))
+                .foregroundStyle(RelayColors.colorScheme.primary)
         }
 
     }
@@ -173,7 +174,7 @@ struct LoginWithInternetView: View {
                 sheetCreateAccountIsPresented.toggle()
             }) {
 
-                Label("Create account", systemImage: "person.crop.circle.badge.plus")
+                Label("Sign up", systemImage: "person.crop.circle.badge.plus")
                     .frame(maxWidth: .infinity)
 
             }
