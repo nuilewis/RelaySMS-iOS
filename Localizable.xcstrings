@@ -1504,6 +1504,9 @@
         }
       }
     },
+    "Emailing is the only currently supported protocol, we are working on including more soon" : {
+
+    },
     "Enter code" : {
       "localizations" : {
         "ar" : {
@@ -2936,6 +2939,9 @@
         }
       }
     },
+    "Message with RelaySMS accout" : {
+
+    },
     "Messaging with your personal accounts" : {
       "localizations" : {
         "ar" : {
@@ -4088,6 +4094,9 @@
           }
         }
       }
+    },
+    "Replies would come back by SMS to the phone number associated with your account" : {
+
     },
     "Resend code" : {
       "localizations" : {
@@ -5243,6 +5252,7 @@
       }
     },
     "This is a brief summary of what happens" : {
+      "extractionState" : "stale",
       "localizations" : {
         "ar" : {
           "stringUnit" : {
@@ -5289,6 +5299,7 @@
       }
     },
     "This is precise information for what happens" : {
+      "extractionState" : "stale",
       "localizations" : {
         "ar" : {
           "stringUnit" : {
@@ -6068,6 +6079,9 @@
           }
         }
       }
+    },
+    "You can send messages from RelaySMS at anytime. Your account details would be your phone number attached to our official domain.\n\nExample +123456789@relaysms.me" : {
+
     },
     "Your incoming messages would show up here once you paste them to get them decrypted." : {
       "localizations" : {

@@ -84,78 +84,84 @@ struct HomepageView: View {
                         EmptyView()
                     }
                 }
+                
+                else if requestedPlatformName.isEmpty == false || composeNewMessageRequested {
+                    NavigationLink(
+                        destination: EmailComposeView(
+                            platformName: $requestedPlatformName,
+                            isBridge: true,
+                            message: $requestedMessage
+                        ),
+                        isActive: $composeNewMessageRequested
+                    ) {
+                        EmptyView()
+                    }
 
-                // Compose views
-                NavigationLink(
-                    destination: EmailComposeView(
-                        platformName: $requestedPlatformName,
-                        isBridge: true,
-                        message: $requestedMessage
-                    ),
-                    isActive: $composeNewMessageRequested
-                ) {
-                    EmptyView()
+                    NavigationLink(
+                        destination: EmailComposeView(
+                            platformName: $requestedPlatformName,
+                            message: $requestedMessage
+                        ),
+                        isActive: $composeEmailRequested
+                    ) {
+                        EmptyView()
+                    }
+
+                    NavigationLink(
+                        destination: TextComposeView(
+                            platformName: $requestedPlatformName,
+                            message: $requestedMessage
+                        ),
+                        isActive: $composeTextRequested
+                    ) {
+                        EmptyView()
+                    }
+
+                    NavigationLink(
+                        destination: MessagingView(
+                            platformName: requestedPlatformName
+                        ),
+                        isActive: $composeMessageRequested
+                    ) {
+                        EmptyView()
+                    }
+
+
                 }
+                
+                if createAccountSheetRequested || loginSheetRequested || passwordRecoveryRequired {
+                    NavigationLink(
+                        destination: SignupSheetView(
+                            loginRequested: $loginSheetRequested,
+                            accountCreated: $isLoggedIn
+                        ),
+                        isActive: $createAccountSheetRequested
+                    ) {
+                        EmptyView()
+                    }
 
-                NavigationLink(
-                    destination: EmailComposeView(
-                        platformName: $requestedPlatformName,
-                        message: $requestedMessage
-                    ),
-                    isActive: $composeEmailRequested
-                ) {
-                    EmptyView()
+                    NavigationLink(
+                        destination: LoginSheetView(
+                            isLoggedIn: $isLoggedIn,
+                            createAccountRequested: $createAccountSheetRequested,
+                            passwordRecoveryRequired: $passwordRecoveryRequired
+                        ),
+                        isActive: $loginSheetRequested
+                    ) {
+                        EmptyView()
+                    }
+                    
+                    NavigationLink(
+                        destination:
+                        RecoverySheetView(isRecovered: $isLoggedIn),
+                        isActive: $passwordRecoveryRequired
+                    ) {
+                        EmptyView()
+                    }
+
+
                 }
-
-                NavigationLink(
-                    destination: TextComposeView(
-                        platformName: $requestedPlatformName,
-                        message: $requestedMessage
-                    ),
-                    isActive: $composeTextRequested
-                ) {
-                    EmptyView()
-                }
-
-                NavigationLink(
-                    destination: MessagingView(
-                        platformName: requestedPlatformName
-                    ),
-                    isActive: $composeMessageRequested
-                ) {
-                    EmptyView()
-                }
-
-
-                NavigationLink(
-                    destination:
-                    RecoverySheetView(isRecovered: $isLoggedIn),
-                    isActive: $passwordRecoveryRequired
-                ) {
-                    EmptyView()
-                }
-
-                NavigationLink(
-                    destination: SignupSheetView(
-                        loginRequested: $loginSheetRequested,
-                        accountCreated: $isLoggedIn
-                    ),
-                    isActive: $createAccountSheetRequested
-                ) {
-                    EmptyView()
-                }
-
-                NavigationLink(
-                    destination: LoginSheetView(
-                        isLoggedIn: $isLoggedIn,
-                        createAccountRequested: $createAccountSheetRequested,
-                        passwordRecoveryRequired: $passwordRecoveryRequired
-                    ),
-                    isActive: $loginSheetRequested
-                ) {
-                    EmptyView()
-                }
-
+                
                 TabView(selection: Binding(
                     get: { selectedTab },
                     set: {
@@ -184,6 +190,10 @@ struct HomepageView: View {
                             Text("Recents")
                         }
                         .tag(HomepageTabs.recents)
+                        .onAppear {
+                            requestedMessage = nil
+                            requestedPlatformName = ""
+                        }
 
                         PlatformsView(
                             requestType: $platformRequestType,
@@ -213,6 +223,10 @@ struct HomepageView: View {
                             Text("Get started")
                         }
                         .tag(HomepageTabs.recents)
+                        .onAppear {
+                            requestedMessage = nil
+                            requestedPlatformName = ""
+                        }
 
                     }
 
@@ -244,25 +258,24 @@ struct HomepageView: View {
             }
 
         }
-        .onChange(of: isLoggedIn) { state in
-            if state {
-                Publisher.refreshPlatforms(context: context)
-
-                Task {
-                    if (ProcessInfo.processInfo.environment["XCODE_RUNNING_FOR_PREVIEWS"] != "1") {
-                        print("Is searching for default....")
-                        do {
-                            try await GatewayClients.refresh(context: context)
-                        } catch {
-                            print("Error refreshing gateways: \(error)")
-                        }
-                    }
-                }
-            }
-        }
+//        .onChange(of: isLoggedIn) { state in
+//            if state {
+//                Publisher.refreshPlatforms(context: context)
+//            }
+//        }
         .onAppear {
             do {
                 isLoggedIn = try !Vault.getLongLivedToken().isEmpty
+//                Task {
+//                    if (ProcessInfo.processInfo.environment["XCODE_RUNNING_FOR_PREVIEWS"] != "1") {
+//                        print("Is searching for default....")
+//                        do {
+//                            try await GatewayClients.refresh(context: context)
+//                        } catch {
+//                            print("Error refreshing gateways: \(error)")
+//                        }
+//                    }
+//                }
             } catch {
                 print(error)
             }
