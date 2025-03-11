@@ -12,7 +12,7 @@ struct InboxDecryptMessageView: View {
     @Environment(\.managedObjectContext) var context
 
     @State var textBody = ""
-    @State var placeHolder = "Click to paste..."
+    @State var placeHolder = String(localized:"Click to paste...")
 
     var body: some View {
         VStack {
@@ -26,7 +26,7 @@ struct InboxDecryptMessageView: View {
                     .multilineTextAlignment(.leading)
                     .foregroundStyle(.secondary)
             }
-            .padding()
+            .padding(.bottom, 24)
 
             VStack {
                 ZStack {
@@ -44,7 +44,7 @@ struct InboxDecryptMessageView: View {
                 .padding()
                 .overlay(
                     RoundedRectangle(cornerRadius: 16)
-                        .stroke(textBody.isEmpty ? .secondary : .primary, lineWidth: 4)
+                        .stroke(textBody.isEmpty ? RelayColors.colorScheme.onSurface.opacity(0.1) : RelayColors.colorScheme.primary, lineWidth: 2)
                 )
             }
 
@@ -87,10 +87,11 @@ struct InboxDecryptMessageView: View {
                 } label: {
                     Text("Decrypt message")
                 }
-                .buttonStyle(.bordered)
+                .buttonStyle(.relayButton(variant: .primary))
                 .controlSize(.large)
                 .tint(.accentColor)
                 .disabled(textBody.isEmpty)
+                .padding(.bottom, 48)
             }
         }
         .padding()
@@ -106,18 +107,19 @@ struct NoMessagesInbox: View {
             VStack {
                 Image(systemName: "tray")
                     .resizable()
-                    .foregroundStyle(Color("SecondaryColor"))
+                    .foregroundStyle(RelayColors.colorScheme.onSurface.opacity(0.2))
                     .frame(width: 150, height: 120)
                     .padding(.bottom, 7)
 
                 Text("No messages in inbox")
                     .font(RelayTypography.headlineSmall)
-                    .foregroundStyle(Color("AccentColor"))
-                
+                    .multilineTextAlignment(.center)
+                    .foregroundStyle(RelayColors.colorScheme.primary)
+                Spacer().frame(height: 10)
                 Text("Your incoming messages would show up here once you paste them to get them decrypted.")
                     .multilineTextAlignment(.center)
                     .font(.footnote)
-                    .foregroundStyle(Color("AccentColor"))
+                    .foregroundStyle(RelayColors.colorScheme.onSurface.opacity(0.7))
             }
             .padding()
 
@@ -129,8 +131,8 @@ struct NoMessagesInbox: View {
                 } label: {
                     Text("Paste new incoming message")
                 }
-                .buttonStyle(.borderedProminent)
-                .controlSize(.large)
+                .buttonStyle(.relayButton(variant: .primary))
+                .padding([.leading,.trailing], 16)
                 .padding(.bottom, 50)
             }
         }
