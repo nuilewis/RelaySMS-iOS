@@ -10,7 +10,7 @@ import SwiftUI
 struct RelayTypography {
 
     // body
-    static let body: Font = Font.system(size: 12)
+    static let bodySmall: Font = Font.system(size: 12)
     static let bodyMedium: Font = Font.system(size: 14)
     static let bodyLarge: Font = Font.system(size: 16)
 

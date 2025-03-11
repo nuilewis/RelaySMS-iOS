@@ -97,7 +97,50 @@
       }
     },
     "Access your account to save or use your online platforms without an internet connection." : {
-
+      "localizations" : {
+        "ar" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "سيتم إرسال رسالة نصية قصيرة إلى رقم هاتفك للتحقق من ملكيتك للرقم."
+          }
+        },
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Greifen Sie auf Ihr Konto zu, um Ihre Online-Plattformen zu speichern oder ohne Internetverbindung zu nutzen."
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Accede a tu cuenta para guardar o usar tus plataformas en línea sin conexión a internet."
+          }
+        },
+        "fa" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "برای ذخیره یا استفاده از پلتفرم‌های آنلاین خود بدون اتصال به اینترنت، به حساب خود دسترسی پیدا کنید."
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Accédez à votre compte pour enregistrer ou utiliser vos plateformes en ligne sans connexion internet."
+          }
+        },
+        "sw" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Fikia akaunti yako ili kuhifadhi au kutumia majukwaa yako ya mtandaoni bila muunganisho wa intaneti."
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "İnternet bağlantısı olmadan çevrimiçi platformlarınızı kaydetmek veya kullanmak için hesabınıza erişin."
+          }
+        }
+      }
     },
     "Account" : {
       "localizations" : {
@@ -377,7 +420,50 @@
       }
     },
     "An SMS would be sent to your phone number to verify you own the number." : {
-
+      "localizations" : {
+        "ar" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "سيتم إرسال رسالة نصية قصيرة إلى رقم هاتفك للتحقق من ملكيتك للرقم."
+          }
+        },
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Eine SMS wird an Ihre Telefonnummer gesendet, um zu überprüfen, dass Sie der Eigentümer der Nummer sind."
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Se enviará un SMS a tu número de teléfono para verificar que eres el propietario del número."
+          }
+        },
+        "fa" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : " یک پیامک به شماره تلفن شما ارسال می‌شود تا مالکیت شماره را تأیید کند."
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Un SMS sera envoyé à votre numéro de téléphone pour vérifier que vous en êtes le propriétaire."
+          }
+        },
+        "sw" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "SMS itatumwa kwenye namba yako ya simu ili kuthibitisha kuwa namba hiyo ni yako."
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Numaranın size ait olduğunu doğrulamak için telefon numaranıza bir SMS gönderilecektir."
+          }
+        }
+      }
     },
     "Bcc " : {
       "localizations" : {
@@ -698,6 +784,52 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Sizinle aynı Coğrafi konumda bulunan bir Ağ Geçidi istemcisi seçmek, mesajlarınızın teslimatının güvenilirliğini artırmaya yardımcı olur"
+          }
+        }
+      }
+    },
+    "Click to paste..." : {
+      "localizations" : {
+        "ar" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "انقر للصق..."
+          }
+        },
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Klicken zum Einfügen..."
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Haz clic para pegar..."
+          }
+        },
+        "fa" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "برای چسباندن کلیک کنید..."
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Cliquez pour coller..."
+          }
+        },
+        "sw" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Bofya ili kubandika..."
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Yapıştırmak için tıklayın..."
           }
         }
       }
@@ -4787,6 +4919,52 @@
         }
       }
     },
+    "Sign up" : {
+      "localizations" : {
+        "ar" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "التسجيل"
+          }
+        },
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Registrieren"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Registrarse"
+          }
+        },
+        "fa" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "ثبت‌نام"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "S'inscrire"
+          }
+        },
+        "sw" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Jiandikishe"
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Kaydol"
+          }
+        }
+      }
+    },
     "Sign Up" : {
       "extractionState" : "stale",
       "localizations" : {
@@ -5093,7 +5271,7 @@
         "fr" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "%@ Telefonnummer"
+            "value" : "Voici un bref résumé de ce qui se passe"
           }
         },
         "sw" : {
@@ -5613,7 +5791,50 @@
       }
     },
     "With an account you can save your online platforms to use them without an internet connection." : {
-
+      "localizations" : {
+        "ar" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "باستخدام حساب، يمكنك حفظ منصاتك عبر الإنترنت لاستخدامها بدون اتصال بالإنترنت."
+          }
+        },
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Mit einem Konto können Sie Ihre Online-Plattformen speichern, um sie ohne Internetverbindung zu nutzen."
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Con una cuenta, puedes guardar tus plataformas en línea para usarlas sin conexión a internet."
+          }
+        },
+        "fa" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "با داشتن یک حساب، می‌توانید پلتفرم‌های آنلاین خود را برای استفاده بدون اتصال به اینترنت ذخیره کنید."
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Avec un compte, vous pouvez enregistrer vos plateformes en ligne pour les utiliser sans connexion internet."
+          }
+        },
+        "sw" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ukiwa na akaunti, unaweza kuhifadhi majukwaa yako ya mtandaoni ili kuyatumia bila muunganisho wa intaneti."
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Bir hesapla, çevrimiçi platformlarınızı internet bağlantısı olmadan kullanmak üzere kaydedebilirsiniz."
+          }
+        }
+      }
     },
     "You are being logged out!" : {
       "localizations" : {
@@ -5849,7 +6070,50 @@
       }
     },
     "Your incoming messages would show up here once you paste them to get them decrypted." : {
-
+      "localizations" : {
+        "ar" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "ستظهر رسائلك الواردة هنا بمجرد لصقها لفك تشفيرها."
+          }
+        },
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ihre eingehenden Nachrichten werden hier angezeigt, sobald Sie sie einfügen, um sie zu entschlüsseln."
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Tus mensajes entrantes aparecerán aquí una vez que los pegues para descifrarlos."
+          }
+        },
+        "fa" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "پیام‌های دریافتی شما پس از چسباندن برای رمزگشایی، در اینجا نمایش داده می‌شوند."
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Vos messages entrants apparaîtront ici une fois que vous les aurez collés pour les déchiffrer."
+          }
+        },
+        "sw" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ujumbe wako unaoingia utaonekana hapa mara tu utakapobandika ili kufunguliwa."
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Gelen mesajlarınız, şifrelerinin çözülmesi için yapıştırdığınızda burada görünecektir."
+          }
+        }
+      }
     },
     "Your phone number is your primary account!" : {
       "localizations" : {
