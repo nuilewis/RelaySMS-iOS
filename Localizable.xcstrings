@@ -465,6 +465,52 @@
         }
       }
     },
+    "Available Platforms" : {
+      "localizations" : {
+        "ar" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "المنصات المتاحة"
+          }
+        },
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Verfügbare Plattformen"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Plataformas disponibles"
+          }
+        },
+        "fa" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "پلتفرم‌های موجود"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Plateformes disponibles"
+          }
+        },
+        "sw" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Majukwaa Yaliyopo"
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Mevcut Platformlar"
+          }
+        }
+      }
+    },
     "Bcc " : {
       "localizations" : {
         "ar" : {
@@ -1500,6 +1546,52 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Hesabınız yok mu?"
+          }
+        }
+      }
+    },
+    "Emailing is the only currently supported protocol, we are working on including more soon" : {
+      "localizations" : {
+        "ar" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "البريد الإلكتروني هو البروتوكول الوحيد المدعوم حاليًا، ونحن نعمل على تضمين المزيد قريبًا"
+          }
+        },
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "E-Mail ist das einzige derzeit unterstützte Protokoll, wir arbeiten daran, bald weitere einzubeziehen"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "El correo electrónico es el único protocolo compatible actualmente, estamos trabajando para incluir más próximamente"
+          }
+        },
+        "fa" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "ایمیل تنها پروتکول پشتیبانی شده در حال حاضر است، ما در حال کار برای گنجاندن موارد بیشتر در آینده نزدیک هستیم"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "L'envoi d'emails est le seul protocole actuellement pris en charge, nous travaillons à en inclure davantage prochainement"
+          }
+        },
+        "sw" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Kutuma barua pepe ni itifaki pekee inayotumika kwa sasa, tunafanya kazi ya kujumuisha zaidi hivi karibuni"
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "E-posta gönderme şu anda desteklenen tek protokoldür, yakında daha fazlasını dahil etmek için çalışıyoruz"
           }
         }
       }
@@ -2936,6 +3028,99 @@
         }
       }
     },
+    "Message with RelaySMS account" : {
+      "localizations" : {
+        "ar" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "رسالة باستخدام حساب"
+          }
+        },
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Nachricht mit RelaySMS-Konto"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Mensaje con cuenta RelaySMS"
+          }
+        },
+        "fa" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "پیام با حساب RelaySMS"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Message avec compte RelaySMS"
+          }
+        },
+        "sw" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ujumbe na akaunti ya RelaySMS"
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "RelaySMS hesabıyla mesaj"
+          }
+        }
+      }
+    },
+    "Message with RelaySMS accout" : {
+      "extractionState" : "stale",
+      "localizations" : {
+        "ar" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "رسالة باستخدام حساب RelaySMS"
+          }
+        },
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Nachricht mit RelaySMS-Konto"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Mensaje con cuenta RelaySMS"
+          }
+        },
+        "fa" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "پیام با حساب RelaySMS\n"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Message avec compte RelaySMS"
+          }
+        },
+        "sw" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ujumbe na akaunti ya RelaySMS"
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "RelaySMS hesabıyla mesaj"
+          }
+        }
+      }
+    },
     "Messaging with your personal accounts" : {
       "localizations" : {
         "ar" : {
@@ -4043,6 +4228,52 @@
         }
       }
     },
+    "Remove a platform" : {
+      "localizations" : {
+        "ar" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "إزالة منصة"
+          }
+        },
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Eine Plattform entfernen"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Eliminar una plataforma"
+          }
+        },
+        "fa" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "حذف یک پلتفرم"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Supprimer une plateforme"
+          }
+        },
+        "sw" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ondoa jukwaa"
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Bir platform kaldır"
+          }
+        }
+      }
+    },
     "Remove Accounts" : {
       "localizations" : {
         "ar" : {
@@ -4085,6 +4316,52 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Hesapları Kaldır"
+          }
+        }
+      }
+    },
+    "Replies would come back by SMS to the phone number associated with your account" : {
+      "localizations" : {
+        "ar" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "سيتم إرسال الردود عبر الرسائل القصيرة إلى رقم الهاتف المرتبط بحسابك"
+          }
+        },
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Antworten werden per SMS an die mit Ihrem Konto verknüpfte Telefonnummer zurückgesendet"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Las respuestas llegarán por SMS al número de teléfono asociado a tu cuenta"
+          }
+        },
+        "fa" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "پاسخ‌ها از طریق پیامک به شماره تلفن مرتبط با حساب شما ارسال می‌شوند"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Les réponses reviendront par SMS au numéro de téléphone associé à votre compte"
+          }
+        },
+        "sw" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Majibu yatarudi kwa SMS kwenye namba ya simu inayohusishwa na akaunti yako"
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Yanıtlar, hesabınızla ilişkilendirilmiş telefon numarasına SMS olarak dönecektir"
           }
         }
       }
@@ -4639,6 +4916,52 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Gönder"
+          }
+        }
+      }
+    },
+    "Send a message" : {
+      "localizations" : {
+        "ar" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "إرسال رسالة"
+          }
+        },
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Eine Nachricht senden"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Enviar un mensaje"
+          }
+        },
+        "fa" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "ارسال پیام"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Envoyer un message"
+          }
+        },
+        "sw" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Tuma ujumbe"
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Mesaj gönder"
           }
         }
       }
@@ -5243,6 +5566,7 @@
       }
     },
     "This is a brief summary of what happens" : {
+      "extractionState" : "stale",
       "localizations" : {
         "ar" : {
           "stringUnit" : {
@@ -5289,6 +5613,7 @@
       }
     },
     "This is precise information for what happens" : {
+      "extractionState" : "stale",
       "localizations" : {
         "ar" : {
           "stringUnit" : {
@@ -6065,6 +6390,52 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "İstediğiniz zaman tekrar giriş yapabilirsiniz. Gönderilen tüm mesajlar silinecektir."
+          }
+        }
+      }
+    },
+    "You can send messages from RelaySMS at anytime. Your account details would be your phone number attached to our official domain.\n\nExample +123456789@relaysms.me" : {
+      "localizations" : {
+        "ar" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "يمكنك إرسال رسائل من RelaySMS في أي وقت. ستكون تفاصيل حسابك هي رقم هاتفك المرتبط بنطاقنا الرسمي.\n\nمثال +123456789@relaysms.me"
+          }
+        },
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Sie können jederzeit Nachrichten von RelaySMS senden. Ihre Kontodaten bestehen aus Ihrer Telefonnummer, die mit unserer offiziellen Domain verknüpft ist.\n\nBeispiel +123456789@relaysms.me"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Puedes enviar mensajes desde RelaySMS en cualquier momento. Los detalles de tu cuenta serán tu número de teléfono unido a nuestro dominio oficial.\n\nEjemplo +123456789@relaysms.me"
+          }
+        },
+        "fa" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "شما می‌توانید در هر زمان از RelaySMS پیام ارسال کنید. جزئیات حساب شما شماره تلفن شما متصل به دامنه رسمی ما خواهد بود.\n\nمثال +123456789@relaysms.me"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Vous pouvez envoyer des messages depuis RelaySMS à tout moment. Les détails de votre compte seront votre numéro de téléphone attaché à notre domaine officiel.\n\nExemple +123456789@relaysms.me"
+          }
+        },
+        "sw" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Unaweza kutuma ujumbe kutoka RelaySMS wakati wowote. Maelezo ya akaunti yako yatakuwa namba yako ya simu iliyounganishwa na kikoa chetu rasmi.\n\nMfano +123456789@relaysms.me"
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "RelaySMS'den istediğiniz zaman mesaj gönderebilirsiniz. Hesap bilgileriniz, resmi alan adımıza eklenmiş telefon numaranız olacaktır.\n\nÖrnek +123456789@relaysms.me"
           }
         }
       }

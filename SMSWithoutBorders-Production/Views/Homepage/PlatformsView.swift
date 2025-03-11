@@ -605,11 +605,11 @@ struct PlatformsView: View {
     func getRequestTypeText(type: PlatformsRequestedType) -> String {
         switch(type) {
         case .compose:
-            return "Send a message"
+            return String(localized:"Send a message")
         case .revoke:
-            return "Remove a platform"
+            return String(localized:"Remove a platform")
         default:
-            return "Available Platforms"
+            return String(localized:"Available Platforms")
         }
     }
 

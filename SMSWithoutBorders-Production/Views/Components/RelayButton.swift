@@ -30,7 +30,7 @@ extension RelayButton {
             .frame(maxWidth: .infinity)
             .padding()
             .background(RelayColors.colorScheme.primary)
-            .foregroundColor(Color.white)
+            .foregroundColor(RelayColors.colorScheme.surface)
             .clipShape(.capsule)
 
       case .secondary:
