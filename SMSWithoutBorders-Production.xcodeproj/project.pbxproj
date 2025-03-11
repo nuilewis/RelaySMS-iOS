@@ -954,7 +954,7 @@
 				CODE_SIGN_ENTITLEMENTS = "SMSWithoutBorders-Production/SMSWithoutBorders-Production.entitlements";
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 13;
+				CURRENT_PROJECT_VERSION = 14;
 				DEVELOPMENT_ASSET_PATHS = "\"SMSWithoutBorders-Production/Preview Content\"";
 				DEVELOPMENT_TEAM = 7J8Q6GLPGN;
 				ENABLE_PREVIEWS = YES;
@@ -972,7 +972,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 0.0.13;
+				MARKETING_VERSION = 0.0.14;
 				PRODUCT_BUNDLE_IDENTIFIER = com.afkanerd.smswithoutborders.relaysms;
 				PRODUCT_NAME = SMSWithoutBorders;
 				PROVISIONING_PROFILE_SPECIFIER = "";
@@ -994,7 +994,7 @@
 				CODE_SIGN_ENTITLEMENTS = "SMSWithoutBorders-Production/SMSWithoutBorders-Production.entitlements";
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 13;
+				CURRENT_PROJECT_VERSION = 14;
 				DEVELOPMENT_ASSET_PATHS = "\"SMSWithoutBorders-Production/Preview Content\"";
 				DEVELOPMENT_TEAM = 7J8Q6GLPGN;
 				ENABLE_PREVIEWS = YES;
@@ -1012,7 +1012,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 0.0.13;
+				MARKETING_VERSION = 0.0.14;
 				PRODUCT_BUNDLE_IDENTIFIER = com.afkanerd.smswithoutborders.relaysms;
 				PRODUCT_NAME = SMSWithoutBorders;
 				PROVISIONING_PROFILE_SPECIFIER = "";
