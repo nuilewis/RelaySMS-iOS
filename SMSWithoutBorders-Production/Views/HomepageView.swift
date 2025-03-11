@@ -77,14 +77,14 @@ struct HomepageView: View {
                     }
                 }
                 
-                else if requestedPlatformName.isEmpty == false || composeNewMessageRequested {
+                if requestedPlatformName.isEmpty == false || composeNewMessageRequested {
                     NavigationLink(
-                        destination: EmailComposeView(
-                            platformName: $requestedPlatformName,
-                            isBridge: true,
-                            message: $requestedMessage
-                        ),
-                        isActive: $composeNewMessageRequested
+                    destination: EmailComposeView(
+                        platformName: $requestedPlatformName,
+                        isBridge: true,
+                        message: $requestedMessage
+                    ),
+                    isActive: $composeNewMessageRequested
                     ) {
                         EmptyView()
                     }
@@ -117,11 +117,9 @@ struct HomepageView: View {
                     ) {
                         EmptyView()
                     }
-
-
                 }
                 
-                if createAccountSheetRequested || loginSheetRequested || passwordRecoveryRequired {
+                else if createAccountSheetRequested || loginSheetRequested || passwordRecoveryRequired {
                     NavigationLink(
                         destination: SignupSheetView(
                             loginRequested: $loginSheetRequested,
@@ -150,8 +148,6 @@ struct HomepageView: View {
                     ) {
                         EmptyView()
                     }
-
-
                 }
                 
                 TabView(selection: Binding(
@@ -247,6 +243,8 @@ struct HomepageView: View {
                     }
                     .tag(HomepageTabs.settings)
                 }
+                    
+                
             }
 
         }

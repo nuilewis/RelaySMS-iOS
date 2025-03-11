@@ -84,8 +84,6 @@ struct TextComposeView: View {
                     
                     if self.message != nil {
                         textBody = self.message!.data
-                        self.message = nil
-                        self.platformName = ""
                     }
                 }
                 .applyPresentationDetentsIfAvailable()

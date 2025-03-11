@@ -19,34 +19,33 @@ struct EmailPlatformView: View {
 
     var body: some View {
         NavigationView {
-            VStack(alignment: .leading) {
-                VStack(alignment: .leading) {
-                    HStack {
-                        Image(systemName: "person.circle")
-                            .resizable()
-                            .frame(width: 50, height: 50)
-                        
-                        VStack(alignment: .leading) {
-                            HStack {
-                                Text(message.fromAccount)
-                                    .bold()
-                                Text(Date(timeIntervalSince1970: TimeInterval(message.date)), formatter: RelativeDateTimeFormatter())
-                                    .font(.caption)
-                            }
-                            HStack {
-                                Text(message.toAccount)
-                                    .font(.caption)
-                            }
+            VStack {
+                HStack {
+                    Image(systemName: "person.circle")
+                        .resizable()
+                        .frame(width: 50, height: 50)
+                        .padding()
+
+                    VStack(alignment: .leading) {
+                        HStack {
+                            Text(message.fromAccount)
+                                .bold()
+                            Text(Date(timeIntervalSince1970: TimeInterval(message.date)), formatter: RelativeDateTimeFormatter())
+                                .font(.caption)
                         }
+                        .padding(.bottom, 8)
+
+                        Text(message.toAccount)
+                            .font(.caption)
                     }
-                    .padding()
-                    
                 }
+                .frame(maxWidth: .infinity, alignment: .leading)
                     
                 Text(message.data)
                     .padding()
                     .multilineTextAlignment(.leading)
-                
+                    .frame(maxWidth: .infinity, alignment: .leading)
+
                 Spacer()
                 
             }
@@ -87,7 +86,7 @@ struct EmailPlatformView_Preview: PreviewProvider {
             id: UUID(),
             subject: "Hello world",
             data: "Hello world",
-            fromAccount: "fromAccount@gmail.com",
+            fromAccount: "a@g.com",
             toAccount: "toAccount@gmail.com",
             platformName: "gmail",
             date: Int(Date().timeIntervalSince1970))
