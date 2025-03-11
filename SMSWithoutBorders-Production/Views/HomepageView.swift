@@ -39,14 +39,6 @@ struct HomepageView: View {
 
     @Binding var isLoggedIn: Bool
 
-//    init() {
-//        do {
-//            self.isLoggedIn = try !Vault.getLongLivedToken().isEmpty
-//        } catch {
-//            print(error)
-//        }
-//    }
-
     var body: some View {
         NavigationView {
             VStack {
