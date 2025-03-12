@@ -163,6 +163,7 @@ struct NoSentMessages: View {
                     .padding(.bottom, 20)
                 Text("Send your first message...")
                     .font(RelayTypography.titleLarge)
+                    .multilineTextAlignment(.center)
             }
 
             Spacer()
