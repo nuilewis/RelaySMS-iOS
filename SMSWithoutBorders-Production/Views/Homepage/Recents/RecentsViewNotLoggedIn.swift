@@ -467,7 +467,7 @@ struct RecentsViewNotLoggedIn: View {
     @Binding var emailIsRequested: Bool
 
     var body: some View {
-        NavigationView {
+
             VStack {
                 if !messages.isEmpty {
                     NotLoggedInMessagesPresentInboxView(
@@ -486,7 +486,7 @@ struct RecentsViewNotLoggedIn: View {
                     )
                 }
             }
-        }
+        
     }
 }
 

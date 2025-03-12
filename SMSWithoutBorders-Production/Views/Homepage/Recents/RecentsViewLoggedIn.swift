@@ -227,7 +227,7 @@ struct RecentsViewLoggedIn: View {
     @Binding var requestedPlatformName: String
 
     var body: some View {
-        NavigationView {
+
             VStack {
                 if !messages.isEmpty {
                     SentMessages(
@@ -256,7 +256,7 @@ struct RecentsViewLoggedIn: View {
                 }
             }
             .navigationTitle("Recents")
-        }
+        
     }
 }
 

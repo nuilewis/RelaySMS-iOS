@@ -46,7 +46,7 @@ struct InboxDecryptMessageView: View {
                     RoundedRectangle(cornerRadius: 16)
                         .stroke(textBody.isEmpty ? RelayColors.colorScheme.onSurface.opacity(0.1) : RelayColors.colorScheme.primary, lineWidth: 2)
                 )
-            }
+            }.padding(.bottom, 8)
 
             VStack {
                 Button {
@@ -88,13 +88,13 @@ struct InboxDecryptMessageView: View {
                     Text("Decrypt message")
                 }
                 .buttonStyle(.relayButton(variant: .primary))
-                .controlSize(.large)
-                .tint(.accentColor)
                 .disabled(textBody.isEmpty)
                 .padding(.bottom, 48)
             }
         }
         .padding()
+        .navigationTitle("Decrypt Message")
+        .navigationBarTitleDisplayMode(.inline)
     }
 }
 
@@ -240,7 +240,7 @@ struct InboxView: View {
     }
 
     var body: some View {
-        NavigationView {
+
             VStack {
                 NavigationLink(
                     destination: InboxDecryptMessageView(),
@@ -260,7 +260,7 @@ struct InboxView: View {
                 }
             }
             .navigationTitle("Inbox")
-        }
+        
     }
 }
 

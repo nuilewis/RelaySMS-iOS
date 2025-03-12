@@ -113,7 +113,6 @@ struct SettingsView: View {
     @State private var showLanguageChangeConfirmationAlert = false
 
     var body: some View {
-        NavigationView {
             VStack {
                 List {
                     Section {
@@ -155,7 +154,7 @@ struct SettingsView: View {
                 }
             }
             .navigationTitle("Settings")
-        }
+        
     }
 }
 

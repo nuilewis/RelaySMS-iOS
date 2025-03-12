@@ -52,7 +52,7 @@ struct GatewayClientsView: View {
     @State var defaultGatewayClient: GatewayClientsEntity?
 
     var body: some View {
-        NavigationView {
+
             VStack {
                 if defaultGatewayClient != nil {
                     VStack {
@@ -86,7 +86,7 @@ struct GatewayClientsView: View {
                 }
             }
             .navigationTitle("Countries")
-        }
+    
         .onChange(of: defaultGatewayClientMsisdn) { state in
             defaultGatewayClient = getDefaultGatewayClient()
         }

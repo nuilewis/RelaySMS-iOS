@@ -160,19 +160,22 @@ struct HomepageView: View {
                     }
                 )) {
                     if (isLoggedIn) {
+                        NavigationView
+                        {
                         RecentsViewLoggedIn(
-                            selectedTab: $selectedTab,
-                            platformRequestType: $platformRequestType,
-                            requestedMessage: $requestedMessage,
-                            emailIsRequested: $emailIsRequested,
-                            textIsRequested: $textIsRequested,
-                            messageIsRequested: $messageIsRequested,
-                            composeNewMessageRequested: $composeNewMessageRequested,
-                            composeTextRequested: $composeTextRequested,
-                            composeMessageRequested: $composeMessageRequested,
-                            composeEmailRequested: $composeEmailRequested,
-                            requestedPlatformName: $requestedPlatformName
-                        )
+                                selectedTab: $selectedTab,
+                                platformRequestType: $platformRequestType,
+                                requestedMessage: $requestedMessage,
+                                emailIsRequested: $emailIsRequested,
+                                textIsRequested: $textIsRequested,
+                                messageIsRequested: $messageIsRequested,
+                                composeNewMessageRequested: $composeNewMessageRequested,
+                                composeTextRequested: $composeTextRequested,
+                                composeMessageRequested: $composeMessageRequested,
+                                composeEmailRequested: $composeEmailRequested,
+                                requestedPlatformName: $requestedPlatformName
+                            )
+                        }
                         .tabItem() {
                             Image(systemName: "house.circle.fill")
                             Text("Recents")
@@ -183,14 +186,16 @@ struct HomepageView: View {
                             requestedPlatformName = ""
                         }
 
-                        PlatformsView(
-                            requestType: $platformRequestType,
-                            requestedPlatformName: $requestedPlatformName,
-                            composeNewMessageRequested: $composeNewMessageRequested,
-                            composeTextRequested: $composeTextRequested,
-                            composeMessageRequested: $composeMessageRequested,
-                            composeEmailRequested: $composeEmailRequested
-                        )
+                        NavigationView{
+                            PlatformsView(
+                                requestType: $platformRequestType,
+                                requestedPlatformName: $requestedPlatformName,
+                                composeNewMessageRequested: $composeNewMessageRequested,
+                                composeTextRequested: $composeTextRequested,
+                                composeMessageRequested: $composeMessageRequested,
+                                composeEmailRequested: $composeEmailRequested
+                            )
+                        }
                         .tabItem() {
                             Image(systemName: "apps.iphone")
                             Text("Platforms")
@@ -198,14 +203,16 @@ struct HomepageView: View {
                         .tag(HomepageTabs.platforms)
 
                     } else {
-                        RecentsViewNotLoggedIn(
-                            isLoggedIn: $isLoggedIn,
-                            composeNewMessageRequested: $composeNewMessageRequested,
-                            createAccountSheetRequested: $createAccountSheetRequested,
-                            loginSheetRequested: $loginSheetRequested,
-                            requestedMessage: $requestedMessage,
-                            emailIsRequested: $emailIsRequested
-                        )
+                        NavigationView{
+                            RecentsViewNotLoggedIn(
+                                isLoggedIn: $isLoggedIn,
+                                composeNewMessageRequested: $composeNewMessageRequested,
+                                createAccountSheetRequested: $createAccountSheetRequested,
+                                loginSheetRequested: $loginSheetRequested,
+                                requestedMessage: $requestedMessage,
+                                emailIsRequested: $emailIsRequested
+                            )
+                        }
                         .tabItem() {
                             Image(systemName: "house.circle.fill")
                             Text("Get started")
@@ -218,17 +225,21 @@ struct HomepageView: View {
 
                     }
 
-                    InboxView(
-                        requestedMessage: $requestedMessage,
-                        emailIsRequested: $emailIsRequested
-                    )
+                    NavigationView{
+                        InboxView(
+                            requestedMessage: $requestedMessage,
+                            emailIsRequested: $emailIsRequested
+                        )
+                    }
                     .tabItem() {
                         Image(systemName: "tray")
                         Text("Inbox")
                     }
                     .tag(HomepageTabs.inbox)
 
-                    GatewayClientsView()
+                    NavigationView{
+                        GatewayClientsView()
+                    }
                     .tabItem() {
                         Image(systemName: "antenna.radiowaves.left.and.right.circle.fill")
                         Text("Countries")
@@ -236,7 +247,9 @@ struct HomepageView: View {
                     .tag(HomepageTabs.gatewayClients)
 
 
-                    SettingsView(isLoggedIn: $isLoggedIn)
+                    NavigationView{
+                        SettingsView(isLoggedIn: $isLoggedIn)
+                    }
                     .tabItem() {
                         Image(systemName: "gear.circle.fill")
                         Text("Settings")
