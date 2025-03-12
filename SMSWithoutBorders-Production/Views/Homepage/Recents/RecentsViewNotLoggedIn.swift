@@ -13,13 +13,15 @@ struct ComposeNewMessageSheetView: View {
 
     var body: some View {
         VStack {
+            Spacer().frame(height:24)
             Image(systemName: "plus.message")
                 .resizable()
                 .scaledToFit()
                 .frame(width: 75, height: 75)
 
-            Text("Message with RelaySMS accout")
-                .font(RelayTypography.titleLarge)
+            Text("Message with RelaySMS account")
+                .font(RelayTypography.titleMedium)
+                .frame(maxWidth: .infinity)
                 .multilineTextAlignment(.center)
                 .padding()
 
@@ -77,10 +79,8 @@ struct CreateAccountSheetView: View {
             }) {
                 Text("Continue").frame(maxWidth: .infinity)
             }
-            .buttonStyle(.borderedProminent)
-            .clipShape(.capsule)
-            .controlSize(.large)
-            .padding()
+            .buttonStyle(.relayButton(variant: .primary))
+            .padding(.bottom, 16)
             
             Text("An SMS would be sent to your phone number to verify you own the number.")
                 .multilineTextAlignment(.center)
@@ -108,7 +108,7 @@ struct LoginAccountSheetView: View {
                 .multilineTextAlignment(.center)
                 .padding()
 
-            Text("Access your account to save or use your online platforms without an internet connection.")
+            Text("Access your account to save or use your online platforms without an internet connection.").multilineTextAlignment(.center)
             Spacer().frame(height: 32)
             
             Button(action: {
@@ -117,10 +117,8 @@ struct LoginAccountSheetView: View {
             }) {
                 Text("Continue").frame(maxWidth: .infinity)
             }
-            .buttonStyle(.borderedProminent)
-            .clipShape(.capsule)
-            .controlSize(.large)
-            .padding()
+            .buttonStyle(.relayButton(variant: .primary))
+            .padding(.bottom, 16)
             
             Text("An SMS would be sent to your phone number to verify you own the number.")
                 .multilineTextAlignment(.center)

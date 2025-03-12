@@ -134,7 +134,6 @@ struct SettingsView: View {
                         } message: {
                             Text(String(localized: "Continue to iOS settings and select your preferred language for RelaySMS.", comment: "Instructions for chnaging application langueg via system settings.") )
                         }
-                        .padding(.bottom, 10)
                     }
                     
                     Section {
