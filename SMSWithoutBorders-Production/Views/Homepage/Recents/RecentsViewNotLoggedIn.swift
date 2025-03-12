@@ -364,7 +364,8 @@ struct NotLoggedInMessagesPresentInboxView: View {
                                 fromAccount: message.fromAccount!,
                                 toAccount: message.toAccount!,
                                 platformName: message.platformName!,
-                                date: Int(message.date)
+                                date: Int(message.date),
+                                type: message.type!
                             )
                             if message.type == Bridges.SERVICE_NAME_INBOX ||
                                    message.type == Bridges.SERVICE_NAME {

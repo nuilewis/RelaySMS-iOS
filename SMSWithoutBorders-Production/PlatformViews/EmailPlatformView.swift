@@ -54,8 +54,8 @@ struct EmailPlatformView: View {
                 ToolbarItem(placement: .navigationBarTrailing) {
                     Button {
                         requestedPlatformName = message.platformName
-                        if message.platformName == Bridges.SERVICE_NAME {
-                            composeNewMessageRequested.toggle()
+                        if message.platformName.isEmpty ||
+                            message.type == Bridges.SERVICE_NAME { composeNewMessageRequested = true
                         } else {
                             emailComposeRequested = true
                         }

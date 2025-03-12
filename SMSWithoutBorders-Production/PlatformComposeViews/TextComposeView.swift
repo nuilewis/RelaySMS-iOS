@@ -166,6 +166,7 @@ struct TextComposeView: View {
                 DispatchQueue.main.async {
                     do {
                         try context.save()
+                        dismiss()
                     } catch {
                         print("Failed to save message entity: \(error)")
                     }

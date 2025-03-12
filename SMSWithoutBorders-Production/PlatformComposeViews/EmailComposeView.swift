@@ -146,7 +146,7 @@ struct EmailComposeView: View {
         isBridge: Bool = false,
         message: Binding<Messages?>
     ) {
-        print("Requested platform name: \(platformName)")
+        print("Requested platform name: \(platformName.wrappedValue )")
         _storedPlatforms = FetchRequest<StoredPlatformsEntity>(
             sortDescriptors: [],
             predicate: NSPredicate(format: "name == %@", platformName.wrappedValue))
@@ -324,6 +324,7 @@ struct EmailComposeView: View {
              DispatchQueue.main.async {
                  do {
                     try context.save()
+                     dismiss()
                 } catch {
                     print("Failed to save message entity: \(error)")
                 }
