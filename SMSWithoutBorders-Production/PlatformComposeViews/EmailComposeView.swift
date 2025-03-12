@@ -184,8 +184,6 @@ struct EmailComposeView: View {
                         composeBCC = self.message!.bcc
                         composeSubject = self.message!.subject
                         composeBody = self.message!.data
-                        self.message = nil
-                        self.platformName = ""
                     }
                 }
                 .applyPresentationDetentsIfAvailable()
