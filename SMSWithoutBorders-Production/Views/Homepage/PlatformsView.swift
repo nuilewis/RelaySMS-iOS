@@ -333,11 +333,9 @@ struct PlatformSheetView: View {
 struct PlatformCard: View {
     @Environment(\.managedObjectContext) var context
 
-    @FetchRequest(
-        sortDescriptors: [NSSortDescriptor(
-            key: "name",
-            ascending: false,
-            selector: #selector(NSString.localizedStandardCompare))]
+    @FetchRequest(sortDescriptors: [NSSortDescriptor(
+        keyPath: \StoredPlatformsEntity.name,
+        ascending: true)]
     ) var storedPlatforms: FetchedResults<StoredPlatformsEntity>
 
     @State var sheetIsPresented: Bool = false
@@ -457,14 +455,15 @@ enum PlatformsRequestedType: CaseIterable {
 struct PlatformsView: View {
     @Environment(\.managedObjectContext) var context
 
-    @FetchRequest(
-        sortDescriptors: [NSSortDescriptor(
-            key: "name",
-            ascending: true,
-            selector: #selector(NSString.localizedStandardCompare))]
+    @FetchRequest(sortDescriptors: [NSSortDescriptor(
+        keyPath: \PlatformsEntity.name,
+        ascending: true)]
     ) var platforms: FetchedResults<PlatformsEntity>
 
-    @FetchRequest(sortDescriptors: []) var storedPlatforms: FetchedResults<StoredPlatformsEntity>
+    @FetchRequest(sortDescriptors: [NSSortDescriptor(
+        keyPath: \StoredPlatformsEntity.name,
+        ascending: true)]
+    ) var storedPlatforms: FetchedResults<StoredPlatformsEntity>
 
     @State private var id = UUID()
     @State private var refreshRequested = false
@@ -552,6 +551,7 @@ struct PlatformsView: View {
                 .id(id)
                 .onChange(of: refreshRequested) { refresh in
                     if refresh {
+                        print("refreshing....")
                         id = UUID()
                     }
                 }

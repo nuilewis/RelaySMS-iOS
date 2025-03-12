@@ -34,9 +34,11 @@
 		04C2C9C92D63B16200016F86 /* SucccessAnimations.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04C2C9C72D63B16200016F86 /* SucccessAnimations.swift */; };
 		04C2C9CA2D63B16200016F86 /* SucccessAnimations.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04C2C9C72D63B16200016F86 /* SucccessAnimations.swift */; };
 		04C6BCAB2D7A086200420775 /* PreviousAndSkipButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04C6BCAA2D7A086200420775 /* PreviousAndSkipButton.swift */; };
-		04D7903B2D58010000EA4859 /* static-x25519.json in Resources */ = {isa = PBXBuildFile; fileRef = 04D7903A2D58010000EA4859 /* static-x25519.json */; };
-		04D7903C2D58010000EA4859 /* static-x25519.json in Resources */ = {isa = PBXBuildFile; fileRef = 04D7903A2D58010000EA4859 /* static-x25519.json */; };
-		04D7903D2D58010000EA4859 /* static-x25519.json in Resources */ = {isa = PBXBuildFile; fileRef = 04D7903A2D58010000EA4859 /* static-x25519.json */; };
+		04C6BCAD2D80D1B400420775 /* static-x25519.json in Resources */ = {isa = PBXBuildFile; fileRef = 04C6BCAC2D80D1B400420775 /* static-x25519.json */; };
+		04C6BCAE2D80D1B400420775 /* static-x25519.json in Resources */ = {isa = PBXBuildFile; fileRef = 04C6BCAC2D80D1B400420775 /* static-x25519.json */; };
+		04D7903B2D58010000EA4859 /* static-x25519-staging.json in Resources */ = {isa = PBXBuildFile; fileRef = 04D7903A2D58010000EA4859 /* static-x25519-staging.json */; };
+		04D7903C2D58010000EA4859 /* static-x25519-staging.json in Resources */ = {isa = PBXBuildFile; fileRef = 04D7903A2D58010000EA4859 /* static-x25519-staging.json */; };
+		04D7903D2D58010000EA4859 /* static-x25519-staging.json in Resources */ = {isa = PBXBuildFile; fileRef = 04D7903A2D58010000EA4859 /* static-x25519-staging.json */; };
 		04DB690F2CE217A600E12978 /* BridgesTest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04DB690E2CE217A000E12978 /* BridgesTest.swift */; };
 		04DC2B0C2D71C17100676ED1 /* OnboardingIntroToAccounts.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04DC2B0B2D71C17100676ED1 /* OnboardingIntroToAccounts.swift */; };
 		04DC2B0F2D71C2C500676ED1 /* OnboardingFinished.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04DC2B0E2D71C2C500676ED1 /* OnboardingFinished.swift */; };
@@ -164,7 +166,8 @@
 		04C2C9C52D636D0500016F86 /* RecentsViewLoggedIn.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RecentsViewLoggedIn.swift; sourceTree = "<group>"; };
 		04C2C9C72D63B16200016F86 /* SucccessAnimations.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SucccessAnimations.swift; sourceTree = "<group>"; };
 		04C6BCAA2D7A086200420775 /* PreviousAndSkipButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PreviousAndSkipButton.swift; sourceTree = "<group>"; };
-		04D7903A2D58010000EA4859 /* static-x25519.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = "static-x25519.json"; sourceTree = "<group>"; };
+		04C6BCAC2D80D1B400420775 /* static-x25519.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = "static-x25519.json"; sourceTree = "<group>"; };
+		04D7903A2D58010000EA4859 /* static-x25519-staging.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = "static-x25519-staging.json"; sourceTree = "<group>"; };
 		04DB690E2CE217A000E12978 /* BridgesTest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BridgesTest.swift; sourceTree = "<group>"; };
 		04DC2B0B2D71C17100676ED1 /* OnboardingIntroToAccounts.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OnboardingIntroToAccounts.swift; sourceTree = "<group>"; };
 		04DC2B0E2D71C2C500676ED1 /* OnboardingFinished.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OnboardingFinished.swift; sourceTree = "<group>"; };
@@ -357,7 +360,8 @@
 				16F0E68828C6308800FDD12C /* Preview Content */,
 				16EDE38328D2331C00E50393 /* Datastore.xcdatamodeld */,
 				0456964F2D551E9C00A2C369 /* Notes.txt */,
-				04D7903A2D58010000EA4859 /* static-x25519.json */,
+				04D7903A2D58010000EA4859 /* static-x25519-staging.json */,
+				04C6BCAC2D80D1B400420775 /* static-x25519.json */,
 			);
 			path = "SMSWithoutBorders-Production";
 			sourceTree = "<group>";
@@ -659,8 +663,9 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				04C6BCAD2D80D1B400420775 /* static-x25519.json in Resources */,
 				045696502D551E9C00A2C369 /* Notes.txt in Resources */,
-				04D7903C2D58010000EA4859 /* static-x25519.json in Resources */,
+				04D7903C2D58010000EA4859 /* static-x25519-staging.json in Resources */,
 				16F0E68A28C6308800FDD12C /* Preview Assets.xcassets in Resources */,
 				046DBD5D2D71E45400D1C43B /* unbounded.ttf in Resources */,
 				16F0E68728C6308800FDD12C /* Assets.xcassets in Resources */,
@@ -673,8 +678,9 @@
 			buildActionMask = 2147483647;
 			files = (
 				046DBD5E2D71E4A000D1C43B /* unbounded.ttf in Resources */,
+				04C6BCAE2D80D1B400420775 /* static-x25519.json in Resources */,
 				045696512D551E9C00A2C369 /* Notes.txt in Resources */,
-				04D7903B2D58010000EA4859 /* static-x25519.json in Resources */,
+				04D7903B2D58010000EA4859 /* static-x25519-staging.json in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -682,7 +688,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				04D7903D2D58010000EA4859 /* static-x25519.json in Resources */,
+				04D7903D2D58010000EA4859 /* static-x25519-staging.json in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -948,7 +954,7 @@
 				CODE_SIGN_ENTITLEMENTS = "SMSWithoutBorders-Production/SMSWithoutBorders-Production.entitlements";
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 13;
+				CURRENT_PROJECT_VERSION = 14;
 				DEVELOPMENT_ASSET_PATHS = "\"SMSWithoutBorders-Production/Preview Content\"";
 				DEVELOPMENT_TEAM = 7J8Q6GLPGN;
 				ENABLE_PREVIEWS = YES;
@@ -966,7 +972,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 0.0.13;
+				MARKETING_VERSION = 0.0.14;
 				PRODUCT_BUNDLE_IDENTIFIER = com.afkanerd.smswithoutborders.relaysms;
 				PRODUCT_NAME = SMSWithoutBorders;
 				PROVISIONING_PROFILE_SPECIFIER = "";
@@ -988,7 +994,7 @@
 				CODE_SIGN_ENTITLEMENTS = "SMSWithoutBorders-Production/SMSWithoutBorders-Production.entitlements";
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 13;
+				CURRENT_PROJECT_VERSION = 14;
 				DEVELOPMENT_ASSET_PATHS = "\"SMSWithoutBorders-Production/Preview Content\"";
 				DEVELOPMENT_TEAM = 7J8Q6GLPGN;
 				ENABLE_PREVIEWS = YES;
@@ -1006,7 +1012,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 0.0.13;
+				MARKETING_VERSION = 0.0.14;
 				PRODUCT_BUNDLE_IDENTIFIER = com.afkanerd.smswithoutborders.relaysms;
 				PRODUCT_NAME = SMSWithoutBorders;
 				PROVISIONING_PROFILE_SPECIFIER = "";

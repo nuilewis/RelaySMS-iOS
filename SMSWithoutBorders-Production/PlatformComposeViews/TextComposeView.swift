@@ -59,21 +59,27 @@ struct TextComposeView: View {
     var body: some View {
         NavigationView {
             VStack {
+                VStack {
+                    Text("From account: \(fromAccount)")
+                        .foregroundStyle(.secondary)
+                        .font(.caption)
+                        .multilineTextAlignment(.center)
+                        .padding()
+                }
                 ZStack {
                     if self.textBody.isEmpty {
                         TextEditor(text: $placeHolder)
                                 .font(.body)
                                 .foregroundColor(.secondary)
                                 .disabled(true)
-                                .padding()
                     }
                     TextEditor(text: $textBody)
                         .font(.body)
                         .opacity(self.textBody.isEmpty ? 0.25 : 1)
                         .textFieldStyle(PlainTextFieldStyle())
-                        .padding()
                 }
             }
+            .padding()
             .sheet(isPresented: $requestToChooseAccount) {
                 AccountSheetView(
                     filter: platformName,
@@ -84,13 +90,12 @@ struct TextComposeView: View {
                     
                     if self.message != nil {
                         textBody = self.message!.data
-                        self.message = nil
-                        self.platformName = ""
                     }
                 }
                 .applyPresentationDetentsIfAvailable()
                 .interactiveDismissDisabled(true)
             }
+            .navigationBarTitle("Compose Post")
         }
         .onChange(of: dismissRequested) { state in
             if state {
@@ -104,7 +109,6 @@ struct TextComposeView: View {
                 }
             }
         }
-        .navigationBarTitle("Compose Post")
         .toolbar(content: {
             ToolbarItem(placement: .navigationBarTrailing) {
                 Button("Post") {

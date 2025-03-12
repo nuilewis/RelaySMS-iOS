@@ -16,6 +16,12 @@ struct Bridges {
     static let SERVER_KID = "com.afkanerd.SERVER_KID"
     static let SERVICE_NAME = "com.afkanerd.BRIDGES"
     static let SERVICE_NAME_INBOX = "com.afkanerd.BRIDGES.INBOX"
+    
+    #if DEBUG
+    static let STATIC_KEYS_FILENAME = "static-x25519-staging"
+    #else
+    static let STATIC_KEYS_FILENAME = "static-x25519"
+    #endif
 
     class StaticKeys: Codable {
         var keypair: String
@@ -115,21 +121,19 @@ struct Bridges {
         UInt8
     ) {
         let (publishPrivateKey, deviceIdPrivateKey) = try generateNewKeypairs()
-//        let clientPublishPubKey = publishPrivateKey.publicKey.rawRepresentation.base64EncodedString()
-//        print(clientPublishPubKey)
         
         let serverPublicKeys = Bridges.getStaticKeys()
         let serverPublicKeyPair = try serverPublicKeys!.first //TODO: randomize key acquisition
         let serverPublicKeyID: UInt8 = UInt8(exactly: serverPublicKeyPair!.kid)!
         
-        let peerPublishPublicKey = try Curve25519.KeyAgreement.PublicKey(rawRepresentation: (serverPublicKeyPair?.keypair.base64Decoded())!)
-//        let peerPublishPublicKey = try Curve25519.KeyAgreement.PublicKey(rawRepresentation: ("QdoWCeu1i3Xdmjf45Dpr+8kpLDz+l4936s2Tu+QruRg=".base64Decoded()))
+        let peerPublishPublicKey = try Curve25519.KeyAgreement.PublicKey(
+            rawRepresentation: (serverPublicKeyPair?.keypair.base64Decoded())!
+        )
 
         let sharedSecret = try SecurityCurve25519.calculateSharedSecret(
             privateKey: publishPrivateKey!, publicKey: peerPublishPublicKey).withUnsafeBytes {
                 return Array($0)
             }
-//        print("SK: \(sharedSecret.toBase64())")
         
         return (sharedSecret, publishPrivateKey?.publicKey, peerPublishPublicKey, serverPublicKeyID)
     }
@@ -192,7 +196,7 @@ struct Bridges {
     }
     
     public static func getStaticKeys(kid: Int? = nil) -> [StaticKeys]? {
-        guard let url = Bundle.main.path(forResource: "static-x25519", ofType: "json") else {
+        guard let url = Bundle.main.path(forResource: STATIC_KEYS_FILENAME, ofType: "json") else {
             print("Error reading file...")
             return nil
         }
