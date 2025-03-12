@@ -169,6 +169,7 @@ struct OTPSheetView: View {
 
                     HStack {
                         Button("Resend code") {
+                            failed = true
                             dismiss()
                         }
                         .disabled(timeTillRetry > -1)

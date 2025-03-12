@@ -179,8 +179,14 @@ struct LoginSheetView: View {
         //                                .frame(width: 200 , height: 50, alignment: .center)
                             }
                             .buttonStyle(.borderedProminent)
-                            .alert(isPresented: $failed) {
-                                Alert(title: Text("Error"), message: Text(errorMessage))
+                            .alert("Error", isPresented: $failed) {
+                                Button(role: .destructive) {
+                                    failed = false
+                                } label: {
+                                    Text("Okay!")
+                                }
+                            } message: {
+                                Text(errorMessage)
                             }
                             
                             Button {
@@ -210,7 +216,12 @@ struct LoginSheetView: View {
                 }
                 
             }
-        
+            .onChange(of: failed) { v in
+                if v {
+                    isLoading = false
+                    otpRequired = false
+                }
+            }
         }
         
     }

@@ -238,8 +238,14 @@ struct SignupSheetView: View {
                             }
                             .disabled(!acceptTermsConditions)
                             .buttonStyle(.borderedProminent)
-                            .alert(isPresented: $failed) {
-                                Alert(title: Text("Error"), message: Text(errorMessage))
+                            .alert("Error", isPresented: $failed) {
+                                Button(role: .destructive) {
+                                    failed = false
+                                } label: {
+                                    Text("Okay!")
+                                }
+                            } message: {
+                                Text(errorMessage)
                             }
                             .padding(.bottom, 20)
                             
@@ -271,6 +277,12 @@ struct SignupSheetView: View {
                 
             }
 
+        }
+        .onChange(of: failed) { v in
+            if v {
+                isLoading = false
+                otpRequired = false
+            }
         }
     }
     
