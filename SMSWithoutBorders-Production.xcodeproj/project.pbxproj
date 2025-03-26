@@ -58,7 +58,6 @@
 		3B7EEE4B2C5BDE9400611092 /* Helpers.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3BF117AD2C2F6E7B003D5BB6 /* Helpers.swift */; };
 		3B7EEE4E2C5BEA6000611092 /* MessageComposer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3B7EEE4C2C5BEA6000611092 /* MessageComposer.swift */; };
 		3B7EEE652C5E8BB500611092 /* MockDataGenerator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3B7EEE642C5E8BB500611092 /* MockDataGenerator.swift */; };
-		3B928A352C65140100BA145F /* GatewayClientsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3B928A342C65140100BA145F /* GatewayClientsView.swift */; };
 		3B928A3F2C66A26300BA145F /* Messages.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3B928A3E2C66A26300BA145F /* Messages.swift */; };
 		3B928A402C66A26300BA145F /* Messages.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3B928A3E2C66A26300BA145F /* Messages.swift */; };
 		3BAB09622C1B21F700664E90 /* OnboardingWelcomeView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3BAB09612C1B21F700664E90 /* OnboardingWelcomeView.swift */; };
@@ -160,7 +159,6 @@
 		16F0E69F28C6308800FDD12C /* SMSWithoutBorders_ProductionUITestsLaunchTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SMSWithoutBorders_ProductionUITestsLaunchTests.swift; sourceTree = "<group>"; };
 		3B7EEE4C2C5BEA6000611092 /* MessageComposer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MessageComposer.swift; sourceTree = "<group>"; };
 		3B7EEE642C5E8BB500611092 /* MockDataGenerator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MockDataGenerator.swift; sourceTree = "<group>"; };
-		3B928A342C65140100BA145F /* GatewayClientsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GatewayClientsView.swift; sourceTree = "<group>"; };
 		3B928A3E2C66A26300BA145F /* Messages.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Messages.swift; sourceTree = "<group>"; };
 		3BAB09612C1B21F700664E90 /* OnboardingWelcomeView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OnboardingWelcomeView.swift; sourceTree = "<group>"; };
 		3BAB09632C1B454B00664E90 /* OnboardingIntroToVaults.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OnboardingIntroToVaults.swift; sourceTree = "<group>"; };
@@ -205,6 +203,7 @@
 		F603A5282D94385100D69C5E /* Components */ = {isa = PBXFileSystemSynchronizedRootGroup; explicitFileTypes = {}; explicitFolders = (); path = Components; sourceTree = "<group>"; };
 		F603A52E2D94398F00D69C5E /* Components */ = {isa = PBXFileSystemSynchronizedRootGroup; explicitFileTypes = {}; explicitFolders = (); path = Components; sourceTree = "<group>"; };
 		F603A5432D943BA700D69C5E /* Recents */ = {isa = PBXFileSystemSynchronizedRootGroup; explicitFileTypes = {}; explicitFolders = (); path = Recents; sourceTree = "<group>"; };
+		F603A5662D944BD000D69C5E /* GatewayClients */ = {isa = PBXFileSystemSynchronizedRootGroup; explicitFileTypes = {}; explicitFolders = (); path = GatewayClients; sourceTree = "<group>"; };
 		F6E7FF0B2D93F47E0052A37E /* Platforms */ = {isa = PBXFileSystemSynchronizedRootGroup; exceptions = (F6E7FF1A2D93F47E0052A37E /* PBXFileSystemSynchronizedBuildFileExceptionSet */, ); explicitFileTypes = {}; explicitFolders = (); path = Platforms; sourceTree = "<group>"; };
 /* End PBXFileSystemSynchronizedRootGroup section */
 
@@ -345,6 +344,7 @@
 		16F0E6AC28C6320F00FDD12C /* Views */ = {
 			isa = PBXGroup;
 			children = (
+				F603A5662D944BD000D69C5E /* GatewayClients */,
 				F603A51C2D94168E00D69C5E /* Inbox */,
 				F603A5062D94149100D69C5E /* Settings */,
 				F603A5192D94154C00D69C5E /* Theme */,
@@ -414,7 +414,6 @@
 			isa = PBXGroup;
 			children = (
 				F603A5432D943BA700D69C5E /* Recents */,
-				3B928A342C65140100BA145F /* GatewayClientsView.swift */,
 				1686DBCF28E47D8A00895D92 /* HomepageView.swift */,
 			);
 			path = Homepage;
@@ -463,6 +462,7 @@
 				F603A5282D94385100D69C5E /* Components */,
 				F603A52E2D94398F00D69C5E /* Components */,
 				F603A5432D943BA700D69C5E /* Recents */,
+				F603A5662D944BD000D69C5E /* GatewayClients */,
 				F6E7FF0B2D93F47E0052A37E /* Platforms */,
 			);
 			name = "SMSWithoutBorders-Production";
@@ -639,7 +639,6 @@
 			buildActionMask = 2147483647;
 			files = (
 				16EDE38528D2331C00E50393 /* Datastore.xcdatamodeld in Sources */,
-				3B928A352C65140100BA145F /* GatewayClientsView.swift in Sources */,
 				04E63A972D6F32A70017103B /* relay_publisher.proto in Sources */,
 				04E63A982D6F32A70017103B /* relay_publisher.grpc.swift in Sources */,
 				04E63A992D6F32A70017103B /* relay_publisher.pb.swift in Sources */,

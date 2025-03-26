@@ -7,34 +7,6 @@
 
 import SwiftUI
 
-struct GatewayClientView: View {
-    var selectedGatewayClient: GatewayClientsEntity
-    var disabled: Bool
-
-    var body: some View {
-        VStack {
-            Group {
-                Text(selectedGatewayClient.msisdn!)
-                    .font(.headline)
-                    .padding(.bottom, 5)
-                    .foregroundColor(disabled ? .secondary : .primary )
-
-                HStack {
-                    Text(selectedGatewayClient.operatorName! + " -")
-                    Text(selectedGatewayClient.operatorCode!)
-                }
-                .foregroundColor(.secondary)
-                .font(.subheadline)
-
-                Text(selectedGatewayClient.country!)
-                    .font(.caption)
-                    .foregroundColor(.secondary)
-            }
-            .frame(maxWidth: .infinity, alignment: .leading)
-        }
-    }
-}
-
 struct GatewayClientsView: View {
 
     @Environment(\.managedObjectContext) var context
@@ -61,7 +33,7 @@ struct GatewayClientsView: View {
                             .font(.caption2)
                             .padding(.bottom, 3)
                             .foregroundColor(.secondary)
-                        GatewayClientView(selectedGatewayClient: defaultGatewayClient!, disabled: true)
+                        GatewayClientCard(selectedGatewayClient: defaultGatewayClient!, disabled: true)
                             .padding(.top, 3)
                     }
                     .padding()
@@ -72,7 +44,7 @@ struct GatewayClientsView: View {
                         selectedGatewayClient = gatewayClient.msisdn!
                         changeDefaultGatewayClient = true
                     }) {
-                        GatewayClientView(selectedGatewayClient: gatewayClient, disabled: false)
+                        GatewayClientCard(selectedGatewayClient: gatewayClient, disabled: false)
                             .padding()
                     }
                 }
