@@ -160,7 +160,7 @@ struct HomepageView: View {
                     }
                 )) {
                     if (isLoggedIn) {
-                        RecentsViewLoggedIn(
+                        RecentsLoggedInView(
                             selectedTab: $selectedTab,
                             platformRequestType: $platformRequestType,
                             requestedMessage: $requestedMessage,
@@ -198,7 +198,7 @@ struct HomepageView: View {
                         .tag(HomepageTabs.platforms)
 
                     } else {
-                        RecentsViewNotLoggedIn(
+                        RecentsNotLoggedInView(
                             isLoggedIn: $isLoggedIn,
                             composeNewMessageRequested: $composeNewMessageRequested,
                             createAccountSheetRequested: $createAccountSheetRequested,
