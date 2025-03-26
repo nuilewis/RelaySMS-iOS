@@ -347,7 +347,6 @@
 				F603A5662D944BD000D69C5E /* GatewayClients */,
 				F603A51C2D94168E00D69C5E /* Inbox */,
 				F603A5062D94149100D69C5E /* Settings */,
-				F603A5192D94154C00D69C5E /* Theme */,
 				F603A5112D94154300D69C5E /* Auth */,
 				F603A52E2D94398F00D69C5E /* Components */,
 				3BDADADC2C538D6B00539E57 /* Homepage */,
@@ -366,6 +365,7 @@
 				16EDE38828D3511700E50393 /* DataController.swift */,
 				1697672528E483F60021BFC5 /* OperatorHandlers.swift */,
 				3B7EEE4C2C5BEA6000611092 /* MessageComposer.swift */,
+				F603A5192D94154C00D69C5E /* Theme */,
 			);
 			path = Commons;
 			sourceTree = "<group>";
