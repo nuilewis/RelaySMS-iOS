@@ -234,6 +234,144 @@
         }
       }
     },
+    "Adding accounts to your RelaySMS account enables you use them to make post using SMS messaging.\n\nPosting is currently supported." : {
+      "localizations" : {
+        "ar" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "إضافة حسابات إلى حساب RelaySMS الخاص بك يمكنك من استخدامها لإنشاء منشورات باستخدام الرسائل القصيرة.\nالنشر مدعوم حاليًا."
+          }
+        },
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Das Hinzufügen von Konten zu Ihrem RelaySMS-Konto ermöglicht es Ihnen, diese zu nutzen, um Beiträge per SMS zu erstellen.\n\nDas Veröffentlichen wird derzeit unterstützt."
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Añadir cuentas a tu cuenta de RelaySMS te permite utilizarlas para realizar publicaciones mediante mensajes SMS.\n\nActualmente se admite la publicación."
+          }
+        },
+        "fa" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "افزودن حساب‌ها به حساب RelaySMS شما امکان استفاده از آنها برای ارسال پست از طریق پیامک را فراهم می‌کند.\nارسال پست در حال حاضر پشتیبانی می‌شود."
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "L'ajout de comptes à votre compte RelaySMS vous permet de les utiliser pour publier des messages via SMS.\n\nLa publication est actuellement prise en charge."
+          }
+        },
+        "sw" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Kuongeza akaunti kwenye akaunti yako ya RelaySMS inakuwezesha kuzitumia kutuma machapisho kwa kutumia ujumbe wa SMS.\n\nKuchapisha kunasaidiwa kwa sasa."
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "RelaySMS hesabınıza hesap eklemek, SMS mesajlaşma kullanarak gönderi yapmanızı sağlar.\n\nGönderi yapmak şu anda desteklenmektedir."
+          }
+        }
+      }
+    },
+    "Adding emails to your RelaySMS account enables you use them to send emails using SMS messaging.\n\nGmail are currently supported." : {
+      "localizations" : {
+        "ar" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "إضافة البريد الإلكتروني إلى حساب RelaySMS الخاص بك يمكنك من استخدامه لإرسال رسائل بريد إلكتروني باستخدام الرسائل القصيرة.\nجيميل مدعوم حاليًا."
+          }
+        },
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Das Hinzufügen von E-Mails zu Ihrem RelaySMS-Konto ermöglicht es Ihnen, diese zu nutzen, um E-Mails per SMS zu senden.\n\nGmail wird derzeit unterstützt."
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Añadir correos electrónicos a tu cuenta de RelaySMS te permite utilizarlos para enviar emails mediante mensajes SMS.\n\nActualmente se admite Gmail."
+          }
+        },
+        "fa" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "افزودن ایمیل‌ها به حساب RelaySMS شما امکان استفاده از آنها برای ارسال ایمیل از طریق پیامک را فراهم می‌کند.\nجیمیل در حال حاضر پشتیبانی می‌شود."
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "L'ajout d'emails à votre compte RelaySMS vous permet de les utiliser pour envoyer des emails via SMS.\n\nGmail est actuellement pris en charge.\n"
+          }
+        },
+        "sw" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Kuongeza barua pepe kwenye akaunti yako ya RelaySMS inakuwezesha kuzitumia kutuma barua pepe kwa kutumia ujumbe wa SMS.\n\nGmail inasaidiwa kwa sasa."
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "RelaySMS hesabınıza e-posta eklemek, SMS mesajlaşma kullanarak e-posta göndermenizi sağlar.\n\nGmail şu anda desteklenmektedir.\n"
+          }
+        }
+      }
+    },
+    "Adding numbers to your RelaySMS account enables you use them to send messages using SMS messaging.\n\nTelegram messaging is currently supported." : {
+      "localizations" : {
+        "ar" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "إضافة أرقام إلى حساب RelaySMS الخاص بك يمكنك من استخدامها لإرسال رسائل باستخدام الرسائل القصيرة.\nالمراسلة عبر تيليجرام مدعومة حاليًا."
+          }
+        },
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Das Hinzufügen von Nummern zu Ihrem RelaySMS-Konto ermöglicht es Ihnen, diese zu nutzen, um Nachrichten per SMS zu senden.\n\nTelegram-Messaging wird derzeit unterstützt."
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Añadir números a tu cuenta de RelaySMS te permite utilizarlos para enviar mensajes mediante mensajes SMS.\n\nActualmente se admite la mensajería de Telegram."
+          }
+        },
+        "fa" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "افزودن شماره‌ها به حساب RelaySMS شما امکان استفاده از آنها برای ارسال پیام از طریق پیامک را فراهم می‌کند.\nپیام‌رسانی تلگرام در حال حاضر پشتیبانی می‌شود."
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "L'ajout de numéros à votre compte RelaySMS vous permet de les utiliser pour envoyer des messages via SMS.\n\nLa messagerie Telegram est actuellement prise en charge."
+          }
+        },
+        "sw" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Kuongeza namba kwenye akaunti yako ya RelaySMS inakuwezesha kuzitumia kutuma ujumbe kwa kutumia ujumbe wa SMS.\n\nUjumbe wa Telegram unasaidiwa kwa sasa."
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "RelaySMS hesabınıza numara eklemek, SMS mesajlaşma kullanarak mesaj göndermenizi sağlar.\n\nTelegram mesajlaşma şu anda desteklenmektedir."
+          }
+        }
+      }
+    },
     "Already got code" : {
       "localizations" : {
         "ar" : {
@@ -1292,6 +1430,144 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "iOS ayarlarına devam edin ve RelaySMS için tercih ettiğiniz dili seçin."
+          }
+        }
+      }
+    },
+    "Continue to make posts from your saved messaging account. You can choose a message forwarding country from the 'Countries' tab below.\n\nContinue to send message" : {
+      "localizations" : {
+        "ar" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "استمر في إنشاء منشورات من حساب المراسلة المحفوظ الخاص بك. يمكنك اختيار بلد إعادة توجيه الرسائل من علامة التبويب 'البلدان' أدناه.\nمتابعة إرسال الرسالة"
+          }
+        },
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Fahren Sie fort, Beiträge von Ihrem gespeicherten Messaging-Konto zu erstellen. Sie können ein Land für die Nachrichtenweiterleitung aus dem unten stehenden Tab 'Länder' auswählen.\n\nWeiter zum Senden der Nachricht\n"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Continúa haciendo publicaciones desde tu cuenta de mensajería guardada. Puedes elegir un país de reenvío de mensajes desde la pestaña 'Países' a continuación.\n\nContinuar para enviar mensaje"
+          }
+        },
+        "fa" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "به ارسال پست از حساب پیام‌رسانی ذخیره‌شده خود ادامه دهید. می‌توانید کشور ارسال پیام را از تب 'کشورها' در زیر انتخاب کنید.\nادامه برای ارسال پیام"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Continuez à publier depuis votre compte de messagerie enregistré. Vous pouvez choisir un pays de transfert de message dans l'onglet 'Pays' ci-dessous.\n\nContinuer pour envoyer un message"
+          }
+        },
+        "sw" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Endelea kufanya machapisho kutoka akaunti yako ya ujumbe iliyohifadhiwa. Unaweza kuchagua nchi ya kusambaza ujumbe kutoka kichupo cha 'Nchi' hapa chini.\n\nEndelea kutuma ujumbe"
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Kayıtlı mesajlaşma hesabınızdan gönderi yapmaya devam edin. Aşağıdaki 'Ülkeler' sekmesinden bir mesaj iletme ülkesi seçebilirsiniz.\n\nMesaj göndermeye devam et"
+          }
+        }
+      }
+    },
+    "Continue to send an email from your saved email account. You can choose a message forwarding country from the 'Countries' tab below.\n\nContinue to send message" : {
+      "localizations" : {
+        "ar" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "استمر في إرسال بريد إلكتروني من حساب البريد الإلكتروني المحفوظ الخاص بك. يمكنك اختيار بلد إعادة توجيه الرسائل من علامة التبويب 'البلدان' أدناه.\nمتابعة إرسال الرسالة"
+          }
+        },
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "ahren Sie fort, eine E-Mail von Ihrem gespeicherten E-Mail-Konto zu senden. Sie können ein Land für die Nachrichtenweiterleitung aus dem unten stehenden Tab 'Länder' auswählen.\n\nWeiter zum Senden der Nachricht"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Continúa enviando un correo electrónico desde tu cuenta de correo guardada. Puedes elegir un país de reenvío de mensajes desde la pestaña 'Países' a continuación.\n\nContinuar para enviar mensaje"
+          }
+        },
+        "fa" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "به ارسال ایمیل از حساب ایمیل ذخیره‌شده خود ادامه دهید. می‌توانید کشور ارسال پیام را از تب 'کشورها' در زیر انتخاب کنید.\nادامه برای ارسال پیام"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Continuez à envoyer un email depuis votre compte email enregistré. Vous pouvez choisir un pays de transfert de message dans l'onglet 'Pays' ci-dessous.\n\nContinuer pour envoyer un message"
+          }
+        },
+        "sw" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Endelea kutuma barua pepe kutoka akaunti yako ya barua pepe iliyohifadhiwa. Unaweza kuchagua nchi ya kusambaza ujumbe kutoka kichupo cha 'Nchi' hapa chini.\n\nEndelea kutuma ujumbe"
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Kayıtlı e-posta hesabınızdan e-posta göndermeye devam edin. Aşağıdaki 'Ülkeler' sekmesinden bir mesaj iletme ülkesi seçebilirsiniz.\n\nMesaj göndermeye devam et"
+          }
+        }
+      }
+    },
+    "Continue to send messages from your saved messaging account. You can choose a message forwarding country from the 'Countries' tab below.\n\nContinue to send message" : {
+      "localizations" : {
+        "ar" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "استمر في إرسال رسائل من حساب المراسلة المحفوظ الخاص بك. يمكنك اختيار بلد إعادة توجيه الرسائل من علامة التبويب 'البلدان' أدناه.\nمتابعة إرسال الرسالة\n"
+          }
+        },
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Fahren Sie fort, Nachrichten von Ihrem gespeicherten Messaging-Konto zu senden. Sie können ein Land für die Nachrichtenweiterleitung aus dem unten stehenden Tab 'Länder' auswählen.\n\nWeiter zum Senden der Nachricht"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Continúa enviando mensajes desde tu cuenta de mensajería guardada. Puedes elegir un país de reenvío de mensajes desde la pestaña 'Países' a continuación.\n\nContinuar para enviar mensaje"
+          }
+        },
+        "fa" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "به ارسال پیام از حساب پیام‌رسانی ذخیره‌شده خود ادامه دهید. می‌توانید کشور ارسال پیام را از تب 'کشورها' در زیر انتخاب کنید.\nادامه برای ارسال پیام"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Continuez à envoyer des messages depuis votre compte de messagerie enregistré. Vous pouvez choisir un pays de transfert de message dans l'onglet 'Pays' ci-dessous.\n\nContinuer pour envoyer un message"
+          }
+        },
+        "sw" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Endelea kutuma ujumbe kutoka akaunti yako ya ujumbe iliyohifadhiwa. Unaweza kuchagua nchi ya kusambaza ujumbe kutoka kichupo cha 'Nchi' hapa chini.\n\nEndelea kutuma ujumbe"
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Kayıtlı mesajlaşma hesabınızdan mesaj göndermeye devam edin. Aşağıdaki 'Ülkeler' sekmesinden bir mesaj iletme ülkesi seçebilirsiniz.\n\nMesaj göndermeye devam et"
           }
         }
       }
@@ -6623,6 +6899,98 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Telefon numaranız ana hesabınızdır!"
+          }
+        }
+      }
+    },
+    "Your RelaySMS account is an alias of your phone number with the domain @relaysms.me.\n\nYou can receive replies by SMS whenever a message is sent to your alias." : {
+      "localizations" : {
+        "ar" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "حساب RelaySMS الخاص بك هو اسم مستعار لرقم هاتفك مع النطاق @relaysms.me.\nيمكنك تلقي الردود عبر الرسائل القصيرة كلما تم إرسال رسالة إلى اسمك المستعار."
+          }
+        },
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ihr RelaySMS-Konto ist ein Alias Ihrer Telefonnummer mit der Domain @relaysms.me.\n\nSie können Antworten per SMS erhalten, wenn eine Nachricht an Ihren Alias gesendet wird."
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Tu cuenta de RelaySMS es un alias de tu número de teléfono con el dominio @relaysms.me.\n\nPuedes recibir respuestas por SMS cada vez que se envía un mensaje a tu alias."
+          }
+        },
+        "fa" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "حساب RelaySMS شما یک نام مستعار از شماره تلفن شما با دامنه @relaysms.me است.\nشما می‌توانید هر زمان که پیامی به نام مستعار شما ارسال شود، پاسخ‌ها را از طریق پیامک دریافت کنید."
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Votre compte RelaySMS est un alias de votre numéro de téléphone avec le domaine @relaysms.me.\n\nVous pouvez recevoir des réponses par SMS chaque fois qu'un message est envoyé à votre alias."
+          }
+        },
+        "sw" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Akaunti yako ya RelaySMS ni jina mbadala la namba yako ya simu na kikoa cha @relaysms.me.\n\nUnaweza kupokea majibu kwa SMS wakati wowote ujumbe unapotumwa kwa jina lako mbadala."
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "RelaySMS hesabınız, telefon numaranızın @relaysms.me alan adıyla birlikte bir takma adıdır.\n\nTakma adınıza bir mesaj gönderildiğinde SMS ile yanıt alabilirsiniz."
+          }
+        }
+      }
+    },
+    "Your RelaySMS account is an alias of your phone number with the domain @relaysms.me.\n\nYou can receive replies by SMS whenever a message is sent to your alias.\nYou can choose a message forwarding country from the 'Countries' tab below.\n\nContinue to send message" : {
+      "localizations" : {
+        "ar" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "حساب RelaySMS الخاص بك هو اسم مستعار لرقم هاتفك مع النطاق @relaysms.me.\nيمكنك تلقي الردود عبر الرسائل القصيرة كلما تم إرسال رسالة إلى اسمك المستعار.\nيمكنك اختيار بلد إعادة توجيه الرسائل من علامة التبويب 'البلدان' أدناه.\nمتابعة إرسال الرسالة"
+          }
+        },
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ihr RelaySMS-Konto ist ein Alias Ihrer Telefonnummer mit der Domain @relaysms.me.\n\nSie können Antworten per SMS erhalten, wenn eine Nachricht an Ihren Alias gesendet wird.\n\nSie können ein Land für die Nachrichtenweiterleitung aus dem unten stehenden Tab 'Länder' auswählen.\nWeiter zum Senden der Nachricht"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Tu cuenta de RelaySMS es un alias de tu número de teléfono con el dominio @relaysms.me.\n\nPuedes recibir respuestas por SMS cada vez que se envía un mensaje a tu alias.\nPuedes elegir un país de reenvío de mensajes desde la pestaña 'Países' a continuación.\n\nContinuar para enviar mensaje"
+          }
+        },
+        "fa" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "حساب RelaySMS شما یک نام مستعار از شماره تلفن شما با دامنه @relaysms.me است.\nشما می‌توانید هر زمان که پیامی به نام مستعار شما ارسال شود، پاسخ‌ها را از طریق پیامک دریافت کنید.\nمی‌توانید کشور ارسال پیام را از تب 'کشورها' در زیر انتخاب کنید.\nادامه برای ارسال پیام"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Votre compte RelaySMS est un alias de votre numéro de téléphone avec le domaine @relaysms.me.\n\nVous pouvez recevoir des réponses par SMS chaque fois qu'un message est envoyé à votre alias.\n\nVous pouvez choisir un pays de transfert de message dans l'onglet 'Pays' ci-dessous.\nContinuer pour envoyer un message"
+          }
+        },
+        "sw" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Akaunti yako ya RelaySMS ni jina mbadala la namba yako ya simu na kikoa cha @relaysms.me.\n\nUnaweza kupokea majibu kwa SMS wakati wowote ujumbe unapotumwa kwa jina lako mbadala.\nUnaweza kuchagua nchi ya kusambaza ujumbe kutoka kichupo cha 'Nchi' hapa chini.\n\nEndelea kutuma ujumbe"
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "RelaySMS hesabınız, telefon numaranızın @relaysms.me alan adıyla birlikte bir takma adıdır.\n\nTakma adınıza bir mesaj gönderildiğinde SMS ile yanıt alabilirsiniz.\nAşağıdaki 'Ülkeler' sekmesinden bir mesaj iletme ülkesi seçebilirsiniz.\n\nMesaj göndermeye devam et"
           }
         }
       }

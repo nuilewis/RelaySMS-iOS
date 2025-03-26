@@ -84,15 +84,16 @@ struct AvailablePlatformView: View {
                 Text(composeDescription)
                     .multilineTextAlignment(.center)
                     .font(.caption)
-                    .padding()
+                    .padding([.leading, .trailing, .bottom], 16)
             } else {
                 Text(description)
                     .multilineTextAlignment(.center)
                     .font(.body)
-                    .padding()
+                    .padding([.leading, .trailing, .bottom], 16)
             }
 
-            Spacer().frame(maxHeight: 120)
+            Spacer().frame(maxHeight: 32)
+           
             if phoneNumberAuthenticationRequested {
                 PhoneNumberSheetView(
                     completed: $parentIsEnabled,
@@ -416,26 +417,26 @@ struct PlatformCard: View {
     func getServiceTypeDescriptions(serviceType: Publisher.ServiceTypes) -> String {
         switch(serviceType) {
         case .EMAIL:
-            return Publisher.ServiceTypeDescriptions.EMAIL.rawValue
+            return Publisher.ServiceTypeDescriptions.EMAIL.localizedValue()
         case .MESSAGE:
-            return Publisher.ServiceTypeDescriptions.MESSAGE.rawValue
+            return Publisher.ServiceTypeDescriptions.MESSAGE.localizedValue()
         case .TEXT:
-            return Publisher.ServiceTypeDescriptions.TEXT.rawValue
+            return Publisher.ServiceTypeDescriptions.TEXT.localizedValue()
         case .BRIDGE:
-            return Publisher.ServiceTypeDescriptions.BRIDGE.rawValue
+            return Publisher.ServiceTypeDescriptions.BRIDGE.localizedValue()
         }
     }
 
     func getServiceTypeComposeDescriptions(serviceType: Publisher.ServiceTypes) -> String {
         switch(serviceType) {
         case .EMAIL:
-            return Publisher.ServiceComposeTypeDescriptions.EMAIL.rawValue
+            return Publisher.ServiceComposeTypeDescriptions.EMAIL.localizedValue()
         case .MESSAGE:
-            return Publisher.ServiceComposeTypeDescriptions.MESSAGE.rawValue
+            return Publisher.ServiceComposeTypeDescriptions.MESSAGE.localizedValue()
         case .TEXT:
-            return Publisher.ServiceComposeTypeDescriptions.TEXT.rawValue
+            return Publisher.ServiceComposeTypeDescriptions.TEXT.localizedValue()
         case .BRIDGE:
-            return Publisher.ServiceComposeTypeDescriptions.BRIDGE.rawValue
+            return Publisher.ServiceComposeTypeDescriptions.BRIDGE.localizedValue()
         }
     }
 

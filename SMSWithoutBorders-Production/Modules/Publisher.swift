@@ -19,18 +19,25 @@ class Publisher {
     public static var PUBLISHER_PUBLIC_KEY_KEYSTOREALIAS = "COM.AFKANERD.PUBLISHER_PUBLIC_KEY_KEYSTOREALIAS"
     public static var CLIENT_PUBLIC_KEY_KEYSTOREALIAS = "COM.AFKANERD.PUBLISHER_PUBLIC_KEY_KEYSTOREALIAS"
     
-    public enum ServiceTypeDescriptions: String {
+    public enum ServiceTypeDescriptions: String.LocalizationValue {
         case EMAIL = "Adding emails to your RelaySMS account enables you use them to send emails using SMS messaging.\n\nGmail are currently supported."
         case MESSAGE = "Adding numbers to your RelaySMS account enables you use them to send messages using SMS messaging.\n\nTelegram messaging is currently supported."
         case TEXT = "Adding accounts to your RelaySMS account enables you use them to make post using SMS messaging.\n\nPosting is currently supported."
         case BRIDGE = "Your RelaySMS account is an alias of your phone number with the domain @relaysms.me.\n\nYou can receive replies by SMS whenever a message is sent to your alias."
+        
+        func localizedValue() -> String {
+            return String(localized: self.rawValue)
+        }
     }
     
-    public enum ServiceComposeTypeDescriptions: String {
+    public enum ServiceComposeTypeDescriptions: String.LocalizationValue {
         case EMAIL = "Continue to send an email from your saved email account. You can choose a message forwarding country from the 'Countries' tab below.\n\nContinue to send message"
         case MESSAGE = "Continue to send messages from your saved messaging account. You can choose a message forwarding country from the 'Countries' tab below.\n\nContinue to send message"
         case TEXT = "Continue to make posts from your saved messaging account. You can choose a message forwarding country from the 'Countries' tab below.\n\nContinue to send message"
         case BRIDGE = "Your RelaySMS account is an alias of your phone number with the domain @relaysms.me.\n\nYou can receive replies by SMS whenever a message is sent to your alias.\nYou can choose a message forwarding country from the 'Countries' tab below.\n\nContinue to send message"
+        func localizedValue() -> String {
+            return String(localized: self.rawValue)
+        }
     }
 
     public enum ProtocolTypes: String {
