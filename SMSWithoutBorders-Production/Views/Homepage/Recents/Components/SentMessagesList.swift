@@ -37,7 +37,7 @@ struct SentMessagesList: View {
             ZStack(alignment: .bottomTrailing) {
                 VStack {
                     List(messages, id: \.id) { message in
-                        Card(
+                        MessageCard(
                             logo: getImageForPlatform(name: message.platformName!),
                             subject: message.subject!,
                             toAccount: message.toAccount!,

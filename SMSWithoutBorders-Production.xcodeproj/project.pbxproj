@@ -18,8 +18,6 @@
 		045696502D551E9C00A2C369 /* Notes.txt in Resources */ = {isa = PBXBuildFile; fileRef = 0456964F2D551E9C00A2C369 /* Notes.txt */; };
 		045696512D551E9C00A2C369 /* Notes.txt in Resources */ = {isa = PBXBuildFile; fileRef = 0456964F2D551E9C00A2C369 /* Notes.txt */; };
 		045696542D551FCF00A2C369 /* gRPCHandler.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3BF1179E2C2B6727003D5BB6 /* gRPCHandler.swift */; };
-		046DBD5D2D71E45400D1C43B /* unbounded.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 046DBD5C2D71E45400D1C43B /* unbounded.ttf */; };
-		046DBD5E2D71E4A000D1C43B /* unbounded.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 046DBD5C2D71E45400D1C43B /* unbounded.ttf */; };
 		04C6BCAD2D80D1B400420775 /* static-x25519.json in Resources */ = {isa = PBXBuildFile; fileRef = 04C6BCAC2D80D1B400420775 /* static-x25519.json */; };
 		04C6BCAE2D80D1B400420775 /* static-x25519.json in Resources */ = {isa = PBXBuildFile; fileRef = 04C6BCAC2D80D1B400420775 /* static-x25519.json */; };
 		04D7903B2D58010000EA4859 /* static-x25519-staging.json in Resources */ = {isa = PBXBuildFile; fileRef = 04D7903A2D58010000EA4859 /* static-x25519-staging.json */; };
@@ -127,7 +125,6 @@
 		0430A2202D5554D100830BF4 /* Bridges.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Bridges.swift; sourceTree = "<group>"; };
 		0439A49A2C766E9A000B8D30 /* SMSComposeMessageUIView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SMSComposeMessageUIView.swift; sourceTree = "<group>"; };
 		0456964F2D551E9C00A2C369 /* Notes.txt */ = {isa = PBXFileReference; lastKnownFileType = text; path = Notes.txt; sourceTree = "<group>"; };
-		046DBD5C2D71E45400D1C43B /* unbounded.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = unbounded.ttf; sourceTree = "<group>"; };
 		04C6BCAC2D80D1B400420775 /* static-x25519.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = "static-x25519.json"; sourceTree = "<group>"; };
 		04D7903A2D58010000EA4859 /* static-x25519-staging.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = "static-x25519-staging.json"; sourceTree = "<group>"; };
 		04DB690E2CE217A000E12978 /* BridgesTest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BridgesTest.swift; sourceTree = "<group>"; };
@@ -186,6 +183,13 @@
 			);
 			target = 16F0E68E28C6308800FDD12C /* SMSWithoutBorders-ProductionTests */;
 		};
+		F603A56F2D944F2A00D69C5E /* PBXFileSystemSynchronizedBuildFileExceptionSet */ = {
+			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
+			membershipExceptions = (
+				Fonts/unbounded.ttf,
+			);
+			target = 16F0E68E28C6308800FDD12C /* SMSWithoutBorders-ProductionTests */;
+		};
 		F6E7FF1A2D93F47E0052A37E /* PBXFileSystemSynchronizedBuildFileExceptionSet */ = {
 			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
 			membershipExceptions = (
@@ -198,7 +202,7 @@
 /* Begin PBXFileSystemSynchronizedRootGroup section */
 		F603A5062D94149100D69C5E /* Settings */ = {isa = PBXFileSystemSynchronizedRootGroup; exceptions = (F603A5072D94149800D69C5E /* PBXFileSystemSynchronizedBuildFileExceptionSet */, ); explicitFileTypes = {}; explicitFolders = (); path = Settings; sourceTree = "<group>"; };
 		F603A5112D94154300D69C5E /* Auth */ = {isa = PBXFileSystemSynchronizedRootGroup; explicitFileTypes = {}; explicitFolders = (); path = Auth; sourceTree = "<group>"; };
-		F603A5192D94154C00D69C5E /* Theme */ = {isa = PBXFileSystemSynchronizedRootGroup; explicitFileTypes = {}; explicitFolders = (); path = Theme; sourceTree = "<group>"; };
+		F603A5192D94154C00D69C5E /* Theme */ = {isa = PBXFileSystemSynchronizedRootGroup; exceptions = (F603A56F2D944F2A00D69C5E /* PBXFileSystemSynchronizedBuildFileExceptionSet */, ); explicitFileTypes = {}; explicitFolders = (); path = Theme; sourceTree = "<group>"; };
 		F603A51C2D94168E00D69C5E /* Inbox */ = {isa = PBXFileSystemSynchronizedRootGroup; explicitFileTypes = {}; explicitFolders = (); path = Inbox; sourceTree = "<group>"; };
 		F603A5282D94385100D69C5E /* Components */ = {isa = PBXFileSystemSynchronizedRootGroup; explicitFileTypes = {}; explicitFolders = (); path = Components; sourceTree = "<group>"; };
 		F603A52E2D94398F00D69C5E /* Components */ = {isa = PBXFileSystemSynchronizedRootGroup; explicitFileTypes = {}; explicitFolders = (); path = Components; sourceTree = "<group>"; };
@@ -260,14 +264,6 @@
 			path = Handlers;
 			sourceTree = "<group>";
 		};
-		04DC2B4B2D71E07200676ED1 /* Fonts */ = {
-			isa = PBXGroup;
-			children = (
-				046DBD5C2D71E45400D1C43B /* unbounded.ttf */,
-			);
-			path = Fonts;
-			sourceTree = "<group>";
-		};
 		16F0E67628C6308600FDD12C = {
 			isa = PBXGroup;
 			children = (
@@ -293,20 +289,19 @@
 		16F0E68128C6308600FDD12C /* SMSWithoutBorders-Production */ = {
 			isa = PBXGroup;
 			children = (
-				04DC2B4B2D71E07200676ED1 /* Fonts */,
-				042DAE2D2D38430300F0D370 /* Handlers */,
-				3BF1177E2C290650003D5BB6 /* Proto */,
-				3B37F27A2C1DBB1D008D5BE9 /* Modules */,
 				16EDE37A28CC936200E50393 /* SMSWithoutBorders-Production.entitlements */,
-				16EDE37928CBA1A300E50393 /* Info.plist */,
-				16F0E6B328C80BBC00FDD12C /* Commons */,
-				16F0E6AC28C6320F00FDD12C /* Views */,
-				16F0E68628C6308800FDD12C /* Assets.xcassets */,
-				16F0E68828C6308800FDD12C /* Preview Content */,
-				16EDE38328D2331C00E50393 /* Datastore.xcdatamodeld */,
-				0456964F2D551E9C00A2C369 /* Notes.txt */,
 				04D7903A2D58010000EA4859 /* static-x25519-staging.json */,
 				04C6BCAC2D80D1B400420775 /* static-x25519.json */,
+				16EDE37928CBA1A300E50393 /* Info.plist */,
+				0456964F2D551E9C00A2C369 /* Notes.txt */,
+				16F0E68628C6308800FDD12C /* Assets.xcassets */,
+				16F0E6B328C80BBC00FDD12C /* Commons */,
+				16EDE38328D2331C00E50393 /* Datastore.xcdatamodeld */,
+				042DAE2D2D38430300F0D370 /* Handlers */,
+				3B37F27A2C1DBB1D008D5BE9 /* Modules */,
+				16F0E68828C6308800FDD12C /* Preview Content */,
+				3BF1177E2C290650003D5BB6 /* Proto */,
+				16F0E6AC28C6320F00FDD12C /* Views */,
 			);
 			path = "SMSWithoutBorders-Production";
 			sourceTree = "<group>";
@@ -606,7 +601,6 @@
 				045696502D551E9C00A2C369 /* Notes.txt in Resources */,
 				04D7903C2D58010000EA4859 /* static-x25519-staging.json in Resources */,
 				16F0E68A28C6308800FDD12C /* Preview Assets.xcassets in Resources */,
-				046DBD5D2D71E45400D1C43B /* unbounded.ttf in Resources */,
 				16F0E68728C6308800FDD12C /* Assets.xcassets in Resources */,
 				3BF117A12C2B6892003D5BB6 /* Localizable.xcstrings in Resources */,
 			);
@@ -616,7 +610,6 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				046DBD5E2D71E4A000D1C43B /* unbounded.ttf in Resources */,
 				04C6BCAE2D80D1B400420775 /* static-x25519.json in Resources */,
 				045696512D551E9C00A2C369 /* Notes.txt in Resources */,
 				04D7903B2D58010000EA4859 /* static-x25519-staging.json in Resources */,
