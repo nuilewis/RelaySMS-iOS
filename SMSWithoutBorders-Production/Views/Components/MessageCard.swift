@@ -1,5 +1,5 @@
 //
-//  ThreadsComponents.swift
+//  MessageCard.swift
 //  SMSWithoutBorders-Production
 //
 //  Created by MAC on 20/01/2025.
@@ -7,7 +7,7 @@
 
 import SwiftUI
 
-struct Card: View {
+struct MessageCard: View {
     var logo: Image = Image("Logo")
     var subject: String = ""
     var toAccount: String = ""
@@ -60,7 +60,7 @@ struct Card: View {
 }
 
 #Preview {
-    Card(
+    MessageCard(
         logo: Image("Logo"),
         subject: "Hello world",
         toAccount: "sample@relaysms.me",

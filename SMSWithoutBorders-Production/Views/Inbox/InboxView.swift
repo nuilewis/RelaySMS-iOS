@@ -72,5 +72,3 @@ struct InboxView_Preview: PreviewProvider {
 
 
 
-
-

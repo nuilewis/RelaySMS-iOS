@@ -35,7 +35,7 @@ struct MessagesList: View {
         ZStack(alignment: .bottomTrailing) {
             VStack {
                 List(inboxMessages, id: \.self) { message in
-                    Card(
+                    MessageCard(
                         logo: getImageForPlatform(name: message.platformName!),
                         subject: message.subject!,
                         toAccount: message.toAccount!,

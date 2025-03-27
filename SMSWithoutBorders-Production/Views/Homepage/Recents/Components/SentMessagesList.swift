@@ -1,14 +1,13 @@
 //
-//  RecentsViewLoggedIn.swift
+//  SentMessagesList.swift
 //  SMSWithoutBorders-Production
 //
-//  Created by MAC on 17/02/2025.
+//  Created by Nui Lewis on 26/03/2025.
 //
 
 import SwiftUI
-import SwiftUICore
 
-struct SentMessages: View {
+struct SentMessagesList: View {
     @FetchRequest(sortDescriptors: [NSSortDescriptor(
         keyPath: \MessageEntity.date,
         ascending: false)]
@@ -38,7 +37,7 @@ struct SentMessages: View {
             ZStack(alignment: .bottomTrailing) {
                 VStack {
                     List(messages, id: \.id) { message in
-                        Card(
+                        MessageCard(
                             logo: getImageForPlatform(name: message.platformName!),
                             subject: message.subject!,
                             toAccount: message.toAccount!,
@@ -124,7 +123,7 @@ struct SentMessages: View {
         .first?.service_type ?? Bridges.SERVICE_NAME
     }
 
-//    
+//
     func getImageForPlatform(name: String) -> Image {
         let image = platforms.filter {
             $0.name == name
@@ -137,163 +136,7 @@ struct SentMessages: View {
     }
 }
 
-
-struct NoSentMessages: View {
-    @Binding var selectedTab: HomepageTabs
-    @Binding var platformRequestType: PlatformsRequestedType
-
-    @Binding var requestedPlatformName: String
-    @Binding var composeNewMessageRequested: Bool
-    @Binding var composeTextRequested: Bool
-    @Binding var composeMessageRequested: Bool
-    @Binding var composeEmailRequested: Bool
-
-    @State var platformIsRequested = false
-
-    var body: some View {
-        VStack {
-            Spacer()
-            Spacer()
-
-            VStack {
-                Image("5")
-                    .resizable()
-                    .aspectRatio(contentMode: .fit)
-                    .frame(width: 200, height: 200)
-                    .padding(.bottom, 20)
-                Text("Send your first message...")
-                    .font(RelayTypography.titleLarge)
-                    .multilineTextAlignment(.center)
-            }
-
-            Spacer()
-
-            VStack(spacing: 16) {
-                Button {
-//                    selectedTab = .platforms
-                    platformRequestType = .compose
-                    platformIsRequested.toggle()
-                } label: {
-                    Text("Send new message")
-                        .frame(maxWidth: .infinity)
-                }
-                .buttonStyle(.relayButton(variant: .primary))
-                .sheet(isPresented: $platformIsRequested) {
-                    PlatformsView(
-                        requestType: $platformRequestType,
-                        requestedPlatformName: $requestedPlatformName,
-                        composeNewMessageRequested: $composeNewMessageRequested,
-                        composeTextRequested: $composeTextRequested,
-                        composeMessageRequested: $composeMessageRequested,
-                        composeEmailRequested: $composeEmailRequested
-                    ) {
-                        platformIsRequested.toggle()
-                    }
-                }
-
-                Button {
-                    selectedTab = .platforms
-                    platformRequestType = .available
-                } label: {
-                    Text("Save platforms")
-                        .bold()
-                        .frame(maxWidth: .infinity)
-                }
-                .buttonStyle(.relayButton(variant: .secondary))
-
-            }
-            .padding()
-            .padding(.bottom, 32)
-        }
-    }
-}
-
-struct RecentsViewLoggedIn: View {
-    @Environment(\.dismiss) var dismiss
-    @Environment(\.managedObjectContext) var context
-    @FetchRequest(sortDescriptors: []) var messages: FetchedResults<MessageEntity>
-
-    @Binding var selectedTab: HomepageTabs
-    @Binding var platformRequestType: PlatformsRequestedType
-
-    @Binding var requestedMessage: Messages?
-    @Binding var emailIsRequested: Bool
-    @Binding var textIsRequested: Bool
-    @Binding var messageIsRequested: Bool
-
-    @Binding var composeNewMessageRequested: Bool
-    @Binding var composeTextRequested: Bool
-    @Binding var composeMessageRequested: Bool
-    @Binding var composeEmailRequested: Bool
-    @Binding var requestedPlatformName: String
-
-    var body: some View {
-        NavigationView {
-            VStack {
-                if !messages.isEmpty {
-                    SentMessages(
-                        selectedTab: $selectedTab,
-                        platformRequestType: $platformRequestType,
-                        requestedMessage: $requestedMessage,
-                        emailIsRequested: $emailIsRequested,
-                        textIsRequested: $textIsRequested,
-                        messageIsRequested: $messageIsRequested,
-                        requestedPlatformName: $requestedPlatformName,
-                        composeNewMessageRequested: $composeNewMessageRequested,
-                        composeTextRequested: $composeTextRequested,
-                        composeMessageRequested: $composeMessageRequested,
-                        composeEmailRequested: $composeEmailRequested
-                    )
-                } else {
-                    NoSentMessages(
-                        selectedTab: $selectedTab,
-                        platformRequestType: $platformRequestType,
-                        requestedPlatformName: $requestedPlatformName,
-                        composeNewMessageRequested: $composeNewMessageRequested,
-                        composeTextRequested: $composeTextRequested,
-                        composeMessageRequested: $composeMessageRequested,
-                        composeEmailRequested: $composeEmailRequested
-                    )
-                }
-            }
-            .navigationTitle("Recents")
-        }
-    }
-}
-
-//#Preview {
-//    @State var selectedTab: HomepageTabs = .recents
-//    @State var platformRequestType: PlatformsRequestedType = .available
-//    
-//    RecentsViewLoggedIn(
-//        selectedTab: $selectedTab,
-//        platformRequestType: $platformRequestType
-//    )
-//}
-
-#Preview {
-    @State var selectedTab: HomepageTabs = .recents
-    @State var platformRequestType: PlatformsRequestedType = .available
-    @State var requestedMessage: Messages? = nil
-    @State var emailIsRequested: Bool = false
-    @State var textIsRequested: Bool = false
-    @State var messageIsRequested: Bool = false
-    @State var composeNewMessagesIsRequested: Bool = false
-    @State var requestedPlatformName = "gmail"
-
-    NoSentMessages(
-        selectedTab: $selectedTab,
-        platformRequestType: $platformRequestType,
-        requestedPlatformName: $requestedPlatformName,
-        composeNewMessageRequested: $composeNewMessagesIsRequested,
-        composeTextRequested: $textIsRequested,
-        composeMessageRequested: $messageIsRequested,
-        composeEmailRequested: $emailIsRequested
-    )
-}
-
-struct SentMessages_Preview: PreviewProvider {
-
+struct SentMessagesList_Preview: PreviewProvider {
     static var previews: some View {
         @State var selectedTab: HomepageTabs = .recents
         @State var platformRequestType: PlatformsRequestedType = .available
@@ -309,7 +152,7 @@ struct SentMessages_Preview: PreviewProvider {
         @State var requestedPlatformName = "gmail"
         @State var composeNewMessagesIsRequested: Bool = false
 
-        return SentMessages(
+        return SentMessagesList(
             selectedTab: $selectedTab,
             platformRequestType: $platformRequestType,
             requestedMessage: $requestedMessage,
