@@ -10,9 +10,11 @@ import SwiftUI
 struct GatewayClientsView: View {
 
     @Environment(\.managedObjectContext) var context
-    @FetchRequest(sortDescriptors: [NSSortDescriptor(
-        key: "msisdn",
-        ascending: true)]
+    @FetchRequest(sortDescriptors: [
+        NSSortDescriptor(
+            key: "msisdn",
+            ascending: true)
+    ]
     ) var gatewayClients: FetchedResults<GatewayClientsEntity>
 
     @AppStorage(GatewayClients.DEFAULT_GATEWAY_CLIENT_MSISDN)
@@ -20,6 +22,7 @@ struct GatewayClientsView: View {
 
     @State var selectedGatewayClient: String = ""
     @State var changeDefaultGatewayClient: Bool = false
+    @State var addGatewayClient: Bool = false
 
     @State var defaultGatewayClient: GatewayClientsEntity?
 
@@ -39,23 +42,38 @@ struct GatewayClientsView: View {
                     .padding()
                 }
 
-                List(gatewayClients, id: \.self) { gatewayClient in
-                    Button(action: {
-                        selectedGatewayClient = gatewayClient.msisdn!
-                        changeDefaultGatewayClient = true
-                    }) {
-                        GatewayClientCard(selectedGatewayClient: gatewayClient, disabled: false)
-                            .padding()
-                    }
-                }
-                .confirmationDialog("Set as default gateway client?",
-                                     isPresented: $changeDefaultGatewayClient) {
-                    Button("Make default") {
-                        defaultGatewayClientMsisdn = selectedGatewayClient
-                    }
-                } message: {
-                    Text(String(localized:"Choosing a Gateway client in the same Geographical location as you helps improves the reliability of your messages being delivered", comment: "Explains that selecting a Gateway clinet int he same geographical localtiion helps improve the reliability of yout messages"))
-                }
+                Button("Add Gateway Client", systemImage: "add") {
+                    addGatewayClient = true
+                }.buttonStyle(.relayButton(variant: .secondary))
+                    .padding(.horizontal, 16).padding(
+                        .bottom, 16
+                    )
+                    .sheet(
+                        isPresented: $addGatewayClient,
+                        onDismiss: {
+                            addGatewayClient = false
+                        },
+                        content: {});
+
+                        List(gatewayClients, id: \.self) { gatewayClient in
+                            Button(action: {
+                                selectedGatewayClient = gatewayClient.msisdn!
+                                changeDefaultGatewayClient = true
+                            }) {
+                                GatewayClientCard(selectedGatewayClient: gatewayClient, disabled: false)
+                                    .padding()
+                            }
+                        }
+                        .confirmationDialog(
+                            "Set as default gateway client?",
+                            isPresented: $changeDefaultGatewayClient
+                        ) {
+                            Button("Make default") {
+                                defaultGatewayClientMsisdn = selectedGatewayClient
+                            }
+                        } message: {
+                            Text(String(localized: "Choosing a Gateway client in the same Geographical location as you helps improves the reliability of your messages being delivered", comment: "Explains that selecting a Gateway clinet int he same geographical localtiion helps improve the reliability of yout messages"))
+                        }
             }
             .navigationTitle("Countries")
         }

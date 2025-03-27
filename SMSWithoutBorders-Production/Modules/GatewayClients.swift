@@ -20,7 +20,7 @@ class GatewayClients: Codable {
     var operator_code: String
     var protocols: [String]
     var reliability: String
-    
+
     init(country: String,
          last_published_date: Int,
          msisdn: String,
@@ -36,29 +36,29 @@ class GatewayClients: Codable {
         self.reliability = reliability
         self.last_published_date = last_published_date
     }
-    
+
     private static func fetch() async throws -> [GatewayClients]{
         let (data, _) = try await URLSession.shared.data(from: URL(string: GATEWAY_CLIENT_URL)!)
         return try! JSONDecoder().decode([GatewayClients].self, from: data)
     }
-    
+
     public static func refresh(context: NSManagedObjectContext) async throws {
         do {
             let gatewayClients = try await fetch()
-            
+
             if !gatewayClients.isEmpty {
 //                try GatewayClients.clear(context: context, shouldSave: false)
-                
+
                 for defaultGatewayClient in gatewayClients {
                     let fetchRequest = GatewayClientsEntity.fetchRequest()
                     fetchRequest.predicate = NSPredicate(format: "msisdn == %@", defaultGatewayClient.msisdn)
-                    
+
                     await context.perform {
-                        
+
                         do {
                             let existingGatewayClients = try context.fetch(fetchRequest)
                             print(existingGatewayClients.count)
-                            
+
                             if let gatewayClient = existingGatewayClients.first {
                                 gatewayClient.country = defaultGatewayClient.country
                                 gatewayClient.lastPublishedDate = Int32(defaultGatewayClient.last_published_date)
@@ -80,11 +80,11 @@ class GatewayClients: Codable {
                             print(error)
                         }
                     }
-                    
+
                 }
-                
+
                 configureDefaults()
-                
+
                 if context.hasChanges {
                     do {
                         try context.save()
@@ -101,10 +101,10 @@ class GatewayClients: Codable {
             try GatewayClients.addDefaultGatewayClientsIfNeeded(context: context)
         }
     }
-    
+
     static func configureDefaults() {
         let currentDefault = UserDefaults.standard.object(forKey: GatewayClients.DEFAULT_GATEWAY_CLIENT_MSISDN) as? String ?? ""
-        
+
         if currentDefault.isEmpty {
             let defaultGatewayClients = GatewayClients.getDefaultGatewayClients()
             print("configuring default: \(defaultGatewayClients.first?.msisdn)")
@@ -113,7 +113,7 @@ class GatewayClients: Codable {
             print("Current default: \(currentDefault)")
         }
     }
-    
+
     static func clear(context: NSManagedObjectContext, shouldSave: Bool = true) throws {
         print("Clearing GatewayClients...")
         let fetchRequest = NSFetchRequest<NSFetchRequestResult>(entityName: "GatewayClientsEntity")
@@ -130,9 +130,9 @@ class GatewayClients: Codable {
             throw error // Re-throw the error after rollback
         }
     }
-    
+
     public static func getDefaultGatewayClients() -> [GatewayClients]{
-        
+
         return [
             GatewayClients(
                 country: "Nigeria",
@@ -142,7 +142,7 @@ class GatewayClients: Codable {
                 operator_code:"62130",
                 protocols:["https", "smtp", "ftp"],
                 reliability:""),
-            
+
             GatewayClients(
                 country: "Cameroon",
                 last_published_date: 0,
@@ -151,7 +151,7 @@ class GatewayClients: Codable {
                 operator_code:"62401",
                 protocols:["https", "smtp", "ftp"],
                 reliability:""),
-            
+
             GatewayClients(
                 country: "Cameroon",
                 last_published_date: 0,
@@ -162,7 +162,7 @@ class GatewayClients: Codable {
                 reliability:""),
         ]
     }
-    
+
     public static func addDefaultGatewayClientsIfNeeded(context: NSManagedObjectContext) throws {
         let defaultGatewayClients = GatewayClients.getDefaultGatewayClients()
 
@@ -193,6 +193,34 @@ class GatewayClients: Codable {
 
         do {
             print("Saving default Gateway clients (if any were added)")
+            try context.save()
+            configureDefaults()
+            print("Ended the default matter")
+        } catch {
+            print("Error saving Gateway client!: \(error)")
+            throw error // Re-throw the error
+        }
+    }
+    
+    
+    public static func addGatewayClient(context: NSManagedObjectContext, client: GatewayClients) throws {
+        
+        
+        
+            //TODO: Update this to fetch and update the client if already existing
+    
+        
+            let gatewayClientEntity = GatewayClientsEntity(context: context)
+            gatewayClientEntity.country = client.country
+            gatewayClientEntity.lastPublishedDate = Int32(client.last_published_date)
+            gatewayClientEntity.msisdn = client.msisdn
+            gatewayClientEntity.operatorName = client.operator
+            gatewayClientEntity.operatorCode = client.operator_code
+            gatewayClientEntity.protocols = client.protocols.joined(separator: ",")
+            gatewayClientEntity.reliability = client.reliability
+        
+        do {
+            print("Saving Gateway clients with msisdn: \(client.msisdn)")
             try context.save()
             configureDefaults()
             print("Ended the default matter")
