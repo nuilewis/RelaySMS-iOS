@@ -22,7 +22,7 @@ struct GatewayClientsView: View {
 
     @State var selectedGatewayClient: String = ""
     @State var changeDefaultGatewayClient: Bool = false
-    @State var addGatewayClient: Bool = false
+    @State var addGatewayClientSheetPresented: Bool = false
 
     @State var defaultGatewayClient: GatewayClientsEntity?
 
@@ -43,37 +43,39 @@ struct GatewayClientsView: View {
                 }
 
                 Button("Add Gateway Client", systemImage: "add") {
-                    addGatewayClient = true
+                    addGatewayClientSheetPresented = true
                 }.buttonStyle(.relayButton(variant: .secondary))
                     .padding(.horizontal, 16).padding(
                         .bottom, 16
                     )
                     .sheet(
-                        isPresented: $addGatewayClient,
+                        isPresented: $addGatewayClientSheetPresented,
                         onDismiss: {
-                            addGatewayClient = false
+                            addGatewayClientSheetPresented = false
                         },
-                        content: {});
+                        content: {
+                            AddEditGatewayClientForm(isPresented: $addGatewayClientSheetPresented)
+                        })
 
-                        List(gatewayClients, id: \.self) { gatewayClient in
-                            Button(action: {
-                                selectedGatewayClient = gatewayClient.msisdn!
-                                changeDefaultGatewayClient = true
-                            }) {
-                                GatewayClientCard(selectedGatewayClient: gatewayClient, disabled: false)
-                                    .padding()
-                            }
-                        }
-                        .confirmationDialog(
-                            "Set as default gateway client?",
-                            isPresented: $changeDefaultGatewayClient
-                        ) {
-                            Button("Make default") {
-                                defaultGatewayClientMsisdn = selectedGatewayClient
-                            }
-                        } message: {
-                            Text(String(localized: "Choosing a Gateway client in the same Geographical location as you helps improves the reliability of your messages being delivered", comment: "Explains that selecting a Gateway clinet int he same geographical localtiion helps improve the reliability of yout messages"))
-                        }
+                List(gatewayClients, id: \.self) { gatewayClient in
+                    Button(action: {
+                        selectedGatewayClient = gatewayClient.msisdn!
+                        changeDefaultGatewayClient = true
+                    }) {
+                        GatewayClientCard(selectedGatewayClient: gatewayClient, disabled: false)
+                            .padding()
+                    }
+                }
+                .confirmationDialog(
+                    "Set as default gateway client?",
+                    isPresented: $changeDefaultGatewayClient
+                ) {
+                    Button("Make default") {
+                        defaultGatewayClientMsisdn = selectedGatewayClient
+                    }
+                } message: {
+                    Text(String(localized: "Choosing a Gateway client in the same Geographical location as you helps improves the reliability of your messages being delivered", comment: "Explains that selecting a Gateway clinet int he same geographical localtiion helps improve the reliability of yout messages"))
+                }
             }
             .navigationTitle("Countries")
         }
