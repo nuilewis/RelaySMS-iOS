@@ -9,8 +9,8 @@ import CoreData
 import CountryPicker
 import SwiftUI
 
-struct AddEditGatewayClientForm: View {
 
+struct AddEditGatewayClientForm: View {
     //Core data context
     @Environment(\.managedObjectContext) var context
     @State private var phoneNumber: String
@@ -27,17 +27,31 @@ struct AddEditGatewayClientForm: View {
     @Binding private var isPresented: Bool
 
     init(gatewayClient: GatewayClients? = nil, isPresented: Binding<Bool>) {
-        self.phoneNumber = ""
-        self.operatorAlias = ""
         self.gatewayClient = gatewayClient
         self._isPresented = isPresented
-        isEditing = gatewayClient != nil
+        self.isEditing = (gatewayClient != nil)
+        self.phoneNumber = ""
+        self.operatorAlias = ""
 
-        if isEditing {
-            phoneNumber = gatewayClient!.msisdn
-            operatorAlias = gatewayClient!.country
+        if let client = gatewayClient {
+            // Editing Mode
+            let countryIsoCode: String = CountryUtils.getISoCode(fromFullName: gatewayClient!.country) ?? "CM"
+            _country = State(initialValue: Country(isoCode: countryIsoCode))
+            _phoneNumber = State(initialValue: CountryUtils.getLocalNumber(fullNumber: client.msisdn, isoCode: countryIsoCode) ?? "")
+            _operatorAlias = State(initialValue: client.operator)
+
+            print("INIT (Editing) : country=\(client.country), phoneNumber=\(client.msisdn), alias=\(client.operator)")
+
+        } else {
+            // Adding Mode
+            let defualtCountry = Country(isoCode: "CM")
+            _country = State(initialValue: defualtCountry)
+            _phoneNumber = State(initialValue: "")
+            _operatorAlias = State(initialValue: "")
+            print("INIT (Adding) : Defualting state")
         }
     }
+
 
     var body: some View {
         VStack {
@@ -79,8 +93,7 @@ struct AddEditGatewayClientForm: View {
 
             Button(isEditing ? "Update Gateway Client" : "Add Gateway Client", systemImage: "add") {
                 // Create the GatewayClientEntity to add
-
-                let gatewayClient: GatewayClients = GatewayClients(
+                let newClient: GatewayClients = GatewayClients(
                     country: country!.localizedName,
                     last_published_date: 0,
                     msisdn: "+\(country!.phoneCode)\(phoneNumber)",
@@ -92,29 +105,58 @@ struct AddEditGatewayClientForm: View {
 
                 do {
                     // Save the gatewayClient
-                    try GatewayClients.addGatewayClient(context: context, client: gatewayClient)
+                    if isEditing {
+                        try GatewayClients.updateGatewayClient(
+                            context: context,
+                            oldClient: gatewayClient!,
+                            newClient: newClient)
+                    } else {
+                        try GatewayClients.addGatewayClient(context: context, client: newClient)
+                    }
+
                     isSuccessful = true
                     showToast = true
                 } catch {
-                    print("Unable to add GatewayClient")
+                    if isEditing {
+                        print("Unable to update GatewayClient")
+                    } else {
+                        print("Unable to add GatewayClient")
+                    }
+
                     isSuccessful = false
                     showToast = true
                 }
             }.buttonStyle(.relayButton(variant: .primary)).alert(
                 isPresented: $showToast,
                 content: {
-                    Alert(
-                        title: Text(isSuccessful ? "Successfully added client" : "Unable to add client"),
-                        primaryButton: .default(
+                    
+                    var message: LocalizedStringKey
+                    if(isEditing){
+                        if(isSuccessful) {
+                            message =  "Successfully saved client"
+                        } else{
+                            message =  "Unable to save client"
+                        }
+                    }else {
+                        if(isSuccessful) {
+                            message =  "Successfully added client"
+                        } else{
+                            message =  "Unable to add client"
+                        }
+                    }
+                    
+                    
+                   return Alert(
+                        title: Text(message),
+                        dismissButton: .default(
                             Text("OK"),
                             action: {
                                 showToast = false
                                 isPresented = false
-                            }),
-                        secondaryButton: .destructive(Text("Nothing"))
-
+                            })
                     )
-                })
+                }
+            )
         }.padding([.leading, .trailing], 16)
     }
 }

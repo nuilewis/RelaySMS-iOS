@@ -20,7 +20,7 @@ struct GatewayClientsView: View {
     @AppStorage(GatewayClients.DEFAULT_GATEWAY_CLIENT_MSISDN)
     private var defaultGatewayClientMsisdn: String = ""
 
-    @State var selectedGatewayClient: String = ""
+    @State var selectedGatewayClientMsisdn: String = ""
     @State var changeDefaultGatewayClient: Bool = false
     @State var addGatewayClientSheetPresented: Bool = false
 
@@ -36,7 +36,7 @@ struct GatewayClientsView: View {
                             .font(.caption2)
                             .padding(.bottom, 3)
                             .foregroundColor(.secondary)
-                        GatewayClientCard(selectedGatewayClient: defaultGatewayClient!, disabled: true)
+                        GatewayClientCard(clientEntity: defaultGatewayClient!, disabled: true)
                             .padding(.top, 3)
                     }
                     .padding()
@@ -59,11 +59,17 @@ struct GatewayClientsView: View {
 
                 List(gatewayClients, id: \.self) { gatewayClient in
                     Button(action: {
-                        selectedGatewayClient = gatewayClient.msisdn!
-                        changeDefaultGatewayClient = true
+                        if let msidn = gatewayClient.msisdn {
+                            selectedGatewayClientMsisdn = msidn
+                            changeDefaultGatewayClient = true
+                        } else {
+                            print("No MSISDN found, MSISDN is nil")
+                            //TODO: Maybe show an alert or something
+                        }
                     }) {
-                        GatewayClientCard(selectedGatewayClient: gatewayClient, disabled: false)
-                            .padding()
+                        GatewayClientCard(clientEntity: gatewayClient, disabled: false)
+                        .padding()
+
                     }
                 }
                 .confirmationDialog(
@@ -71,7 +77,7 @@ struct GatewayClientsView: View {
                     isPresented: $changeDefaultGatewayClient
                 ) {
                     Button("Make default") {
-                        defaultGatewayClientMsisdn = selectedGatewayClient
+                        defaultGatewayClientMsisdn = selectedGatewayClientMsisdn
                     }
                 } message: {
                     Text(String(localized: "Choosing a Gateway client in the same Geographical location as you helps improves the reliability of your messages being delivered", comment: "Explains that selecting a Gateway clinet int he same geographical localtiion helps improve the reliability of yout messages"))
@@ -90,7 +96,10 @@ struct GatewayClientsView: View {
     }
 
     func getDefaultGatewayClient() -> GatewayClientsEntity? {
-        return gatewayClients.filter { $0.msisdn == defaultGatewayClientMsisdn }.first
+        gatewayClients.filter {
+            $0.msisdn == defaultGatewayClientMsisdn
+        }
+        .first
     }
 }
 
