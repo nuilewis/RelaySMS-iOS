@@ -204,31 +204,15 @@ class GatewayClients: Codable {
 
 
     public static func addGatewayClient(context: NSManagedObjectContext, client: GatewayClients) throws {
-        // Fetch and check if gatewaycleint already exist
-        let fetchRequest: NSFetchRequest = NSFetchRequest<GatewayClientsEntity>(entityName: "GatewayClientsEntity")
-        fetchRequest.predicate = NSPredicate(format: "msisdn == %@", client.msisdn)
-        let existingClientEntity: GatewayClientsEntity? = try context.fetch(fetchRequest).first
-
-        if existingClientEntity != nil {
-            // An existing client exist, update that
-            existingClientEntity!.country = client.country
-            existingClientEntity!.lastPublishedDate = Int32(client.last_published_date)
-            existingClientEntity!.msisdn = client.msisdn
-            existingClientEntity!.operatorName = client.operator
-            existingClientEntity!.operatorCode = client.operator_code
-            existingClientEntity!.protocols = client.protocols.joined(separator: ",")
-            existingClientEntity!.reliability = client.reliability
-        } else {
-            // Add a new instance of the client in the database
-            let gatewayClientEntity: GatewayClientsEntity = GatewayClientsEntity(context: context)
-            gatewayClientEntity.country = client.country
-            gatewayClientEntity.lastPublishedDate = Int32(client.last_published_date)
-            gatewayClientEntity.msisdn = client.msisdn
-            gatewayClientEntity.operatorName = client.operator
-            gatewayClientEntity.operatorCode = client.operator_code
-            gatewayClientEntity.protocols = client.protocols.joined(separator: ",")
-            gatewayClientEntity.reliability = client.reliability
-        }
+        // Add a new instance of the client in the database
+        let gatewayClientEntity: GatewayClientsEntity = GatewayClientsEntity(context: context)
+        gatewayClientEntity.country = client.country
+        gatewayClientEntity.lastPublishedDate = Int32(client.last_published_date)
+        gatewayClientEntity.msisdn = client.msisdn
+        gatewayClientEntity.operatorName = client.operator
+        gatewayClientEntity.operatorCode = client.operator_code
+        gatewayClientEntity.protocols = client.protocols.joined(separator: ",")
+        gatewayClientEntity.reliability = client.reliability
 
         do {
             print("Saving or Updating Gateway clients with msisdn: \(client.msisdn)")
@@ -239,5 +223,81 @@ class GatewayClients: Codable {
             print("Error saving Gateway client!: \(error)")
             throw error  // Re-throw the error
         }
+    }
+
+
+    public static func updateGatewayClient(context: NSManagedObjectContext, oldClient: GatewayClients, newClient: GatewayClients) throws {
+        // Fetch and check if gatewaycleint already exist
+        let fetchRequest: NSFetchRequest = NSFetchRequest<GatewayClientsEntity>(entityName: "GatewayClientsEntity")
+        fetchRequest.predicate = NSPredicate(format: "msisdn == %@", oldClient.msisdn)
+        let existingClientEntity: GatewayClientsEntity? = try context.fetch(fetchRequest).first
+
+        if existingClientEntity != nil {
+            print("REMOVE PRINT: Updating Gateway clients with msisdn \(oldClient.msisdn) to new \(newClient.msisdn)")
+            // An existing client exist, update that
+            existingClientEntity!.country = newClient.country
+            existingClientEntity!.lastPublishedDate = Int32(newClient.last_published_date)
+            existingClientEntity!.msisdn = newClient.msisdn
+            existingClientEntity!.operatorName = newClient.operator
+            existingClientEntity!.operatorCode = newClient.operator_code
+            existingClientEntity!.protocols = newClient.protocols.joined(separator: ",")
+            existingClientEntity!.reliability = newClient.reliability
+
+        }
+        do {
+            print("Updating Gateway clients with msisdn: \(newClient.msisdn)")
+            try context.save()
+            configureDefaults()
+            print("Ended the default matter")
+        } catch {
+            print("Error updating Gateway client!: \(error)")
+            throw error  // Re-throw the error
+        }
+    }
+
+
+    public static func deleteGatewayClient(context: NSManagedObjectContext, client: GatewayClients) throws {
+        // Fetch and check if gatewayclient already exist
+        let fetchRequest: NSFetchRequest = NSFetchRequest<GatewayClientsEntity>(entityName: "GatewayClientsEntity")
+        fetchRequest.predicate = NSPredicate(format: "msisdn == %@", client.msisdn)
+        let existingClientEntity: GatewayClientsEntity? = try context.fetch(fetchRequest).first
+
+        if existingClientEntity != nil {
+            context.delete(existingClientEntity!)
+            do {
+                print("Deleting Gateway clients with msisdn: \(client.msisdn)")
+                try context.save()
+                configureDefaults()
+                print("Ended the default matter")
+            } catch {
+                print("Error deleting Gateway client!: \(error)")
+                throw error  // Re-throw the error
+            }
+        } else {
+            throw CustomError(message: "Unable to delete Gateway client; Gateway client not found!")
+        }
+    }
+
+
+    public static func fromEntity(entity: GatewayClientsEntity) -> GatewayClients {
+        
+        var protocols: [String] = []
+        
+        if(entity.protocols != nil) {
+            if(!entity.protocols!.isEmpty){
+                protocols = entity.protocols!.split(separator: ",").makeIterator().map(String.init)
+            }
+        }
+        
+        return GatewayClients(
+            country: entity.country ?? "",
+            last_published_date: Int(entity.lastPublishedDate),
+            msisdn: entity.msisdn ?? "",
+            operator: entity.operatorName ?? "",
+            operator_code: entity.operatorCode ?? "",
+            protocols: protocols,
+            reliability: entity.reliability ?? ""
+        )
+
     }
 }
