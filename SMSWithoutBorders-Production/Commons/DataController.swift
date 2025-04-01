@@ -11,7 +11,7 @@ import CoreData
 
 class DataController: ObservableObject {
     let container = NSPersistentContainer(name: "Datastore")
-    
+
     init() {
         container.loadPersistentStores(completionHandler: { description, error in
             self.container.viewContext.automaticallyMergesChangesFromParent = true
@@ -21,7 +21,7 @@ class DataController: ObservableObject {
             }
         })
     }
-    
+
     public static func resetDatabase(context: NSManagedObjectContext) throws {
         // This deletes everything except the default Gateway Clients
         do {
