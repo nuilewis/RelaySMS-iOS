@@ -162,16 +162,26 @@ struct GatewayClientsView: View {
 
     var body: some View {
         NavigationView {
-            VStack {
+            VStack(alignment: .leading) {
                 // Display Selected Client Header
                 SelectedClientHeader(client: selectedDefaultGatewayClient)
 
                 Button("Add Gateway Client", systemImage: "plus.circle") {
                     showAddSheet = true
                 }.buttonStyle(.relayButton(variant: .secondary))
-                    .padding(.horizontal, 16).padding(
-                        .bottom, 16
-                    )
+                    .padding(.horizontal, 16)
+                    .padding(.bottom, 24)
+
+
+                Text("All Gateway Clients")
+                    .font(RelayTypography.titleSmall)
+                    .padding([.leading], 16)
+                    .padding(.bottom, 8)
+
+                Text("Long press for more options")
+                    .font(RelayTypography.bodySmall)
+                    .foregroundStyle(RelayColors.colorScheme.onSurface.opacity(0.5))
+                    .padding([.leading], 16)
 
                 GatewayClientList(
                     gatewayClients: gatewayClients,  // Pass the fetched results
@@ -329,5 +339,3 @@ struct GatewayClientsView_Previoew: PreviewProvider {
             .environment(\.managedObjectContext, container.viewContext)
     }
 }
-
-
