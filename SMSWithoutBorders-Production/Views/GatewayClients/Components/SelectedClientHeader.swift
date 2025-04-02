@@ -22,7 +22,7 @@ struct SelectedClientHeader: View {
                         canEdit: false,
                         isSelected: true  // Visually mark as selected in the header
                     )
-     
+
                 }
                 .padding([.horizontal, .top])
                 .padding(.bottom, 8)
