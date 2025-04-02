@@ -8,7 +8,6 @@
 import SwiftUI
 
 struct GatewayClientsView: View {
-
     @Environment(\.managedObjectContext) var context
     @FetchRequest(sortDescriptors: [
         NSSortDescriptor(
@@ -23,6 +22,8 @@ struct GatewayClientsView: View {
     @State var selectedGatewayClientMsisdn: String = ""
     @State var changeDefaultGatewayClient: Bool = false
     @State var addGatewayClientSheetPresented: Bool = false
+    @State var showDeletedNotification: Bool = false
+    @State var isSuccessful: Bool = false
 
     @State var defaultGatewayClient: GatewayClientsEntity?
 
@@ -59,17 +60,20 @@ struct GatewayClientsView: View {
 
                 List(gatewayClients, id: \.self) { gatewayClient in
                     Button(action: {
-                        if let msidn = gatewayClient.msisdn {
-                            selectedGatewayClientMsisdn = msidn
+                        if let msisdn = gatewayClient.msisdn {
+                            selectedGatewayClientMsisdn = msisdn
                             changeDefaultGatewayClient = true
                         } else {
                             print("No MSISDN found, MSISDN is nil")
                             //TODO: Maybe show an alert or something
                         }
+
+
+
+
                     }) {
                         GatewayClientCard(clientEntity: gatewayClient, disabled: false)
-                        .padding()
-
+                            .padding()
                     }
                 }
                 .confirmationDialog(
