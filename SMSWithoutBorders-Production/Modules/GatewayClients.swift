@@ -226,33 +226,43 @@ class GatewayClients: Codable {
     }
 
 
-    public static func updateGatewayClient(context: NSManagedObjectContext, oldClient: GatewayClients, newClient: GatewayClients) throws {
+    public static func updateGatewayClient(context: NSManagedObjectContext, oldClientMsisdn: String, newClient: GatewayClients) throws {
         // Fetch and check if gatewaycleint already exist
-        let fetchRequest: NSFetchRequest = NSFetchRequest<GatewayClientsEntity>(entityName: "GatewayClientsEntity")
-        fetchRequest.predicate = NSPredicate(format: "msisdn == %@", oldClient.msisdn)
-        let existingClientEntity: GatewayClientsEntity? = try context.fetch(fetchRequest).first
+        let fetchRequest = GatewayClientsEntity.fetchRequest()
+        fetchRequest.predicate = NSPredicate(format: "msisdn == %@", oldClientMsisdn)
 
-        if existingClientEntity != nil {
-            print("REMOVE PRINT: Updating Gateway clients with msisdn \(oldClient.msisdn) to new \(newClient.msisdn)")
-            // An existing client exist, update that
-            existingClientEntity!.country = newClient.country
-            existingClientEntity!.lastPublishedDate = Int32(newClient.last_published_date)
-            existingClientEntity!.msisdn = newClient.msisdn
-            existingClientEntity!.operatorName = newClient.operator
-            existingClientEntity!.operatorCode = newClient.operator_code
-            existingClientEntity!.protocols = newClient.protocols.joined(separator: ",")
-            existingClientEntity!.reliability = newClient.reliability
+        let results = try context.fetch(fetchRequest)
 
+        guard let existingClientEntity = results.first else {
+            print("Error updating: Client with MSISDN \(oldClientMsisdn) not found")
+            throw CustomError(message: "Client to update not found")
         }
-        do {
-            print("Updating Gateway clients with msisdn: \(newClient.msisdn)")
-            try context.save()
-            configureDefaults()
-            print("Ended the default matter")
-        } catch {
-            print("Error updating Gateway client!: \(error)")
-            throw error  // Re-throw the error
+
+        // An existing client exist, update that
+        existingClientEntity.country = newClient.country
+        existingClientEntity.lastPublishedDate = Int32(newClient.last_published_date)
+        existingClientEntity.msisdn = newClient.msisdn
+        existingClientEntity.operatorName = newClient.operator
+        existingClientEntity.operatorCode = newClient.operator_code
+        existingClientEntity.protocols = newClient.protocols.joined(separator: ",")
+        existingClientEntity.reliability = newClient.reliability
+
+
+        if context.hasChanges {
+            do {
+                print("Updating Gateway clients with msisdn: \(newClient.msisdn)")
+                try context.save()
+                print("Successfully saved updated client: \(newClient.msisdn)")
+                configureDefaults()
+            } catch {
+                print("Error updating Gateway client!: \(error)")
+                context.rollback()
+                throw error  // Re-throw the error
+            }
+        } else {
+            print("No changes detected in context for client \(oldClientMsisdn). Skipping save.")
         }
+
     }
 
 
@@ -280,15 +290,15 @@ class GatewayClients: Codable {
 
 
     public static func fromEntity(entity: GatewayClientsEntity) -> GatewayClients {
-        
+
         var protocols: [String] = []
-        
-        if(entity.protocols != nil) {
-            if(!entity.protocols!.isEmpty){
+
+        if entity.protocols != nil {
+            if !entity.protocols!.isEmpty {
                 protocols = entity.protocols!.split(separator: ",").makeIterator().map(String.init)
             }
         }
-        
+
         return GatewayClients(
             country: entity.country ?? "",
             last_published_date: Int(entity.lastPublishedDate),
@@ -299,5 +309,19 @@ class GatewayClients: Codable {
             reliability: entity.reliability ?? ""
         )
 
+    }
+}
+
+
+extension GatewayClientsEntity {
+    func isDefaultClient() -> Bool {
+        guard let msisdn = self.msisdn else { return false }
+        // Check against hardcoded Twilio number
+        if msisdn == "+15024439537" {
+            return true
+        }
+
+        let defaultList = GatewayClients.getDefaultGatewayClients()
+        return defaultList.contains { $0.msisdn == msisdn }
     }
 }
