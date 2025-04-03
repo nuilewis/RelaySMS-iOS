@@ -234,6 +234,98 @@
         }
       }
     },
+    "Add Client" : {
+      "localizations" : {
+        "ar" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "إضافة عميل"
+          }
+        },
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Klient hinzufügen"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Añadir Cliente"
+          }
+        },
+        "fa" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "افزودن مشتری"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ajouter un client"
+          }
+        },
+        "sw" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ongeza Mteja"
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Müşteri Ekle"
+          }
+        }
+      }
+    },
+    "Add Gateway Client" : {
+      "localizations" : {
+        "ar" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : " إضافة Gateway Client"
+          }
+        },
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Gateway Client hinzufügen"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Añadir Gateway Client"
+          }
+        },
+        "fa" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "افزودن Gateway Client"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ajouter Gateway Client"
+          }
+        },
+        "sw" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ongeza Gateway Client"
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Gateway Client Ekle"
+          }
+        }
+      }
+    },
     "Adding accounts to your RelaySMS account enables you use them to make post using SMS messaging.\n\nPosting is currently supported." : {
       "localizations" : {
         "ar" : {
@@ -368,6 +460,52 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "RelaySMS hesabınıza numara eklemek, SMS mesajlaşma kullanarak mesaj göndermenizi sağlar.\n\nTelegram mesajlaşma şu anda desteklenmektedir."
+          }
+        }
+      }
+    },
+    "All Gateway Clients" : {
+      "localizations" : {
+        "ar" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "جميع Gateway Clients"
+          }
+        },
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Alle Gateway Clients"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Todos los Gateway Clients"
+          }
+        },
+        "fa" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "همه Gateway Clients"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Tous les Gateway Clients"
+          }
+        },
+        "sw" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Gateway Clients Wote"
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Tüm Gateway Clients"
           }
         }
       }
@@ -599,6 +737,98 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Numaranın size ait olduğunu doğrulamak için telefon numaranıza bir SMS gönderilecektir."
+          }
+        }
+      }
+    },
+    "Another Placeholder" : {
+      "localizations" : {
+        "ar" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "عنصر نائب آخر"
+          }
+        },
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Weiterer Platzhalter"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Otro Marcador de Posición"
+          }
+        },
+        "fa" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "مکان نگهدار دیگر"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Autre espace réservé"
+          }
+        },
+        "sw" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Kishika Nafasi Kingine"
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Başka Yer Tutucu"
+          }
+        }
+      }
+    },
+    "Are you sure you want to delete the gateway client %@? This cannot be undone." : {
+      "localizations" : {
+        "ar" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "هل أنت متأكد من رغبتك في حذف عميل البوابة %@؟ لا يمكن التراجع عن هذا الإجراء."
+          }
+        },
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Sind Sie sicher, dass Sie den Gateway-Klienten %@ löschen möchten? Dies kann nicht rückgängig gemacht werden."
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "¿Está seguro de que desea eliminar el cliente de pasarela %@? Esta acción no se puede deshacer."
+          }
+        },
+        "fa" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "آیا مطمئن هستید که می‌خواهید مشتری دروازه %@ را حذف کنید؟ این عمل قابل بازگشت نیست."
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Êtes-vous sûr de vouloir supprimer le client passerelle %@ ? Cette action est irréversible."
+          }
+        },
+        "sw" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Je, una uhakika unataka kufuta mteja wa lango %@? Hatua hii haiwezi kutendwa kinyume."
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ağ geçidi müşterisi %@'i silmek istediğinizden emin misiniz? Bu işlem geri alınamaz."
           }
         }
       }
@@ -1757,7 +1987,50 @@
       }
     },
     "Decrypt Message" : {
-
+      "localizations" : {
+        "ar" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "فك تشفير الرسالة"
+          }
+        },
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Nachricht entschlüsseln"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Descifrar Mensaje"
+          }
+        },
+        "fa" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "رمزگشایی پیام"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Déchiffrer le message"
+          }
+        },
+        "sw" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Fungua Ujumbe"
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Mesajı Şifrele"
+          }
+        }
+      }
     },
     "default_app_scheme" : {
       "extractionState" : "manual",
@@ -1782,6 +2055,98 @@
         }
       },
       "shouldTranslate" : false
+    },
+    "Delete" : {
+      "localizations" : {
+        "ar" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "حذف"
+          }
+        },
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Löschen"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Eliminar"
+          }
+        },
+        "fa" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "حذف"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Supprimer"
+          }
+        },
+        "sw" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Futa"
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Sil"
+          }
+        }
+      }
+    },
+    "Delete %@" : {
+      "localizations" : {
+        "ar" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : " حذف %@"
+          }
+        },
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%@ löschen"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Eliminar %@"
+          }
+        },
+        "fa" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "حذف %@"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Supprimer %@"
+          }
+        },
+        "sw" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Futa %@"
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%@ Sil"
+          }
+        }
+      }
     },
     "Delete Account" : {
       "localizations" : {
@@ -1829,6 +2194,52 @@
         }
       }
     },
+    "Delete Client?" : {
+      "localizations" : {
+        "ar" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "حذف العميل؟"
+          }
+        },
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Klient löschen?"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "¿Eliminar Cliente?"
+          }
+        },
+        "fa" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "حذف مشتری؟"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Supprimer le client ?"
+          }
+        },
+        "sw" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Futa Mteja?"
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Müşteri Silinsin mi?"
+          }
+        }
+      }
+    },
     "Don't have an account?" : {
       "localizations" : {
         "ar" : {
@@ -1871,6 +2282,144 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Hesabınız yok mu?"
+          }
+        }
+      }
+    },
+    "Edit" : {
+      "localizations" : {
+        "ar" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "تعديل"
+          }
+        },
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Bearbeiten"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Editar"
+          }
+        },
+        "fa" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "ویرایش"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Modifier"
+          }
+        },
+        "sw" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Hariri"
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Düzenle"
+          }
+        }
+      }
+    },
+    "Edit Client" : {
+      "localizations" : {
+        "ar" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "تعديل العميل"
+          }
+        },
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Klient bearbeiten"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Editar Cliente"
+          }
+        },
+        "fa" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "ویرایش مشتری"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Modifier le client"
+          }
+        },
+        "sw" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Hariri Mteja"
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Müşteriyi Düzenle"
+          }
+        }
+      }
+    },
+    "Edit Gateway Client" : {
+      "localizations" : {
+        "ar" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "تعديل Gateway Client"
+          }
+        },
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Gateway Client bearbeiten"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Editar Gateway Client"
+          }
+        },
+        "fa" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "ویرایش Gateway Client"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Modifier Gateway Client"
+          }
+        },
+        "sw" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Hariri Gateway Client"
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Gateway Client Düzenle"
           }
         }
       }
@@ -2197,6 +2746,52 @@
         }
       }
     },
+    "Focus First Field" : {
+      "localizations" : {
+        "ar" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "التركيز على الحقل الأول"
+          }
+        },
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Erstes Feld fokussieren"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Enfocar Primer Campo"
+          }
+        },
+        "fa" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "تمرکز روی فیلد اول"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Mettre le focus sur le premier champ"
+          }
+        },
+        "sw" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Lenga Uga wa Kwanza"
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "İlk Alana Odaklan"
+          }
+        }
+      }
+    },
     "Forgot password?" : {
       "localizations" : {
         "ar" : {
@@ -2377,54 +2972,6 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Kimden: %@"
-          }
-        }
-      }
-    },
-    "Gateway Clients" : {
-      "comment" : "Noun",
-      "extractionState" : "stale",
-      "localizations" : {
-        "ar" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Gateway Clients"
-          }
-        },
-        "de" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Gateway-Clients"
-          }
-        },
-        "es" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Clientes de Gateway"
-          }
-        },
-        "fa" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Gateway Clients"
-          }
-        },
-        "fr" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Clients Gateway"
-          }
-        },
-        "sw" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Gateway Clients"
-          }
-        },
-        "tr" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Gateway Clients"
           }
         }
       }
@@ -3261,6 +3808,52 @@
         }
       }
     },
+    "Long press for more options" : {
+      "localizations" : {
+        "ar" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "اضغط مطولاً لمزيد من الخيارات"
+          }
+        },
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Lang drücken für weitere"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Mantén pulsado para más opciones"
+          }
+        },
+        "fa" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "برای گزینه‌های بیشتر طولانی فشار دهید"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Appui long pour plus d'options"
+          }
+        },
+        "sw" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Bonyeza kwa muda kwa chaguo zaidi"
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Daha fazla seçenek için uzun basın"
+          }
+        }
+      }
+    },
     "Make default" : {
       "localizations" : {
         "ar" : {
@@ -3445,53 +4038,6 @@
         }
       }
     },
-    "Message with RelaySMS accout" : {
-      "extractionState" : "stale",
-      "localizations" : {
-        "ar" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "رسالة باستخدام حساب RelaySMS"
-          }
-        },
-        "de" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Nachricht mit RelaySMS-Konto"
-          }
-        },
-        "es" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Mensaje con cuenta RelaySMS"
-          }
-        },
-        "fa" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "پیام با حساب RelaySMS\n"
-          }
-        },
-        "fr" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Message avec compte RelaySMS"
-          }
-        },
-        "sw" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Ujumbe na akaunti ya RelaySMS"
-          }
-        },
-        "tr" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "RelaySMS hesabıyla mesaj"
-          }
-        }
-      }
-    },
     "Messaging with your personal accounts" : {
       "localizations" : {
         "ar" : {
@@ -3580,6 +4126,52 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "RelaySMS hesabınızla mesajlaşma"
+          }
+        }
+      }
+    },
+    "No default client selected." : {
+      "localizations" : {
+        "ar" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "لم يتم تحديد عميل افتراضي."
+          }
+        },
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Kein Standard-Klient ausgewählt."
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "No se ha seleccionado cliente predeterminado."
+          }
+        },
+        "fa" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "هیچ مشتری پیش‌فرضی انتخاب نشده است."
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Aucun client par défaut sélectionné."
+          }
+        },
+        "sw" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Hakuna mteja chaguo-msingi aliyechaguliwa."
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Varsayılan müşteri seçilmedi."
           }
         }
       }
@@ -3722,49 +4314,48 @@
         }
       }
     },
-    "No recent messages" : {
-      "extractionState" : "stale",
+    "Not Focused:" : {
       "localizations" : {
         "ar" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "لا توجد رسائل حديثة"
+            "value" : "غير مركز:"
           }
         },
         "de" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Keine neuen Nachrichten"
+            "value" : "Nicht fokussiert:"
           }
         },
         "es" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "No hay mensajes recientes"
+            "value" : "No Enfocado:"
           }
         },
         "fa" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "بدون پیام‌های اخیر"
+            "value" : "بدون تمرکز:"
           }
         },
         "fr" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Pas de messages récents"
+            "value" : "Non focalisé :"
           }
         },
         "sw" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Hakuna ujumbe wa hivi karibuni"
+            "value" : "Haijalenga:"
           }
         },
         "tr" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Son mesaj yok"
+            "value" : "Odaklanılmamış:"
           }
         }
       }
@@ -3815,8 +4406,97 @@
         }
       }
     },
+    "OK" : {
+      "localizations" : {
+        "ar" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "موافق"
+          }
+        },
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "OK"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Aceptar"
+          }
+        },
+        "fa" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "تأیید"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "OK"
+          }
+        },
+        "sw" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Sawa"
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Tamam"
+          }
+        }
+      }
+    },
     "Okay!" : {
-
+      "localizations" : {
+        "ar" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "حسناً!"
+          }
+        },
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "In Ordnung!"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "¡Vale!"
+          }
+        },
+        "fa" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "باشه!"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "D'accord !"
+          }
+        },
+        "sw" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Sawa!"
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Tamam!"
+          }
+        }
+      }
     },
     "Open Settings" : {
       "localizations" : {
@@ -3860,6 +4540,52 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Uygulama Dilini Değiştir"
+          }
+        }
+      }
+    },
+    "Operator Alias" : {
+      "localizations" : {
+        "ar" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "الاسم المستعار للمشغل"
+          }
+        },
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Operator-Alias"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Alias del Operador"
+          }
+        },
+        "fa" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "نام مستعار اپراتور"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Alias de l'opérateur"
+          }
+        },
+        "sw" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Jina la Bandia la Opereta"
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Operatör Takma Adı"
           }
         }
       }
@@ -4142,6 +4868,52 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Telefon Numarası"
+          }
+        }
+      }
+    },
+    "Placeholder" : {
+      "localizations" : {
+        "ar" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "عنصر نائب"
+          }
+        },
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Platzhalter"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Marcador de Posición"
+          }
+        },
+        "fa" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "مکان نگهدار"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Espace réservé"
+          }
+        },
+        "sw" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Kishika Nafasi"
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Yer Tutucu"
           }
         }
       }
@@ -4925,6 +5697,52 @@
         }
       }
     },
+    "Sample Text" : {
+      "localizations" : {
+        "ar" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "نص عينة"
+          }
+        },
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Beispieltext"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Texto de Ejemplo"
+          }
+        },
+        "fa" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "متن نمونه"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Exemple de texte"
+          }
+        },
+        "sw" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Sampuli ya Maandishi"
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Örnek Metin"
+          }
+        }
+      }
+    },
     "Save more platforms..." : {
       "localizations" : {
         "ar" : {
@@ -5478,6 +6296,52 @@
         }
       }
     },
+    "Set as Default" : {
+      "localizations" : {
+        "ar" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "تعيين كافتراضي"
+          }
+        },
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Als Standard festlegen"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Establecer como Predeterminado"
+          }
+        },
+        "fa" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "تنظیم به عنوان پیش‌فرض"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Définir par défaut"
+          }
+        },
+        "sw" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Weka kama Chaguo-msingi"
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Varsayılan Olarak Ayarla"
+          }
+        }
+      }
+    },
     "Set as default gateway client?" : {
       "localizations" : {
         "ar" : {
@@ -5662,49 +6526,48 @@
         }
       }
     },
-    "Sign Up" : {
-      "extractionState" : "stale",
+    "Simulated Focused State:" : {
       "localizations" : {
         "ar" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "تسجيل"
+            "value" : "حالة التركيز المحاكاة:"
           }
         },
         "de" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Anmelden"
+            "value" : "Simulierter fokussierter Zustand:"
           }
         },
         "es" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Registrarse"
+            "value" : "Estado Enfocado Simulado:"
           }
         },
         "fa" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "ثبت نام"
+            "value" : "وضعیت تمرکز شبیه‌سازی شده:"
           }
         },
         "fr" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "S'inscrire"
+            "value" : "État de focus simulé :"
           }
         },
         "sw" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Jisajili"
+            "value" : "Hali ya Umakinikaji Iliyoigizwa:"
           }
         },
         "tr" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Kaydol"
+            "value" : "Simüle Edilmiş Odaklanma Durumu:"
           }
         }
       }
@@ -5847,6 +6710,190 @@
         }
       }
     },
+    "Success" : {
+      "localizations" : {
+        "ar" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "نجاح"
+          }
+        },
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Erfolg"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Éxito"
+          }
+        },
+        "fa" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "موفقیت"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Succès"
+          }
+        },
+        "sw" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Mafanikio"
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Başarılı"
+          }
+        }
+      }
+    },
+    "Successfully added client" : {
+      "localizations" : {
+        "ar" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "تمت إضافة العميل بنجاح"
+          }
+        },
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Klient erfolgreich hinzugefügt"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Cliente añadido con éxito"
+          }
+        },
+        "fa" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "مشتری با موفقیت اضافه شد"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Client ajouté avec succès"
+          }
+        },
+        "sw" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Mteja ameongezwa kwa mafanikio"
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Müşteri başarıyla eklendi"
+          }
+        }
+      }
+    },
+    "Successfully saved client" : {
+      "localizations" : {
+        "ar" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "تم حفظ العميل بنجاح"
+          }
+        },
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Klient erfolgreich gespeichert"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Cliente guardado con éxito"
+          }
+        },
+        "fa" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "مشتری با موفقیت ذخیره شد"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Client enregistré avec succès"
+          }
+        },
+        "sw" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Mteja amehifadhiwa kwa mafanikio"
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Müşteri başarıyla kaydedildi"
+          }
+        }
+      }
+    },
+    "Tap to Focus:" : {
+      "localizations" : {
+        "ar" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "انقر للتركيز:"
+          }
+        },
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Tippen zum Fokussieren:"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Tocar para Enfocar:"
+          }
+        },
+        "fa" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "ضربه برای تمرکز:"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Appuyer pour focaliser :"
+          }
+        },
+        "sw" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Gusa ili Kulenga:"
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Odaklanmak için dokun:"
+          }
+        }
+      }
+    },
     "terms and conditions" : {
       "localizations" : {
         "ar" : {
@@ -5893,6 +6940,52 @@
         }
       }
     },
+    "TextField Style Preview" : {
+      "localizations" : {
+        "ar" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "معاينة نمط حقل النص"
+          }
+        },
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Vorschau des Textfeld-Stils"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Vista Previa del Estilo del Campo de Texto"
+          }
+        },
+        "fa" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "پیش‌نمایش سبک فیلد متن"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Aperçu du style du champ de texte"
+          }
+        },
+        "sw" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Hakiki ya Mtindo wa Uga wa Maandishi"
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Metin Alanı Stil Önizlemesi"
+          }
+        }
+      }
+    },
     "These features requires you to have an internet connection" : {
       "localizations" : {
         "ar" : {
@@ -5935,100 +7028,6 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Bu özellikler internet bağlantınızın olmasını gerektirir"
-          }
-        }
-      }
-    },
-    "This is a brief summary of what happens" : {
-      "extractionState" : "stale",
-      "localizations" : {
-        "ar" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "هذا ملخص موجز لما يحدث"
-          }
-        },
-        "de" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Dies ist eine kurze Zusammenfassung dessen, was passiert"
-          }
-        },
-        "es" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Este es un breve resumen de lo que sucede"
-          }
-        },
-        "fa" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "این خلاصه کوتاهی از آنچه اتفاق می‌افتد است"
-          }
-        },
-        "fr" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Voici un bref résumé de ce qui se passe"
-          }
-        },
-        "sw" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Hii ni muhtasari mfupi wa kinachotokea"
-          }
-        },
-        "tr" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Bu, olanların kısa bir özetidir"
-          }
-        }
-      }
-    },
-    "This is precise information for what happens" : {
-      "extractionState" : "stale",
-      "localizations" : {
-        "ar" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "هذه معلومات دقيقة لما يحدث"
-          }
-        },
-        "de" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Dies ist präzise Information darüber, was passiert"
-          }
-        },
-        "es" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Esta es información precisa de lo que sucede"
-          }
-        },
-        "fa" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "این اطلاعات دقیقی درباره آنچه اتفاق می‌افتد است"
-          }
-        },
-        "fr" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Voici des informations précises sur ce qui se passe"
-          }
-        },
-        "sw" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Hii ni habari kamili ya kinachotokea"
-          }
-        },
-        "tr" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "u, olanlar hakkında kesin bilgidir"
           }
         }
       }
@@ -6122,6 +7121,144 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Mesajı DeviceID'nizi değil telefon numaranızı kullanarak yayınlamak için bunu açın.\n\nBu, SMS mesajının boyutunu azaltmaya yardımcı olabilir"
+          }
+        }
+      }
+    },
+    "Unable to add client" : {
+      "localizations" : {
+        "ar" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "تعذر إضافة العميل"
+          }
+        },
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Klient konnte nicht hinzugefügt werden"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "No se puede añadir el cliente"
+          }
+        },
+        "fa" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "عدم امکان افزودن مشتری"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Impossible d'ajouter le client"
+          }
+        },
+        "sw" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Imeshindwa kuongeza mteja"
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Müşteri eklenemiyor"
+          }
+        }
+      }
+    },
+    "Unable to save client" : {
+      "localizations" : {
+        "ar" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "تعذر حفظ العميل"
+          }
+        },
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : " Klient konnte nicht gespeichert werden"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "No se puede guardar el cliente"
+          }
+        },
+        "fa" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "عدم امکان ذخیره مشتری"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Impossible d'enregistrer le client"
+          }
+        },
+        "sw" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Imeshindwa kuhifadhi mteja"
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Müşteri kaydedilemiyor"
+          }
+        }
+      }
+    },
+    "Update Gateway Client" : {
+      "localizations" : {
+        "ar" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "تحديث Gateway Client"
+          }
+        },
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Gateway Client aktualisieren"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Actualizar Gateway Client"
+          }
+        },
+        "fa" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "به‌روزرسانی Gateway Client"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Mettre à jour Gateway Client"
+          }
+        },
+        "sw" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Sasisha Gateway Client"
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Gateway Client Güncelle"
           }
         }
       }
@@ -6393,6 +7530,52 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Telefon numaranızı doğrulayın"
+          }
+        }
+      }
+    },
+    "Visually Focused" : {
+      "localizations" : {
+        "ar" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "مركز بصرياً"
+          }
+        },
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Visuell fokussiert"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Visualmente Enfocado"
+          }
+        },
+        "fa" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "تمرکز بصری"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Visuellement focalisé"
+          }
+        },
+        "sw" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Kimacho Imelenga"
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Görsel Olarak Odaklanmış"
           }
         }
       }
