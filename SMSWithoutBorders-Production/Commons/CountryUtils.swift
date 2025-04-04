@@ -24,9 +24,23 @@ struct CountryUtils {
 
         return foundCountry?.isoCode
     }
+    
+    static func getCountryNameFromPhoneCode(phoneCode: String) -> String? {
+        let allCountries: [Country] = CountryManager.shared.getCountries()
+        
+        let foundCountry = allCountries.first {
+            country in
+        
+            let countryCode = country.phoneCode
+            print("country code is : \(countryCode)")
+            return countryCode == phoneCode.replacingOccurrences(of: "+", with: "")
+        }
+        
+        return foundCountry?.localizedName
+    }
+
 
     static func getLocalNumber(fullNumber: String, isoCode: String) -> String? {
-        
         var phoneCode: String = "+" + Country.init(isoCode: isoCode).phoneCode
         var phoneNumber: String = fullNumber
         phoneNumber = phoneNumber.replacingOccurrences(of: phoneCode, with: "")

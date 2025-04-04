@@ -35,8 +35,9 @@ class ContactPickerServiceDelegate: NSObject, ObservableObject, CNContactPickerD
     var pickedNumber: String?
     @Published var internationPhoneNumber: String?
     @Published var localPhoneNumber: String?
-    @Published var isoCode: String?
+    @Published var phoneCode: String?
     @Published var rawValue: String?
+    @Published var name: String?
 
     func contactPicker(_ picker: CNContactPickerViewController, didSelect contact: CNContact) {
         // Clear the pickedNumber initially
@@ -45,11 +46,17 @@ class ContactPickerServiceDelegate: NSObject, ObservableObject, CNContactPickerD
         // Check if the contact has selected phone numbers
         if let phoneNumber = contact.phoneNumbers.first?.value.stringValue {
             handlePhoneNumber(phoneNumber)
+            
+            self.name = contact.givenName + " " + contact.familyName
         }
     }
 
     func contactPicker(_ picker: CNContactPickerViewController, didSelect contactProperty: CNContactProperty) {
-
+        
+        // Get the name
+        let contact: CNContact = contactProperty.contact
+            self.name = contact.givenName + " " + contact.familyName
+        
         if contactProperty.key == CNContactPhoneNumbersKey,
            let phoneNumber = contactProperty.value as? CNPhoneNumber {
 
@@ -63,29 +70,21 @@ class ContactPickerServiceDelegate: NSObject, ObservableObject, CNContactPickerD
     }
 
     private func handlePhoneNumber(_ phoneNumber: String) {
-//        let phoneNumberWithoutSpace = phoneNumber.replacingOccurrences(of: " ", with: "")
-//
-//        // Check if the phone number starts with "+"
-//        let sanitizedPhoneNumber = phoneNumberWithoutSpace.hasPrefix("+") ? String(phoneNumberWithoutSpace.dropFirst()) : phoneNumberWithoutSpace
-        
-        // Remove isocode from phone number
-
-        
         let localNumber = phoneNumber.starts(with: "+") ? phoneNumber.split(separator: " ").dropFirst().joined(separator: " ") : phoneNumber
-        var cleanedNumber = localNumber.replacingOccurrences(of: "(", with: "").replacingOccurrences(of: ")", with: "").replacingOccurrences(of: "-", with: "").replacingOccurrences(of: " ", with: "") // This should remove these characters " "(", ")", "-", and " "
-        let isoCode: String = phoneNumber.starts(with: "+") ? String(phoneNumber.split(separator: " ").first ?? "") : ""
+        let cleanedNumber = localNumber.replacingOccurrences(of: "(", with: "").replacingOccurrences(of: ")", with: "").replacingOccurrences(of: "-", with: "").replacingOccurrences(of: " ", with: "") // This should remove these characters '(' , ')' , '-' , and ' '
+        let phoneCode: String = phoneNumber.starts(with: "+") ? String(phoneNumber.split(separator: " ").first ?? "") : ""
 
         DispatchQueue.main.async {
-            //self.localPhoneNumber = sanitizedPhoneNumber
-            self.isoCode = isoCode
+            self.phoneCode = phoneCode
             self.localPhoneNumber = cleanedNumber
-            self.internationPhoneNumber = isoCode.isEmpty ? nil : "\(isoCode)\(cleanedNumber)"
+            self.internationPhoneNumber = phoneCode.isEmpty ? nil : "\(phoneCode)\(cleanedNumber)"
             self.rawValue = phoneNumber
 
-            print("international Phone Number: \(self.internationPhoneNumber ?? "nil") ")
-            print("Local Phone Number: \(self.localPhoneNumber ?? "nil") ")
-            print("isoCode: \(self.isoCode ?? "nil") ")
-            print("rawValue: \(self.rawValue ?? "nil") ")
+            print("international Phone Number: \(self.internationPhoneNumber ?? "N/A") ")
+            print("Local Phone Number: \(self.localPhoneNumber ?? "N/A") ")
+            print("phoneCode: \(self.phoneCode ?? "N/A") ")
+            print("rawValue: \(self.rawValue ?? "N/A") ")
+            print("name: \(self.name ?? "N/A")")
         }
     }
 
