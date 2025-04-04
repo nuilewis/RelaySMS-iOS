@@ -171,11 +171,11 @@ struct SignupSheetView: View {
                         Rectangle().frame(height: 1).foregroundColor(.secondary)
                             .padding(.bottom, 20)
                         
-                        SecureField("Password", text: $password)
+                        PasswordField( placeholder: "Password", text: $password)
                         Rectangle().frame(height: 1).foregroundColor(.secondary)
                             .padding(.bottom, 20)
                         
-                        SecureField("Re-enter password", text: $rePassword)
+                        PasswordField(placeholder: "Re-enter password", text: $rePassword)
                         Group {
                             Rectangle().frame(height: 1).foregroundColor(.secondary)
                             if passwordsNotMatch {

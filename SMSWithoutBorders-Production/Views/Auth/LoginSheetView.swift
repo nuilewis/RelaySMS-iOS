@@ -134,9 +134,8 @@ struct LoginSheetView: View {
                         .padding(.top, 25)
                         .font(.subheadline)
                         .frame(maxWidth: .infinity, alignment: .trailing)
-                        
-                        SecureField("Password", text: $password)
-                            .padding(.bottom, 10)
+                    
+                        PasswordField(text: $password)
                         Rectangle().frame(height: 1).foregroundColor(.secondary)
                     }
                     .padding()
@@ -243,3 +242,8 @@ struct LoginSheetView_Preview: PreviewProvider {
         )
     }
 }
+
+
+
+
+
