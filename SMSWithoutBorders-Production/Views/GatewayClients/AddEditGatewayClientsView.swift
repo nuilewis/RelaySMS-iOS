@@ -73,9 +73,9 @@ struct AddEditGatewayClientView: View {
 
 
     var body: some View {
-        VStack {
-            Text(isEditing ? "Edit Gateway Client" : "Add Gateway Client").font(RelayTypography.titleLarge)
+        VStack(alignment: .leading) {
             Spacer().frame(height: 32)
+            Text("Phone Number").font(RelayTypography.bodyMedium)
             HStack {
                 // Country Picker Button
                 Button {
@@ -96,9 +96,6 @@ struct AddEditGatewayClientView: View {
                     "Phone Number",
                     text: $phoneNumber
                 )
-                .onSubmit {
-                    //TODO: Validate Phone Number
-                }
                 .keyboardType(.numberPad)
                 .textInputAutocapitalization(.never)
                 .disableAutocorrection(true)
@@ -136,17 +133,16 @@ struct AddEditGatewayClientView: View {
 
                 }.onReceive(contactPickerService.delegate.$name) { name in
                     if let contactName = name {
-                        operatorAlias = name ?? operatorAlias
+                        operatorAlias = contactName
                     }
                 }
 
             }
             Spacer().frame(height: 16)
+            Text("Alias").font(RelayTypography.bodyMedium)
             TextField(
                 "Operator Alias", text: $operatorAlias
             )
-            .onSubmit {
-            }
             .textInputAutocapitalization(.never)
             .disableAutocorrection(true)
             .textFieldStyle(RelayTextFieldStyle())

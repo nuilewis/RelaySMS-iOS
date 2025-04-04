@@ -27,14 +27,12 @@ struct GatewayClientsView: View {
 
 
     // State for Alerts/Sheets
-    @State private var showEditSheet = false
+    @State private var showAddEditClientView = false
     @State private var showDeleteConfirm = false
     @State private var showDefaultClientChangeConfirm = false
     @State private var alertTitle = ""
     @State private var alertMessage = ""
-    @State private var showAddSheet = false
     @State private var showResultAlert = false
-
     @State private var listVersion = UUID()
 
 
@@ -49,11 +47,24 @@ struct GatewayClientsView: View {
                 // Display Selected Client Header
                 SelectedClientHeader(client: selectedDefaultGatewayClient)
 
-                Button("Add Gateway Client", systemImage: "plus.circle") {
-                    showAddSheet = true
-                }.buttonStyle(.relayButton(variant: .secondary))
-                    .padding(.horizontal, 16)
-                    .padding(.bottom, 24)
+                NavigationLink(
+                    "Add Gateway Client",
+                    destination: AddEditGatewayClientView(
+                        gatewayClient: clientToEdit != nil ? GatewayClients.fromEntity(entity: clientToEdit!) : nil,
+                        defaultMsisdnStorage: $defaultGatewayClientMsisdn,
+                        onDismissed: {
+                            listVersion = UUID()
+                            showAddEditClientView = false
+                            clientToEdit = nil
+                        }
+                    ).onDisappear{
+                        listVersion = UUID()
+                        showAddEditClientView = false
+                        clientToEdit = nil
+                    },
+                    isActive: $showAddEditClientView
+
+                ).buttonStyle(.relayButton(variant: .secondary)).padding([.leading, .trailing, .bottom], 16)
 
 
                 Text("All Gateway Clients")
@@ -77,7 +88,7 @@ struct GatewayClientsView: View {
                     },
                     onRequestEdit: { client in  // Closure implementations
                         self.clientToEdit = client
-                        self.showEditSheet = true
+                        self.showAddEditClientView = true
                     },
                     onRequestDelete: { client in  // Closure implementations
                         self.clientToDelete = client
@@ -89,25 +100,6 @@ struct GatewayClientsView: View {
                 ).id(listVersion)
 
             }.navigationTitle("Countries")
-                .sheet(isPresented: $showAddSheet) {
-                    AddEditGatewayClientForm(
-                        isPresented: $showAddSheet,
-                        defaultMsisdnStorage: $defaultGatewayClientMsisdn
-                    ).environment(\.managedObjectContext, context)  // Endusre context is passed
-                }
-                .sheet(
-                    item: $clientToEdit,
-                    onDismiss: {
-                        print("Edit sheet dismissed, updating list veriosn")
-                        listVersion = UUID()
-                    }
-                ) { client in
-                    AddEditGatewayClientForm(
-                        gatewayClient: GatewayClients.fromEntity(entity: client),
-                        isPresented: $showEditSheet,
-                        defaultMsisdnStorage: $defaultGatewayClientMsisdn
-                    ).environment(\.managedObjectContext, context)  // Endusre context is passed
-                }
                 .confirmationDialog("Delete Client?", isPresented: $showDeleteConfirm, presenting: clientToDelete) {
                     client in
                     Button("Delete \(client.msisdn ?? "Client")", role: .destructive) {
