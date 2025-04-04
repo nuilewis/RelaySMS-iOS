@@ -50,7 +50,7 @@ struct PhoneNumberCodeEntryView: View {
                 )
             
             if havePassword {
-                SecureField("Enter password", text: $password)
+                PasswordField(placeholder: "Enter password", text: $password)
                     .padding()
                     .controlSize(.large)
                     .overlay(
