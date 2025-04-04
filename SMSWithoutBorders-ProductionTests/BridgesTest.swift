@@ -15,15 +15,15 @@ import CryptoKit
 
 
 public class BridgesTest: XCTestCase {
-    
+
     func testReadStaticKeys() async throws {
         let keys = Bridges.getStaticKeys()
         XCTAssertEqual(255, keys!.count)
     }
-    
+
     func testBridges() async throws {
         let context = DataController().container.viewContext
-        
+
         try Vault.resetKeystore(context: context)
         Bridges.reset()
 
@@ -32,7 +32,7 @@ public class BridgesTest: XCTestCase {
         var bcc = ""
         var subject = "Test email"
         var body = "Hello world"
-        
+
         var (cipherText, clientPublicKey) = try Bridges.compose(
             to: to,
             cc: cc,
@@ -47,12 +47,12 @@ public class BridgesTest: XCTestCase {
             cipherText: cipherText,
             clientPublicKey: clientPublicKey!
         )
-        
+
         print("Executing first stage... auth + payload")
         var responseCode = try await BridgesTest.executePayload(phoneNumber: "+237123456789", payload: payload!)
         XCTAssertEqual(responseCode, 200)
         print("- First stage complete")
-        
+
         (cipherText, clientPublicKey) = try Bridges.compose(
             to: to,
             cc: cc,
@@ -67,12 +67,12 @@ public class BridgesTest: XCTestCase {
             cipherText: cipherText,
             clientPublicKey: clientPublicKey!
         )
-        
+
         print("Executing second stage... auth + payload")
         responseCode = try await BridgesTest.executePayload(phoneNumber: "+237123456789", payload: payload!)
         XCTAssertEqual(responseCode, 200)
         print("- Second stage complete")
-        
+
         (cipherText, clientPublicKey) = try Bridges.compose(
             to: to,
             cc: cc,
@@ -87,7 +87,7 @@ public class BridgesTest: XCTestCase {
         XCTAssertEqual(responseCode1, 200)
 
     }
-    
+
 //    func testBridgesPlatforms() async throws {
 //        (cipherText, clientPublicKey) = try Bridges.compose(
 //            to: to,
@@ -102,7 +102,7 @@ public class BridgesTest: XCTestCase {
 //        let responseCode1 = try await executePayload(payload: payload!)
 //        XCTAssertEqual(responseCode1, 200)
 //    }
-    
+
     func testBridgeDecryption() async throws {
         let context = DataController().container.viewContext
 
@@ -113,12 +113,12 @@ public class BridgesTest: XCTestCase {
         )
         print(text)
     }
-    
+
     func testBridgeDecryptionFormatting() throws {
         var text = "Dev SMSWithoutBorders - dev at relaysms.me <dev_at_relaysms_me_sduzxjiklr@simplelogin.co>:::Re Test email:Hello world back at you"
-        
+
         var splitText = text.split(separator: ":", omittingEmptySubsequences: false)
-        
+
 //        let format = Bridges.formatMessageAfterDecryption(
 //            lenAliasAddress: <#Int#>,
 //            lenSender: <#Int#>,
@@ -135,10 +135,10 @@ public class BridgesTest: XCTestCase {
 //        XCTAssertEqual(format.subject, "Re Test email")
 //        XCTAssertEqual(format.body, "Hello world back at you")
     }
-    
+
     static func executePayload(phoneNumber: String, payload: String) async throws -> Int? {
         guard let url = URL(string: "https://gatewayserver.staging.smswithoutborders.com/v3/publish") else { return 0 }
-        
+
         print(payload)
         let _requestBody = ["address": phoneNumber, "text": payload]
         let requestBody = try JSONSerialization.data(withJSONObject: _requestBody)
@@ -147,12 +147,12 @@ public class BridgesTest: XCTestCase {
         request.httpBody = requestBody
         request.setValue("application/json", forHTTPHeaderField: "Content-Type")
         let (_data, response) = try await URLSession.shared.data(for: request)
-        
+
         if let json = try JSONSerialization.jsonObject(with: _data, options: []) as? [String: Any] {
             print(json)
         }
         let httpResponse = response as? HTTPURLResponse
         return httpResponse?.statusCode
     }
-    
+
 }
