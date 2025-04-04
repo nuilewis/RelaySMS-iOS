@@ -1,19 +1,25 @@
 //
-//  AddEditGatewayClientForm.swift
+//  AddEditGatewayClientsView.swift
 //  SMSWithoutBorders-Production
 //
-//  Created by Nui Lewis on 27/03/2025.
+//  Created by Nui Lewis on 03/04/2025.
 //
 
-import CoreData
+import Contacts
+import ContactsUI
 import CountryPicker
 import SwiftUI
 
-struct AddEditGatewayClientForm: View {
+enum FormFieldFocus {
+    case phoneNumber
+    case alias
+}
+
+
+struct AddEditGatewayClientView: View {
     //Core data context
     @Environment(\.managedObjectContext) var context
     @Environment(\.dismiss) var dismiss
-    @Binding private var isPresented: Bool
     @State private var phoneNumber: String
     @State private var operatorAlias: String
     @State var gatewayClient: GatewayClients?
@@ -24,25 +30,30 @@ struct AddEditGatewayClientForm: View {
 
 
     @State private var showCountryPicker: Bool = false
-    @State private var showToast: Bool = false
+    @State private var showAlert: Bool = false
     @State private var isSuccessful: Bool = false
+    @State private var alertMessage: String = ""
+    @State private var alertTitle: String = ""
 
 
     @Binding var defaultMsisdnStorage: String
+    @State private var contactPickerService = ContactPickerService()
+    @FocusState private var focus: FormFieldFocus?
+    let onDismiss: () -> Void
 
-
-    init(gatewayClient: GatewayClients? = nil, isPresented: Binding<Bool>, defaultMsisdnStorage: Binding<String>) {
-
+    init(gatewayClient: GatewayClients? = nil, defaultMsisdnStorage: Binding<String>, onDismissed: @escaping () -> Void) {
         _gatewayClient = State(initialValue: gatewayClient)
         self._defaultMsisdnStorage = defaultMsisdnStorage
-        self._isPresented = isPresented
         self._isEditing = State(initialValue: (gatewayClient != nil))
         self.phoneNumber = ""
         self.operatorAlias = ""
+    
+        self.onDismiss = onDismissed
 
         if let client = gatewayClient {
+            print("edit mode client.operator alisa: \(client.operator)")
             // Editing Mode
-            let countryIsoCode: String = CountryUtils.getISoCode(fromFullName: gatewayClient!.country) ?? "CM"
+            let countryIsoCode: String = CountryUtils.getISoCode(fromFullName: client.country) ?? "CM"
             _country = State(initialValue: Country(isoCode: countryIsoCode))
             _phoneNumber = State(initialValue: CountryUtils.getLocalNumber(fullNumber: client.msisdn, isoCode: countryIsoCode) ?? "")
             _operatorAlias = State(initialValue: client.operator)
@@ -66,6 +77,7 @@ struct AddEditGatewayClientForm: View {
             Text(isEditing ? "Edit Gateway Client" : "Add Gateway Client").font(RelayTypography.titleLarge)
             Spacer().frame(height: 32)
             HStack {
+                // Country Picker Button
                 Button {
                     showCountryPicker = true
                 } label: {
@@ -73,33 +85,88 @@ struct AddEditGatewayClientForm: View {
                     Text(flag.getFlag() + "+" + (country!.phoneCode))
                         .foregroundColor(RelayColors.colorScheme.onSurface)
                         .padding(.vertical, 16)
-                        .padding(.horizontal, 16)
+                        .padding(.horizontal, 8)
                 }.sheet(isPresented: $showCountryPicker) {
                     CountryPicker(
                         country: $country,
                         selectedCountryCodeText: $selectedCountryCodeText)
                 }.background(RelayColors.colorScheme.surfaceContainer)
                     .clipShape(RoundedRectangle(cornerRadius: 12, style: .continuous))
-                TextField("Phone Number", text: $phoneNumber)
-                    .onSubmit {
-                        //TODO: Validate Phone Number
-                    }
-                    .keyboardType(.numberPad)
-                    .textInputAutocapitalization(.never)
-                    .disableAutocorrection(true)
-                    .textFieldStyle(RelayTextFieldStyle())
-            }
-
-            Spacer().frame(height: 16)
-            TextField("Operator Alias", text: $operatorAlias)
+                TextField(
+                    "Phone Number",
+                    text: $phoneNumber
+                )
                 .onSubmit {
+                    //TODO: Validate Phone Number
                 }
+                .keyboardType(.numberPad)
                 .textInputAutocapitalization(.never)
                 .disableAutocorrection(true)
                 .textFieldStyle(RelayTextFieldStyle())
+                .focused($focus, equals: .phoneNumber)
+                .onAppear {
+                    focus = FormFieldFocus.phoneNumber
+                }.onSubmit {
+                    focus = FormFieldFocus.alias
+                }
+
+                // Contact Picker Button
+                Button {
+                    contactPickerService.openContactPicker()
+                } label: {
+                    Image(systemName: "person.crop.circle.badge.plus")
+                }.onReceive(contactPickerService.delegate.$localPhoneNumber) { phoneNum in
+                    // Sets the phone number from the selected phone number
+                    if let number = phoneNum {
+                        phoneNumber = number
+                    }
+                }.onReceive(contactPickerService.delegate.$phoneCode) { phoneCode in
+                    print("selected phone code: \(phoneCode ?? "N/A")")
+                    
+                    // Sets the country of the selected phone number if available
+                    if let code = phoneCode {
+                        let countryName: String?  = CountryUtils.getCountryNameFromPhoneCode(phoneCode: code)
+                        print("countryName: \(countryName ?? "N/A")")
+                        
+                        if let name = countryName {
+                            let isoCode = CountryUtils.getISoCode(fromFullName: name)
+                            country = Country.init(isoCode: isoCode!)
+                        }
+                    }
+
+                }.onReceive(contactPickerService.delegate.$name) { name in
+                    if let contactName = name {
+                        operatorAlias = name ?? operatorAlias
+                    }
+                }
+
+            }
+            Spacer().frame(height: 16)
+            TextField(
+                "Operator Alias", text: $operatorAlias
+            )
+            .onSubmit {
+            }
+            .textInputAutocapitalization(.never)
+            .disableAutocorrection(true)
+            .textFieldStyle(RelayTextFieldStyle())
+            .focused($focus, equals: .alias)
+
             Spacer().frame(height: 32)
+            Spacer()
 
             Button(isEditing ? "Update Gateway Client" : "Add Gateway Client", systemImage: isEditing ? "pencil" : "plus") {
+                
+                // Validate Information
+                if phoneNumber.isEmpty {
+                    showAlert = true
+                    alertTitle = "Error"
+                    alertMessage = "Please input a phone number."
+                    isSuccessful = false
+                    return
+                }
+                
+                
                 // Create the GatewayClientEntity to add
                 let newClient: GatewayClients = GatewayClients(
                     country: country!.localizedName,
@@ -125,66 +192,63 @@ struct AddEditGatewayClientForm: View {
                             print("Default client MSISDN changed from \(oldMsisdn) to \(newMsisdn). Updating AppStorage.")
                             self.defaultMsisdnStorage = newMsisdn
                         }
+                        
+                        // Successfully updated the client
+                        isSuccessful = true
+                        alertTitle = "Success"
+                        alertMessage = "Successfully saved client"
+             
                     } else {
                         try GatewayClients.addGatewayClient(context: context, client: newClient)
+                        
+                        // Successfully added the client
+                        isSuccessful = true
+                        alertTitle = "Success"
+                        alertMessage = "Successfully added client"
                     }
-
-                    isSuccessful = true
-                    showToast = true
+                    showAlert = true
                 } catch {
+                    // Error Occureed
                     if isEditing {
-                        print("Unable to update GatewayClient")
+                        isSuccessful = false
+                        alertTitle = "Error"
+                        alertMessage = "Unable to update Gateway Client"
+                        print("Unable to update Gateway Client")
                     } else {
-                        print("Unable to add GatewayClient")
+                        print("Unable to add Gateway Client")
+                        isSuccessful = false
+                        alertTitle = "Error"
+                        alertMessage = "Unable to add Gateway Client"
                     }
-
-                    isSuccessful = false
-                    showToast = true
+                    showAlert = true
                 }
             }.buttonStyle(.relayButton(variant: .primary))
+            Spacer().frame(height: 64)
+
         }.padding([.leading, .trailing], 16)
-            .navigationTitle(isEditing ? "Edit Client" : "Add Client")
-            .navigationBarTitleDisplayMode(.inline)
-            .toolbar {
-                ToolbarItem(placement: .navigationBarLeading) {
-                    Button("Cancel") {
-                        isPresented = false
-                        dismiss()
-                    }
-                }
-            }.alert(
-                isPresented: $showToast,
+            .navigationTitle(isEditing ? "Edit Gateway Client" : "Add Gateway Client")
+
+            .alert(
+                isPresented: $showAlert,
                 content: {
-
                     let dismissButton: Alert.Button = .default(Text("OK")) {
-                        showToast = false
+                        showAlert = false
                         if isSuccessful {
-                            isPresented = false
                             dismiss()
+                            onDismiss()
                         }
                     }
-
-                    var message: LocalizedStringKey
-                    if isEditing {
-                        if isSuccessful {
-                            message = "Successfully saved client"
-                        } else {
-                            message = "Unable to save client"
-                        }
-                    } else {
-                        if isSuccessful {
-                            message = "Successfully added client"
-                        } else {
-                            message = "Unable to add client"
-                        }
-                    }
-
                     return Alert(
-                        title: Text(isSuccessful ? "Success" : "Error"),
-                        message: Text(message),
+                        title: Text(alertTitle),
+                        message: Text(alertMessage),
                         dismissButton: dismissButton
                     )
                 }
             )
+
+
     }
+
+
+
 }
