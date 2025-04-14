@@ -8,7 +8,7 @@
 import Foundation
 
 
-class CSecurity {
+struct CSecurity {
      enum Exceptions: Error {
         case DuplicateKeys
         case FailedToStoreItem
@@ -25,7 +25,8 @@ class CSecurity {
         var query = self.query
         query[kSecValueData as String] = sharedKey.data(using: .utf8)
         query[kSecAttrAccount as String] = sharedKeyTagLable
-        
+        query[kSecAttrAccessible as String] = kSecAttrAccessibleAfterFirstUnlockThisDeviceOnly
+
         let status = SecItemAdd(query as CFDictionary, nil)
         
         guard status == errSecSuccess else {
@@ -48,7 +49,9 @@ class CSecurity {
         var query: [String: Any] = [
             kSecClass as String: kSecClassGenericPassword,
             kSecValueData as String: data,
-            kSecAttrAccount as String: keystoreAlias]
+            kSecAttrAccount as String: keystoreAlias,
+            kSecAttrAccessible as String: kSecAttrAccessibleAfterFirstUnlockThisDeviceOnly // <- Crucial!
+        ]
             
         let status = SecItemAdd(query as CFDictionary, nil)
         

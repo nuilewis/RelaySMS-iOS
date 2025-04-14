@@ -12,9 +12,11 @@ import CoreData
 import CryptoKit
 import SwiftUI
 import CryptoSwift
+import SwobDoubleRatchet
+import Fernet
 
 
-class Vault {
+struct Vault {
     
     public static var VAULT_LONG_LIVED_TOKEN = "COM.AFKANERD.RELAYSMS.VAULT_LONG_LIVED_TOKEN"
     public static var VAULT_PHONE_NUMBER = "COM.AFKANERD.RELAYSMS.VAULT_PHONE_NUMBER"
@@ -44,40 +46,83 @@ class Vault {
         channel = GRPCHandler.getChannelVault()
         let logger = Logger(label: "gRPC", factory: StreamLogHandler.standardOutput(label:))
         callOptions = CallOptions.init(logger: logger)
-        vaultEntityStub = Vault_V1_EntityNIOClient.init(channel: channel!,
-                                                            defaultCallOptions: callOptions!)
+        vaultEntityStub = Vault_V1_EntityNIOClient.init(
+            channel: channel!,
+            defaultCallOptions: callOptions!
+        )
     }
     
-    func createEntity(phoneNumber: String,
-                       countryCode: String, 
-                       password: String, 
-                       clientPublishPubKey: String,
-                       clientDeviceIdPubKey: String,
-                       ownershipResponse: String? = nil) throws -> Vault_V1_CreateEntityResponse {
+    func createEntity(
+        context: NSManagedObjectContext,
+        phoneNumber: String,
+        countryCode: String,
+        password: String,
+        ownershipResponse: String? = nil
+    ) throws -> Vault_V1_CreateEntityResponse {
+        let clientDeviceIDPrivateKey = try SecurityCurve25519.generateKeyPair()
+        let clientDeviceIDPubKey = clientDeviceIDPrivateKey.publicKey.rawRepresentation.base64EncodedString()
+        
+        let clientPublishPrivateKey = try SecurityCurve25519.generateKeyPair()
+        let clientPublishPubKey = clientPublishPrivateKey.publicKey.rawRepresentation.base64EncodedString()
+
         let entityCreationRequest: Vault_V1_CreateEntityRequest = .with {
             $0.countryCode = countryCode
             $0.phoneNumber = phoneNumber
             $0.password = password
             $0.clientPublishPubKey = clientPublishPubKey
-            $0.clientDeviceIDPubKey = clientDeviceIdPubKey
+            $0.clientDeviceIDPubKey = clientDeviceIDPubKey
             if(ownershipResponse != nil && !ownershipResponse!.isEmpty) {
                 $0.ownershipProofResponse = ownershipResponse!
+                
+                UserDefaults.standard.set(
+                    clientPublishPrivateKey.publicKey.rawRepresentation.bytes,
+                    forKey: Bridges.CLIENT_PUBLIC_KEY_KEYSTOREALIAS
+                )
             }
         }
         
         let call = vaultEntityStub!.createEntity(entityCreationRequest)
-        let response: Vault_V1_CreateEntityResponse
+        var response: Vault_V1_CreateEntityResponse
 
         do {
             response = try call.response.wait()
             let status = try call.status.wait()
             
+            #if DEBUG
             print("status code - raw value: \(status.code.rawValue)")
+            print("response: \(response)")
             print("status code - description: \(status.code.description)")
             print("status code - isOk: \(status.isOk)")
+            #endif
             
             if(!status.isOk) {
                 throw Exceptions.requestNotOK(status: status)
+            }
+            
+            if(!response.requiresOwnershipProof) {
+                UserDefaults.standard.set(
+                    [UInt8](Data(base64Encoded: response.serverPublishPubKey)!),
+                    forKey: Publisher.PUBLISHER_SERVER_PUBLIC_KEY
+                )
+                
+                #if DEBUG
+                print("Peer publish: \(response.serverPublishPubKey) : \(response.serverPublishPubKey.count)")
+                print("Peer pubkey: \(response.serverDeviceIDPubKey) : \(response.serverDeviceIDPubKey.count)")
+                #endif
+                try Vault.derivceStoreLLT(
+                    lltEncoded: response.longLivedToken,
+                    phoneNumber: phoneNumber,
+                    clientDeviceIDPrivateKey: clientDeviceIDPrivateKey,
+                    peerPublicKey: try Curve25519.KeyAgreement.PublicKey(
+                        rawRepresentation: [UInt8](Data(base64Encoded: response.serverDeviceIDPubKey)!))
+                )
+                
+                try Vault.derivceStorePublishSharedSecret(
+                    context: context,
+                    clientPublishPrivateKey: clientPublishPrivateKey,
+                    peerPublishPublicKey: try Curve25519.KeyAgreement.PublicKey(
+                        rawRepresentation: [UInt8](Data(base64Encoded: response.serverPublishPubKey)!))
+                )
             }
         } catch {
             print("Some error came back: \(error)")
@@ -86,12 +131,18 @@ class Vault {
         return response
     }
     
-    func authenticateEntity(phoneNumber: String,
-                            password: String,
-                            clientPublishPubKey: String,
-                             clientDeviceIDPubKey: String,
-                             ownershipResponse: String? = nil)
-    throws -> Vault_V1_AuthenticateEntityResponse {
+    func authenticateEntity(
+        context: NSManagedObjectContext,
+        phoneNumber: String,
+        password: String,
+        ownershipResponse: String? = nil
+    ) throws -> Vault_V1_AuthenticateEntityResponse {
+        let clientDeviceIDPrivateKey = try SecurityCurve25519.generateKeyPair()
+        let clientDeviceIDPubKey = clientDeviceIDPrivateKey.publicKey.rawRepresentation.base64EncodedString()
+        
+        let clientPublishPrivateKey = try SecurityCurve25519.generateKeyPair()
+        let clientPublishPubKey = clientPublishPrivateKey.publicKey.rawRepresentation.base64EncodedString()
+        
         let authenticateEntityRequest: Vault_V1_AuthenticateEntityRequest = .with {
             $0.phoneNumber = phoneNumber
             $0.password = password
@@ -99,6 +150,11 @@ class Vault {
             $0.clientDeviceIDPubKey = clientDeviceIDPubKey
             if(ownershipResponse != nil) {
                 $0.ownershipProofResponse = ownershipResponse!
+                
+                UserDefaults.standard.set(
+                    clientPublishPrivateKey.publicKey.rawRepresentation.bytes,
+                    forKey: Bridges.CLIENT_PUBLIC_KEY_KEYSTOREALIAS
+                )
             }
         }
         
@@ -114,6 +170,30 @@ class Vault {
             
             if(!status.isOk) {
                 throw Exceptions.requestNotOK(status: status)
+            }
+            
+            if(!response.requiresOwnershipProof) {
+                print("\nHere lies the Ad: \(response.serverPublishPubKey)\n")
+
+                UserDefaults.standard.set(
+                    [UInt8](Data(base64Encoded: response.serverPublishPubKey)!),
+                    forKey: Publisher.PUBLISHER_SERVER_PUBLIC_KEY
+                )
+                
+                try Vault.derivceStoreLLT(
+                    lltEncoded: response.longLivedToken,
+                    phoneNumber: phoneNumber,
+                    clientDeviceIDPrivateKey: clientDeviceIDPrivateKey,
+                    peerPublicKey: try Curve25519.KeyAgreement.PublicKey(
+                        rawRepresentation: [UInt8](Data(base64Encoded: response.serverDeviceIDPubKey)!))
+                )
+                
+                try Vault.derivceStorePublishSharedSecret(
+                    context: context,
+                    clientPublishPrivateKey: clientPublishPrivateKey,
+                    peerPublishPublicKey: try Curve25519.KeyAgreement.PublicKey(
+                        rawRepresentation: [UInt8](Data(base64Encoded: response.serverPublishPubKey)!))
+                )
             }
         } catch {
             print("Some error came back: \(error)")
@@ -151,18 +231,30 @@ class Vault {
         return response
     }
     
-    func recoverPassword(phoneNumber: String, 
-                         newPassword: String,
-                         clientPublishPubKey: String,
-                         clientDeviceIdPubKey: String,
-                         ownershipResponse: String? = nil) throws -> Vault_V1_ResetPasswordResponse {
+    func recoverPassword(
+        context: NSManagedObjectContext,
+        phoneNumber: String,
+        newPassword: String,
+        ownershipResponse: String? = nil
+    ) throws -> Vault_V1_ResetPasswordResponse {
+        let clientDeviceIDPrivateKey = try SecurityCurve25519.generateKeyPair()
+        let clientDeviceIDPubKey = clientDeviceIDPrivateKey.publicKey.rawRepresentation.base64EncodedString()
+        
+        let clientPublishPrivateKey = try SecurityCurve25519.generateKeyPair()
+        let clientPublishPubKey = clientPublishPrivateKey.publicKey.rawRepresentation.base64EncodedString()
+        
         let recoverPasswordRequest: Vault_V1_ResetPasswordRequest = .with {
             $0.phoneNumber = phoneNumber
             $0.newPassword = newPassword
             $0.clientPublishPubKey = clientPublishPubKey
-            $0.clientDeviceIDPubKey = clientDeviceIdPubKey
+            $0.clientDeviceIDPubKey = clientDeviceIDPubKey
             if(ownershipResponse != nil) {
                 $0.ownershipProofResponse = ownershipResponse!
+                
+                UserDefaults.standard.set(
+                    clientPublishPrivateKey.publicKey.rawRepresentation.bytes,
+                    forKey: Bridges.CLIENT_PUBLIC_KEY_KEYSTOREALIAS
+                )
             }
         }
         
@@ -179,6 +271,28 @@ class Vault {
             if(!status.isOk) {
                 throw Exceptions.requestNotOK(status: status)
             }
+            
+            if(!response.requiresOwnershipProof) {
+                UserDefaults.standard.set(
+                    [UInt8](Data(base64Encoded: response.serverPublishPubKey)!),
+                    forKey: Publisher.PUBLISHER_SERVER_PUBLIC_KEY
+                )
+                
+                try Vault.derivceStoreLLT(
+                    lltEncoded: response.longLivedToken,
+                    phoneNumber: phoneNumber,
+                    clientDeviceIDPrivateKey: clientDeviceIDPrivateKey,
+                    peerPublicKey: try Curve25519.KeyAgreement.PublicKey(
+                        rawRepresentation: [UInt8](Data(base64Encoded: response.serverDeviceIDPubKey)!))
+                )
+                
+                try Vault.derivceStorePublishSharedSecret(
+                    context: context,
+                    clientPublishPrivateKey: clientPublishPrivateKey,
+                    peerPublishPublicKey: try Curve25519.KeyAgreement.PublicKey(
+                        rawRepresentation: [UInt8](Data(base64Encoded: response.serverPublishPubKey)!))
+                )
+            }
         } catch {
             print("Some error came back: \(error)")
             throw error
@@ -186,7 +300,7 @@ class Vault {
         return response
     }
     
-    func deleteEntity(longLiveToken: String) throws -> Vault_V1_DeleteEntityResponse {
+    private func deleteEntity(context: NSManagedObjectContext, longLiveToken: String) throws -> Vault_V1_DeleteEntityResponse {
         let deleteEntityRequest: Vault_V1_DeleteEntityRequest = .with {
             $0.longLivedToken = longLiveToken
         }
@@ -205,8 +319,12 @@ class Vault {
                 if status.code.rawValue == 16 {
                     throw Exceptions.unauthenticatedLLT(status: status)
                 }
+                print(status)
                 throw Exceptions.requestNotOK(status: status)
             }
+            
+            try Vault.resetKeystore(context: context)
+            
         } catch {
             print("Some error came back: \(error)")
             throw error
@@ -214,21 +332,40 @@ class Vault {
         return response
     }
     
-    public static func completeDeleteEntity(longLiveToken: String,
-                                            storedTokenEntities: FetchedResults<StoredPlatformsEntity>,
-                                            platforms: FetchedResults<PlatformsEntity>) throws {
+    public static func completeDeleteEntity(
+        context: NSManagedObjectContext,
+        longLiveToken: String,
+        storedTokenEntities: FetchedResults<StoredPlatformsEntity>,
+        platforms: FetchedResults<PlatformsEntity>
+    ) throws {
         let vault = Vault()
         
         do {
             let publisher = Publisher()
             for storedTokenEntity in storedTokenEntities {
+                print("[+] Revoking \(storedTokenEntity.name!)")
                 try publisher.revokePlatform(
                     llt: longLiveToken,
                     platform: storedTokenEntity.name!,
                     account: storedTokenEntity.account!,
-                    protocolType: getProtocolTypeForPlatform(storedPlatform: storedTokenEntity, platforms: platforms))
+                    protocolType: Publisher.getProtocolTypeForPlatform(
+                        storedPlatform: storedTokenEntity,
+                        platforms: platforms
+                    )
+                )
             }
-            try vault.deleteEntity(longLiveToken: longLiveToken)
+            try vault.deleteEntity(context: context, longLiveToken: longLiveToken)
+        } catch {
+            throw error
+        }
+    }
+    
+    public static func getPublisherSharedSecret() throws -> [UInt8]? {
+        do {
+            let sk = try CSecurity.findInKeyChain(keystoreAlias: Publisher.PUBLISHER_SHARED_KEY)
+            return [UInt8](Data(sk))
+        } catch CSecurity.Exceptions.FailedToFetchStoredItem {
+            return nil
         } catch {
             throw error
         }
@@ -236,8 +373,7 @@ class Vault {
     
     public static func getLongLivedToken() throws -> String {
         do {
-            let llt = try CSecurity.findInKeyChain(keystoreAlias:
-                                                    Vault.VAULT_LONG_LIVED_TOKEN)
+            let llt = try CSecurity.findInKeyChain(keystoreAlias: Vault.VAULT_LONG_LIVED_TOKEN)
             return String(data: llt, encoding: .utf8)!
         } catch CSecurity.Exceptions.FailedToFetchStoredItem {
             return ""
@@ -246,12 +382,22 @@ class Vault {
         }
     }
     
-    public static func resetKeystore() {
+    public static func resetKeystore(context: NSManagedObjectContext) throws {
         CSecurity.deletePasswordFromKeychain(keystoreAlias: Vault.VAULT_LONG_LIVED_TOKEN)
         CSecurity.deletePasswordFromKeychain(keystoreAlias: Publisher.PUBLISHER_SHARED_KEY)
         
+        try resetStates(context: context)
+        
+        let onboardingCompleted = UserDefaults.standard.bool(forKey: OnboardingView.ONBOARDING_COMPLETED)
+        let defaultGatewayClient = UserDefaults.standard.string(forKey: GatewayClients.DEFAULT_GATEWAY_CLIENT_MSISDN) as? String ?? ""
+
         if let appDomain = Bundle.main.bundleIdentifier {
             UserDefaults.standard.removePersistentDomain(forName: appDomain)
+        }
+        
+        UserDefaults.standard.set(onboardingCompleted, forKey: OnboardingView.ONBOARDING_COMPLETED)
+        if !defaultGatewayClient.isEmpty {
+            UserDefaults.standard.set(defaultGatewayClient, forKey: GatewayClients.DEFAULT_GATEWAY_CLIENT_MSISDN)
         }
         print("[important] keystore reset done...")
     }
@@ -277,22 +423,27 @@ class Vault {
         let vault = Vault()
         do {
             let storedTokens = try vault.listStoredEntityToken(longLiveToken: llt)
+            try Vault.clear(context: context, shouldSave: false)
             for storedToken in storedTokens.storedTokens {
                 let storedPlatformEntity = StoredPlatformsEntity(context: context)
                 storedPlatformEntity.name = storedToken.platform
                 storedPlatformEntity.account = storedToken.accountIdentifier
-                storedPlatformEntity.id = Vault.deriveUniqueKey(platformName: storedToken.platform,
-                                                                accountIdentifier: storedToken.accountIdentifier)
-                print("[+] stored: \(storedPlatformEntity.name)")
-                do {
-                    try context.save()
-                } catch {
-                    print("Failed to stored platform: \(error)")
-                }
+                storedPlatformEntity.id = Vault.deriveUniqueKey(
+                    platformName: storedToken.platform,
+                    accountIdentifier: storedToken.accountIdentifier
+                )
             }
+            
+            DispatchQueue.main.async {
+                do {
+                   try context.save()
+               } catch {
+                   print("Failed to refresh entities: \(error)")
+               }
+           }
         } catch Exceptions.unauthenticatedLLT(let status){
             print("Should delete invalid llt: \(status.message)")
-            Vault.resetKeystore()
+            try Vault.resetKeystore(context: context)
             try DataController.resetDatabase(context: context)
             return false
         } catch {
@@ -302,7 +453,40 @@ class Vault {
         return true
     }
     
-    public static func getDeviceID(derivedKey: [UInt8], phoneNumber: String, publicKey: [UInt8]) throws -> [UInt8] {
+    static func clear(context: NSManagedObjectContext, shouldSave: Bool = true) throws {
+        print("Clearing platforms...")
+        let fetchRequest = NSFetchRequest<NSFetchRequestResult>(entityName: "StoredPlatformsEntity")
+        let deleteRequest = NSBatchDeleteRequest(fetchRequest: fetchRequest) // Use batch delete for efficiency
+
+        deleteRequest.resultType = .resultTypeCount // Or .resultTypeObjectIDs if you need object IDs
+
+        do {
+            try context.execute(deleteRequest)
+            if shouldSave {
+                try context.save()
+            }
+        } catch {
+            print("Error clearing PlatformsEntity: \(error)")
+            context.rollback()
+            throw error // Re-throw the error after rollback
+        }
+    }
+
+    func validateLLT(llt: String, context: NSManagedObjectContext) throws -> Bool {
+        let vault = Vault()
+        do {
+            let storedTokens = try vault.listStoredEntityToken(longLiveToken: llt)
+        } catch Exceptions.unauthenticatedLLT(let status){
+            print("Should delete invalid llt: \(status.message)")
+            return false
+        } catch {
+            print("Error fetching stored tokens: \(error)")
+            throw error
+        }
+        return true
+    }
+    
+    private static func deriveDeviceID(derivedKey: [UInt8], phoneNumber: String, publicKey: [UInt8]) throws -> [UInt8] {
         print("DID key: \(derivedKey.toBase64())")
         print("DID phoneNumber: \(phoneNumber)")
         print("DID publicKey: \(publicKey.toBase64())")
@@ -312,5 +496,59 @@ class Vault {
         let deviceId = try HMAC(key: derivedKey, variant: .sha2(.sha256)).authenticate(combinedData)
         print("DID id: \(deviceId.toBase64())")
         return deviceId
+    }
+    
+    private static func derivceStoreLLT(
+        lltEncoded: String,
+        phoneNumber: String,
+        clientDeviceIDPrivateKey: Curve25519.KeyAgreement.PrivateKey,
+        peerPublicKey: Curve25519.KeyAgreement.PublicKey
+    ) throws -> String {
+        let sharedKey = try SecurityCurve25519.calculateSharedSecret(
+            privateKey: clientDeviceIDPrivateKey,
+            publicKey: peerPublicKey)
+        
+        let deviceIdSharedKey = sharedKey.withUnsafeBytes { return Array($0) }
+
+        let fernetToken = try Fernet(key: Data(deviceIdSharedKey))
+        let decodedOutput = try fernetToken.decode(Data(base64Encoded: lltEncoded)!)
+        
+        let deviceID = try Vault.deriveDeviceID(
+            derivedKey: deviceIdSharedKey,
+            phoneNumber: phoneNumber,
+            publicKey: clientDeviceIDPrivateKey.publicKey.rawRepresentation.bytes
+        )
+
+        let llt = String(data: decodedOutput.data, encoding: .utf8)!
+        
+        UserDefaults.standard.set(deviceID, forKey: Vault.VAULT_DEVICE_ID)
+        
+        CSecurity.deletePasswordFromKeychain(keystoreAlias: Vault.VAULT_LONG_LIVED_TOKEN)
+        
+        try CSecurity.storeInKeyChain(
+            data: llt.data(using: .utf8)!,
+            keystoreAlias: Vault.VAULT_LONG_LIVED_TOKEN
+        )
+
+        return llt
+    }
+    
+    private static func derivceStorePublishSharedSecret(
+        context: NSManagedObjectContext,
+        clientPublishPrivateKey: Curve25519.KeyAgreement.PrivateKey,
+        peerPublishPublicKey: Curve25519.KeyAgreement.PublicKey
+    ) throws {
+        let publishingSharedKey = try SecurityCurve25519.calculateSharedSecret(
+            privateKey: clientPublishPrivateKey,
+            publicKey: peerPublishPublicKey).withUnsafeBytes { return Array($0) }
+        
+        CSecurity.deletePasswordFromKeychain(keystoreAlias: Publisher.PUBLISHER_SHARED_KEY)
+        
+        try CSecurity.storeInKeyChain(
+            data: Data(publishingSharedKey),
+            keystoreAlias: Publisher.PUBLISHER_SHARED_KEY
+        )
+        
+        try Vault.resetStates(context: context)
     }
 }

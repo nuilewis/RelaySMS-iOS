@@ -11,16 +11,17 @@ import CoreData
 
 class DataController: ObservableObject {
     let container = NSPersistentContainer(name: "Datastore")
-    
+
     init() {
         container.loadPersistentStores(completionHandler: { description, error in
-            self.container.viewContext.mergePolicy = NSOverwriteMergePolicy
+            self.container.viewContext.automaticallyMergesChangesFromParent = true
+            self.container.viewContext.mergePolicy = NSMergeByPropertyObjectTrumpMergePolicy
             if let error = error {
                 print("Core Data failed to load: \(error.localizedDescription)")
             }
         })
     }
-    
+
     public static func resetDatabase(context: NSManagedObjectContext) throws {
         // This deletes everything except the default Gateway Clients
         do {
