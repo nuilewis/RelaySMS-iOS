@@ -10,6 +10,14 @@
 		041BB4E92D4B3D4A0072A097 /* SecurityHandler.swift in Sources */ = {isa = PBXBuildFile; fileRef = 041BB4E62D4B3D4A0072A097 /* SecurityHandler.swift */; };
 		042DAE302D38432200F0D370 /* PlatformsEntityHandlers.swift in Sources */ = {isa = PBXBuildFile; fileRef = 042DAE2E2D38432200F0D370 /* PlatformsEntityHandlers.swift */; };
 		0430A2222D5554D100830BF4 /* Bridges.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0430A2202D5554D100830BF4 /* Bridges.swift */; };
+		043920992DAD9C220092E583 /* ContactPickerService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 043920982DAD9C220092E583 /* ContactPickerService.swift */; };
+		0439209A2DAD9C220092E583 /* ContactPickerService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 043920982DAD9C220092E583 /* ContactPickerService.swift */; };
+		043920A22DAD9C540092E583 /* CountryUtils.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0439209B2DAD9C540092E583 /* CountryUtils.swift */; };
+		043920A62DAD9C540092E583 /* Errors.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0439209E2DAD9C540092E583 /* Errors.swift */; };
+		043920A72DAD9C540092E583 /* PublisherHandler.swift in Sources */ = {isa = PBXBuildFile; fileRef = 043920A12DAD9C540092E583 /* PublisherHandler.swift */; };
+		043920A92DAD9C540092E583 /* CountryUtils.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0439209B2DAD9C540092E583 /* CountryUtils.swift */; };
+		043920AD2DAD9C540092E583 /* Errors.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0439209E2DAD9C540092E583 /* Errors.swift */; };
+		043920AE2DAD9C540092E583 /* PublisherHandler.swift in Sources */ = {isa = PBXBuildFile; fileRef = 043920A12DAD9C540092E583 /* PublisherHandler.swift */; };
 		0439A49C2C7677A0000B8D30 /* SMSComposeMessageUIView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0439A49A2C766E9A000B8D30 /* SMSComposeMessageUIView.swift */; };
 		0439A49D2C7677A1000B8D30 /* SMSComposeMessageUIView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0439A49A2C766E9A000B8D30 /* SMSComposeMessageUIView.swift */; };
 		0456964A2D551AB000A2C369 /* CSecurity.swift in Sources */ = {isa = PBXBuildFile; fileRef = 16EDE37F28D0D23000E50393 /* CSecurity.swift */; };
@@ -123,6 +131,10 @@
 		041BB4E62D4B3D4A0072A097 /* SecurityHandler.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SecurityHandler.swift; sourceTree = "<group>"; };
 		042DAE2E2D38432200F0D370 /* PlatformsEntityHandlers.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlatformsEntityHandlers.swift; sourceTree = "<group>"; };
 		0430A2202D5554D100830BF4 /* Bridges.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Bridges.swift; sourceTree = "<group>"; };
+		043920982DAD9C220092E583 /* ContactPickerService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContactPickerService.swift; sourceTree = "<group>"; };
+		0439209B2DAD9C540092E583 /* CountryUtils.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CountryUtils.swift; sourceTree = "<group>"; };
+		0439209E2DAD9C540092E583 /* Errors.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Errors.swift; sourceTree = "<group>"; };
+		043920A12DAD9C540092E583 /* PublisherHandler.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PublisherHandler.swift; sourceTree = "<group>"; };
 		0439A49A2C766E9A000B8D30 /* SMSComposeMessageUIView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SMSComposeMessageUIView.swift; sourceTree = "<group>"; };
 		0456964F2D551E9C00A2C369 /* Notes.txt */ = {isa = PBXFileReference; lastKnownFileType = text; path = Notes.txt; sourceTree = "<group>"; };
 		04C6BCAC2D80D1B400420775 /* static-x25519.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = "static-x25519.json"; sourceTree = "<group>"; };
@@ -361,6 +373,10 @@
 				1697672528E483F60021BFC5 /* OperatorHandlers.swift */,
 				3B7EEE4C2C5BEA6000611092 /* MessageComposer.swift */,
 				F603A5192D94154C00D69C5E /* Theme */,
+				043920982DAD9C220092E583 /* ContactPickerService.swift */,
+				0439209B2DAD9C540092E583 /* CountryUtils.swift */,
+				0439209E2DAD9C540092E583 /* Errors.swift */,
+				043920A12DAD9C540092E583 /* PublisherHandler.swift */,
 			);
 			path = Commons;
 			sourceTree = "<group>";
@@ -660,6 +676,10 @@
 				3BCBA3A92C4FE3C300736B9B /* AccountSheetView.swift in Sources */,
 				16F0E68528C6308600FDD12C /* EmailComposeView.swift in Sources */,
 				3B7EEE4E2C5BEA6000611092 /* MessageComposer.swift in Sources */,
+				043920A92DAD9C540092E583 /* CountryUtils.swift in Sources */,
+				043920AD2DAD9C540092E583 /* Errors.swift in Sources */,
+				043920AE2DAD9C540092E583 /* PublisherHandler.swift in Sources */,
+				0439209A2DAD9C220092E583 /* ContactPickerService.swift in Sources */,
 				04E63AA22D71A6D80017103B /* OnboardingView.swift in Sources */,
 				164EF7D12954D431007F8C76 /* MessagingView.swift in Sources */,
 				3BF117AE2C2F6E7B003D5BB6 /* Helpers.swift in Sources */,
@@ -679,11 +699,15 @@
 				0456964B2D551AB000A2C369 /* CSecurity.swift in Sources */,
 				3BCBA3CA2C51594D00736B9B /* DataController.swift in Sources */,
 				3BC978112C36BFFC00AB626C /* PublisherTest.swift in Sources */,
+				043920992DAD9C220092E583 /* ContactPickerService.swift in Sources */,
 				3BF3D1652C349977003A3AFB /* gRPCHandler.swift in Sources */,
 				3BCBA3C92C5153CF00736B9B /* Datastore.xcdatamodeld in Sources */,
 				0439A49D2C7677A1000B8D30 /* SMSComposeMessageUIView.swift in Sources */,
 				16F0E69428C6308800FDD12C /* SMSWithoutBorders_ProductionTests.swift in Sources */,
 				3BCBA3A22C49611100736B9B /* PlatformsTest.swift in Sources */,
+				043920A22DAD9C540092E583 /* CountryUtils.swift in Sources */,
+				043920A62DAD9C540092E583 /* Errors.swift in Sources */,
+				043920A72DAD9C540092E583 /* PublisherHandler.swift in Sources */,
 				04E63A9A2D6F32A70017103B /* relay_publisher.proto in Sources */,
 				04E63A9B2D6F32A70017103B /* relay_publisher.grpc.swift in Sources */,
 				04E63A9C2D6F32A70017103B /* relay_publisher.pb.swift in Sources */,

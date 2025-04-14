@@ -2471,6 +2471,7 @@
       }
     },
     "Enter password" : {
+      "extractionState" : "stale",
       "localizations" : {
         "ar" : {
           "stringUnit" : {
@@ -4453,6 +4454,7 @@
       }
     },
     "Password" : {
+      "extractionState" : "stale",
       "localizations" : {
         "ar" : {
           "stringUnit" : {
@@ -4960,6 +4962,7 @@
       "shouldTranslate" : false
     },
     "Re-enter password" : {
+      "extractionState" : "stale",
       "localizations" : {
         "ar" : {
           "stringUnit" : {
