@@ -119,13 +119,15 @@ struct SignupSheetView: View {
                         .frame(width: 75, height: 75)
                         .padding()
 
-                    Text("Create Account")
+                    Text("Create account")
                         .font(.title)
                         .bold()
                         .padding()
-         
-                    Text(String(localized:"If you don't have an account,\nPlease create one to save your platforms", comment: "Explains that you need to create an account to save your platforms if you don't have an account already")).multilineTextAlignment(.center)
                     
+                    Group {
+                        Text("If you don't have an account")
+                        Text("Please create one to save your platforms")
+                    }
                     .foregroundStyle(.secondary)
                     .font(.subheadline)
                 }
@@ -211,7 +213,7 @@ struct SignupSheetView: View {
                                 }
                             }
                         } label: {
-                            Text("Create Account")
+                            Text("Create account")
                                 .bold()
                                 .frame(maxWidth: .infinity, maxHeight: 35)
                         }

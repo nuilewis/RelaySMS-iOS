@@ -21,7 +21,7 @@ struct signupLoginOnboardingView: View {
                     Button {
                         signupSheetShown = true
                     } label: {
-                        Text("Create Account")
+                        Text("Create Acocunt")
                             .bold()
                             .frame(maxWidth: .infinity)
                     }
@@ -35,7 +35,7 @@ struct signupLoginOnboardingView: View {
                     Button {
                         loginSheetShown = true
                     } label: {
-                        Text("Log in")
+                        Text("Login")
                             .bold()
                             .frame(maxWidth: .infinity)
                     }
@@ -49,11 +49,11 @@ struct signupLoginOnboardingView: View {
                     }
                     
                 },
-                title:String(localized:"Let's get you started", comment: "Signup/signin Onboarding View title"),
-                subTitle: String(localized:"Introducing Vaults", comment: "Signup/Sign in Onboarding View subtitle"),
-                description: String(localized:"RelaySMS Vaults keep secure access to your online accounts while you are offline", comment: "Explains that RelaySMS Vaults have secure access to youe online accounts even while you are offline"),
+                title:"Let's get you started",
+                subTitle: "Introducing Vaults",
+                description: "RelaySMS Vaults keep secure access to your online accounts while you are offline",
                 imageName: "OnboardingVault",
-                subDescription: String(localized:"Create a new RelaySMS Vault account or signup to your existing.", comment: "Prompts user to create a RelaySMS Vault account or signup to their existing one")
+                subDescription: "Create a new RelaySMS Vault account or signup to your existing."
             )
         }
     }
@@ -63,8 +63,8 @@ struct addAccountsView: View {
     @Binding var codeVerifier: String
     @Binding var availablePlatformsPresented: Bool
     
-    var title: String = String(localized:"Available Platforms")
-    var description: String = String(localized:"Select a platform to save it for offline use", comment: "Asks a user to select a platform which should be saved for offline use later")
+    @State var title: String = "Available platforms"
+    @State var description = "Select a platform to save it for offline use"
     
     @FetchRequest(sortDescriptors: []) var storedPlatforms: FetchedResults<StoredPlatformsEntity>
     
@@ -86,11 +86,11 @@ struct addAccountsView: View {
                 .controlSize(.large)
                 .padding(.bottom, 10)
                 .buttonStyle(.borderedProminent),
-                title: String(localized:"Add Accounts to Vault", comment: "Title for Add Accounts View"),
-                subTitle: String(localized:"Let's get you started"),
-                description: String(localized:"You can add accounts to Vault. These accounts are accessible to you when you are offline", comment: "Explains that you can add accounts to Vault and the accounts are persisted while offline"),
+                title: "Add Accounts to Vault",
+                subTitle: "Let's get you started",
+                description: "You can add accounts to Vault. This accounts are accessible to you when you are offline",
                 imageName: "OnboardingVaultOpen",
-                subDescription: String(localized:"The Vault supports storing for multiple online platforms. Click Save Accounts to Vault to see the list", comment: "Explains that the Vault supports storing for multiple online platforms and you can click to save accounts to your vault")
+                subDescription: "The Vault supports storing for multiple online platforms. Click Save Accounts to Vault to see the list"
             )
         }
         .task {

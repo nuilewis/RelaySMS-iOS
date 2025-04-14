@@ -224,7 +224,7 @@ struct RecentsView: View {
             Button {
                 signupSheetVisible = true
             } label: {
-                Text("Create Account")
+                Text("Create account")
                     .bold()
                     .frame(maxWidth: .infinity)
             }
