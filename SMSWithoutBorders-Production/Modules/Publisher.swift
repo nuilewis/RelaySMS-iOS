@@ -10,14 +10,50 @@ import GRPC
 import Logging
 import CoreData
 import CryptoKit
+import SwiftUI
 
 class Publisher {
     public static var PUBLISHER_SHARED_KEY = "COM.AFKANERD.RELAYSMS.PUBLISHER_SHARED_KEY"
     public static var REDIRECT_URL_SCHEME = "relaysms://relaysms.com/ios/"
     public static var PUBLISHER_SERVER_PUBLIC_KEY = "COM.AFKANERD.PUBLISHER_SERVER_PUBLIC_KEY"
     public static var PUBLISHER_PUBLIC_KEY_KEYSTOREALIAS = "COM.AFKANERD.PUBLISHER_PUBLIC_KEY_KEYSTOREALIAS"
+    public static var CLIENT_PUBLIC_KEY_KEYSTOREALIAS = "COM.AFKANERD.PUBLISHER_PUBLIC_KEY_KEYSTOREALIAS"
+    
+    public enum ServiceTypeDescriptions: String.LocalizationValue {
+        case EMAIL = "Adding emails to your RelaySMS account enables you use them to send emails using SMS messaging.\n\nGmail are currently supported."
+        case MESSAGE = "Adding numbers to your RelaySMS account enables you use them to send messages using SMS messaging.\n\nTelegram messaging is currently supported."
+        case TEXT = "Adding accounts to your RelaySMS account enables you use them to make post using SMS messaging.\n\nPosting is currently supported."
+        case BRIDGE = "Your RelaySMS account is an alias of your phone number with the domain @relaysms.me.\n\nYou can receive replies by SMS whenever a message is sent to your alias."
+        
+        func localizedValue() -> String {
+            return String(localized: self.rawValue)
+        }
+    }
+    
+    public enum ServiceComposeTypeDescriptions: String.LocalizationValue {
+        case EMAIL = "Continue to send an email from your saved email account. You can choose a message forwarding country from the 'Countries' tab below.\n\nContinue to send message"
+        case MESSAGE = "Continue to send messages from your saved messaging account. You can choose a message forwarding country from the 'Countries' tab below.\n\nContinue to send message"
+        case TEXT = "Continue to make posts from your saved messaging account. You can choose a message forwarding country from the 'Countries' tab below.\n\nContinue to send message"
+        case BRIDGE = "Your RelaySMS account is an alias of your phone number with the domain @relaysms.me.\n\nYou can receive replies by SMS whenever a message is sent to your alias.\nYou can choose a message forwarding country from the 'Countries' tab below.\n\nContinue to send message"
+        func localizedValue() -> String {
+            return String(localized: self.rawValue)
+        }
+    }
 
-    enum Exceptions: Error {
+    public enum ProtocolTypes: String {
+        case OAUTH2 = "oauth2"
+        case PNBA = "pnba"
+        case BRIDGE = "bridge"
+    }
+    
+    public enum ServiceTypes: String {
+        case EMAIL = "email"
+        case MESSAGE = "message"
+        case TEXT = "text"
+        case BRIDGE = "bridge"
+    }
+
+    public enum Exceptions: Error {
         case requestNotOK(status: GRPCStatus)
     }
     
@@ -169,10 +205,11 @@ class Publisher {
     }
 
     func revokePlatform(llt: String, platform: String, account: String, protocolType: String) throws -> Bool {
-        if protocolType ==  "oauth2" {
+        print("[+] Revoking: \(platform) with protocol type: \(protocolType)")
+        if protocolType ==  ProtocolTypes.OAUTH2.rawValue {
             return try revokeOAuthPlatform(llt: llt, platform: platform, account: account).success
         }
-        else if protocolType == "pnba" {
+        else if protocolType == ProtocolTypes.PNBA.rawValue {
             return try revokePNBAPlatform(llt: llt, platform: platform, account: account).success
         }
         return false
@@ -188,7 +225,111 @@ class Publisher {
         let icon_png: String
     }
     
-    static func getPlatforms(completion: @escaping (Result<[PlatformsData], Error>) -> Void) {
+    public static func refreshPlatforms(context: NSManagedObjectContext ) {
+        Publisher.getPlatforms() { result in
+            switch result {
+            case .success(let data):
+                print("Success: \(data)")
+                
+//                do {
+//                    try Publisher.clear(context: context, shouldSave: true)
+//                } catch {
+//                    print(error)
+//                    return
+//                }
+                for platform in data {
+                    downloadAndSaveIcons(
+                        url: URL(string: platform.icon_png)!,
+                        platform: platform,
+                        context: context
+                    )
+                }
+                    
+//                group.notify(queue: .main) { // Notify when all tasks are done
+//
+//                }
+                                   
+            case .failure(let error):
+                print("Failed to load JSON data: \(error)")
+            }
+        }
+    }
+
+    private static func downloadAndSaveIcons(
+        url: URL,
+        platform: Publisher.PlatformsData,
+        context: NSManagedObjectContext
+    ) {
+        print("Storing Platform Icon: \(platform.name)")
+
+        let task = URLSession.shared.dataTask(with: url) { data, response, error in
+            guard let data = data, error == nil else { return }
+
+            // 1. Fetch existing entity
+            let fetchRequest = PlatformsEntity.fetchRequest()
+            fetchRequest.predicate = NSPredicate(format: "name == %@", platform.name)
+
+            do {
+                let existingPlatforms = try context.fetch(fetchRequest)
+                print(existingPlatforms.count)
+
+                if let existingPlatform = existingPlatforms.first {
+                    // 2. Update existing entity
+                    print("Updating existing Platform Icon: \(platform.name)")
+                    existingPlatform.image = data
+                    existingPlatform.protocol_type = platform.protocol_type
+                    existingPlatform.service_type = platform.service_type
+                    existingPlatform.shortcode = platform.shortcode
+                    existingPlatform.support_url_scheme = platform.support_url_scheme
+                } else {
+                    // 3. Create new entity
+                    print("Creating new Platform Icon: \(platform.name)")
+                    let platformsEntity = PlatformsEntity(context: context)
+                    platformsEntity.image = data
+                    platformsEntity.name = platform.name
+                    platformsEntity.protocol_type = platform.protocol_type
+                    platformsEntity.service_type = platform.service_type
+                    platformsEntity.shortcode = platform.shortcode
+                    platformsEntity.support_url_scheme = platform.support_url_scheme
+                }
+
+                // 4. Save changes (outside the if/else)
+                if context.hasChanges {
+                    do {
+                        try context.save()
+                    } catch {
+                        print("Failed save download image: \(error) \(error.localizedDescription)")
+                    }
+                }
+
+            } catch {
+                print("Error fetching Platform: \(error) \(error.localizedDescription)")
+            }
+        }
+        task.resume()
+    }
+
+    static func clear(context: NSManagedObjectContext, shouldSave: Bool = true) throws {
+        print("Clearing platforms...")
+        let fetchRequest = NSFetchRequest<NSFetchRequestResult>(entityName: "PlatformsEntity")
+        let deleteRequest = NSBatchDeleteRequest(fetchRequest: fetchRequest) // Use batch delete for efficiency
+
+        deleteRequest.resultType = .resultTypeCount // Or .resultTypeObjectIDs if you need object IDs
+
+        do {
+            try context.execute(deleteRequest)
+            if shouldSave {
+                try context.save()
+            }
+        } catch {
+            print("Error clearing PlatformsEntity: \(error)")
+            context.rollback()
+            throw error // Re-throw the error after rollback
+        }
+    }
+
+
+    private static func getPlatforms(completion: @escaping (Result<[PlatformsData], Error>) -> Void) {
         let platformsUrl = "https://raw.githubusercontent.com/smswithoutborders/SMSWithoutBorders-Publisher/staging/resources/platforms.json"
         
         Task {
@@ -230,12 +371,16 @@ class Publisher {
         return response
     }
     
-    public func phoneNumberBaseAuthenticationExchange( authorizationCode: String,
-                                                       llt: String, phoneNumber: String, platform: String) throws -> Publisher_V1_ExchangePNBACodeAndStoreResponse {
+    public func phoneNumberBaseAuthenticationExchange(
+        authorizationCode: String,
+        llt: String, phoneNumber: String,
+        platform: String,
+        password: String = ""
+    ) throws -> Publisher_V1_ExchangePNBACodeAndStoreResponse {
         let pnbaExchangeRequest: Publisher_V1_ExchangePNBACodeAndStoreRequest = .with {
             $0.authorizationCode = authorizationCode
             $0.longLivedToken = llt
-            $0.password = ""
+            $0.password = password
             $0.phoneNumber = phoneNumber
             $0.platform = platform
         }
@@ -262,13 +407,27 @@ class Publisher {
         return response
     }
     
-    public static func publish(platform: PlatformsEntity, context: NSManagedObjectContext) throws -> MessageComposer {
+    public static func canPublish() throws -> Bool {
+        do {
+            return try !CSecurity.findInKeyChain(keystoreAlias: Publisher.PUBLISHER_PUBLIC_KEY_KEYSTOREALIAS).isEmpty
+        } catch {
+            print(error)
+            return false
+        }
+    }
+    
+    public static func publish(
+        context: NSManagedObjectContext,
+        checkPhoneNumberSettings: Bool = true
+    ) throws -> MessageComposer {
         do {
             let AD: [UInt8] = UserDefaults.standard.object(forKey: Publisher.PUBLISHER_SERVER_PUBLIC_KEY) as! [UInt8]
             let deviceID: [UInt8] = UserDefaults.standard.object(forKey: Vault.VAULT_DEVICE_ID) as! [UInt8]
             let peerPubkey = try Curve25519.KeyAgreement.PublicKey(rawRepresentation: AD)
             let pubSharedKey = try CSecurity.findInKeyChain(keystoreAlias: Publisher.PUBLISHER_SHARED_KEY)
-            let usePhonenumber = UserDefaults.standard.bool(forKey: SecuritySettingsView.SETTINGS_MESSAGE_WITH_PHONENUMBER)
+            let usePhonenumber = checkPhoneNumberSettings ? UserDefaults
+                .standard.bool(forKey: SecuritySettingsView.SETTINGS_MESSAGE_WITH_PHONENUMBER) : true
+            print("use deviceID for publishing: \(!usePhonenumber)")
             
             let messageComposer = try MessageComposer(
                 SK: pubSharedKey.bytes,
@@ -277,11 +436,68 @@ class Publisher {
                 keystoreAlias: Publisher.PUBLISHER_SHARED_KEY,
                 deviceID: deviceID,
                 context: context,
-                useDeviceID: usePhonenumber)
+                useDeviceID: !usePhonenumber)
             
             return messageComposer
         } catch {
             throw error
         }
     }
+    
+    public static func processIncomingUrls(context: NSManagedObjectContext, url: URL, codeVerifier: String) throws {
+        let stateB64Values = url.valueOf("state")
+        // Decode the Base64 string to Data
+        guard let decodedData = Data(base64Encoded: stateB64Values!) else {
+            fatalError("Failed to decode Base64 string")
+        }
+
+        // Convert Data to String
+        guard let decodedString = String(data: decodedData, encoding: .utf8) else {
+            fatalError("Failed to convert Data to String")
+        }
+        
+        print("decoded string: \(decodedString)")
+        let values = decodedString.split(separator: ",")
+        let state = values[0]
+        let supportsUrlScheme = values[1] == "true"
+        
+        let code = url.valueOf("code")
+        if(code == nil) {
+            return
+        }
+        print("state: \(state)\ncode: \(code)\ncodeVerifier: \(codeVerifier)")
+        
+        do {
+            let llt = try Vault.getLongLivedToken()
+            let publisher = Publisher()
+            
+            let response = try publisher.sendOAuthAuthorizationCode(
+                llt: llt,
+                platform: String(state),
+                code: code!,
+                codeVerifier: codeVerifier,
+                supportsUrlSchemes: supportsUrlScheme)
+            
+            print("Saved new account successfully....")
+            
+            if(response.success) {
+                try Vault().refreshStoredTokens(llt: llt, context: context)
+            }
+        } catch {
+            throw error
+        }
+    }
+    
+    public static func getProtocolTypeForPlatform(
+        storedPlatform: StoredPlatformsEntity,
+        platforms: FetchedResults<PlatformsEntity>
+    ) -> String {
+        for platform in platforms {
+            if platform.name == storedPlatform.name {
+                return platform.protocol_type!
+            }
+        }
+        return ""
+    }
+
 }

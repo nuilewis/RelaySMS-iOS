@@ -8,44 +8,99 @@
 import SwiftUI
 
 struct OnboardingWelcomeView: View {
+    @Environment(\.locale) var locale
+    @Binding var pageIndex: Int
+    
+    @State private var showLanguageChangeConfirmationAlert = false
+    
     var body: some View {
         VStack {
-            Spacer()
-            Text("Welcome to RelaySMS")
-                .font(.title)
-                .fontWeight(.semibold)
+            HStack {
+                Spacer()
+                
+                Button {
+                    showLanguageChangeConfirmationAlert = true
+                } label: {
+                    if #available(iOS 16, *) {
+                        if let languageCode = locale.language.languageCode?.identifier,
+                           let languageName = Locale.current.localizedString(forLanguageCode: languageCode) {
+                            Label(languageName, systemImage: "globe")
+                                .padding(12)
+                                .background(Color.blue.opacity(0.1))
+                                .clipShape(Capsule())
+                        }
+                        
+                    } else {
+                        if let languageCode = locale.languageCode,
+                           let languageName = Locale.current.localizedString(forLanguageCode: languageCode) {
+                            Label(languageName, systemImage: "globe")
+                                .padding(12)
+                                .background(Color.blue.opacity(0.1))
+                                .clipShape(Capsule())
+                        }
+                    }
+                }.padding(16)
+                .alert("Change App Language", isPresented: $showLanguageChangeConfirmationAlert) {
+                    Button("Cancel", role: .cancel){
+                        showLanguageChangeConfirmationAlert = false
+                    }
+                    Button("Open Settings"){
+                        // Open language settings page instead
+                        if let url: URL = URL(string: UIApplication.openSettingsURLString), UIApplication.shared.canOpenURL(url) {
+                            UIApplication.shared.open(url)
+                        }
+                        
+                    }
+                } message: {
+                    Text(String(localized: "Continue to iOS settings and select your preferred language for RelaySMS.", comment: "Instructions for chnaging application langueg via system settings.") )
+                }
+            }
+            Text("Welcome to RelaySMS!")
+                .font(RelayTypography.headlineSmall)
+                .padding(.top, 30)
                 
                 
             VStack {
-                Text("Use SMS to make a post, send emails and messages with no internet connection")
-                    .font(.subheadline)
-                    .padding(.bottom, 30)
-                    .multilineTextAlignment(.center)
-                    .foregroundColor(.secondary)
-                
-                Image("Recents")
+                Image("1")
                     .resizable()
                     .aspectRatio(contentMode: .fit)
-                    .frame(width: 200, height: 200)
+                    .frame(width: 300, height: 300)
+                    .padding()
                     .padding(.bottom, 20)
-                
 
-//                Button("English", systemImage: "globe") {
-//                    
-//                }
-//                .buttonStyle(.borderedProminent)
-//                .tint(.secondary)
-//                .cornerRadius(38.5)
+
+                Text(String(localized: "Use SMS to make a post, send emails and messages with no internet connection", comment: "Explains that you can use Relay to make posts, and send emails and messages without an internet conenction"))
+                    .font(RelayTypography.titleLarge)
+                    .padding(.bottom, 10)
+                    .multilineTextAlignment(.center)
+                
 
             }.padding()
             
-            
-            Spacer()
+            Button {
+                pageIndex += 1
+            } label: {
+                Text("Learn how it works")
+                    .frame(maxWidth: .infinity)
+            }
+            .buttonStyle(.relayButton(variant: .primary))
+            .padding([.leading, .trailing, .bottom], 16)
+
+            Button {
+                if let url = URL(string: "https://smswithoutborders.com/privacy-policy") {
+                    UIApplication.shared.open(url)
+                }
+            } label: {
+                Text("Read our privacy policy").font(RelayTypography.bodySmall)
+            }
+            .buttonStyle(.relayButton(variant:.text))
+            .padding(.bottom, 24)
         }
-            
     }
 }
 
 #Preview {
-    OnboardingWelcomeView()
+    @State var pageIndex = 0
+    OnboardingWelcomeView(pageIndex: $pageIndex)
 }
+

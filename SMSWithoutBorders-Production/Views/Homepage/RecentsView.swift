@@ -23,60 +23,6 @@ public extension Color {
     #endif
 }
 
-
-
-struct Card: View {
-    @State var logo: Image
-    @State var subject: String
-    @State var toAccount: String
-    @State var messageBody: String
-    @State var date: Int
-    
-    let radius = 20.0
-    var squareSide: CGFloat {
-        2.0.squareRoot() * radius
-    }
-
-    var body: some View {
-        HStack {
-            ZStack {
-                Circle()
-                    .fill(.white)
-                    .frame(width: radius * 2, height: radius * 2)
-                logo
-                    .resizable()
-                    .aspectRatio(1.0, contentMode: .fit)
-                    .frame(width: squareSide, height: squareSide)
-                
-            }
-            VStack {
-                HStack {
-                    Text(subject)
-                        .bold()
-                        .font(.subheadline)
-                        .frame(maxWidth: .infinity, alignment: .leading)
-                    Text(Date(timeIntervalSince1970: TimeInterval(date)), formatter: RelativeDateTimeFormatter())
-                        .frame(maxWidth: .infinity, alignment: .trailing)
-                        .font(.caption)
-                }
-                .padding(.bottom, 3)
-
-                Text(toAccount)
-                    .font(.caption)
-                    .foregroundStyle(.secondary)
-                    .frame(maxWidth: .infinity, alignment: .leading)
-                    .padding(.bottom, 5)
-
-                Text(messageBody)
-                    .lineLimit(2)
-                    .font(.subheadline)
-                    .foregroundStyle(.secondary)
-                    .frame(maxWidth: .infinity, alignment: .leading)
-            }
-        }
-    }
-}
-
 @ViewBuilder
 func getNoRecentsView() -> some View {
     VStack {
@@ -107,13 +53,12 @@ func getNoLoggedInView() -> some View {
             .fixedSize(horizontal: false, vertical: true)
             .foregroundColor(.secondary)
     }.padding()
-    Spacer()
 }
 
 struct RecentsView: View {
     @Environment(\.managedObjectContext) var context
     @FetchRequest(sortDescriptors: []) var platforms: FetchedResults<PlatformsEntity>
-    
+
     @FetchRequest(sortDescriptors: [NSSortDescriptor(keyPath: \MessageEntity.date, ascending: false)])
     var messages: FetchedResults<MessageEntity>
 
@@ -125,18 +70,18 @@ struct RecentsView: View {
 
     @State var showAvailablePlatforms: Bool = false
     @State var showComposePlatforms: Bool = false
-    
+
     @State var messagePlatformViewRequested: Bool = false
     @State var emailPlatformViewRequested: Bool = false
     @State var textPlatformViewRequested: Bool = false
-    
+
     @State var messagePlatformViewPlatformName: String = ""
     @State var messagePlatformViewFromAccount: String = ""
 
     @State var loginSheetVisible: Bool = false
     @State var signupSheetVisible: Bool = false
     @State var loginFailed: Bool = false
-    
+
     var body: some View {
         NavigationView {
             VStack {
@@ -155,14 +100,19 @@ struct RecentsView: View {
             .navigationTitle("Recents")
         }
         .task {
-            do {
-                try await refreshLocalDBs(context: context)
-            } catch {
-                print("Failed to refresh remote db")
-            }
+            DispatchQueue.background(background: {
+                do {
+                    try refreshLocalDBs()
+                    print("Finished refreshing local db")
+                } catch {
+                    print("Failed to refresh local DBs: \(error)")
+                }
+            }, completion: {
+
+            })
         }
     }
-    
+
     func getImageForPlatform(name: String) -> Image {
         for platform in platforms {
             if platform.name == name {
@@ -173,7 +123,7 @@ struct RecentsView: View {
         }
         return Image("Logo")
     }
-    
+
     @ViewBuilder func getPlatformView(message: Messages) -> some View {
         ForEach(platforms) { platform in
             if platform.name == message.platformName {
@@ -192,34 +142,37 @@ struct RecentsView: View {
             }
         }
     }
-    
-    func refreshLocalDBs(context: NSManagedObjectContext) async throws {
-        await Task.detached(priority: .userInitiated) {
-            Publisher.getPlatforms() { result in
-                switch result {
-                case .success(let data):
-                    print("Success: \(data)")
-                    for platform in data {
-                        if(ProcessInfo.processInfo.environment["XCODE_RUNNING_FOR_PREVIEWS"] != "1") {
-                            downloadAndSaveIcons(
+
+    func refreshLocalDBs() throws {
+        Publisher.getPlatforms() { result in
+            switch result {
+            case .success(let data):
+                print("Success: \(data)")
+                for platform in data {
+                    if(ProcessInfo.processInfo.environment["XCODE_RUNNING_FOR_PREVIEWS"] != "1") {
+                        do {
+                            DownloadContent.downloadAndSaveIcons(
                                 url: URL(string: platform.icon_png)!,
-                                platform: platform, viewContext: context)
+                                platform: platform,
+                                viewContext: context)
+                        } catch {
+                            print("Issue downloading icons: \(error)")
                         }
                     }
-                case .failure(let error):
-                    print("Failed to load JSON data: \(error)")
                 }
+            case .failure(let error):
+                print("Failed to load JSON data: \(error)")
             }
         }
     }
-    
+
     @ViewBuilder
     func notLoggedInView() -> some View {
         Spacer()
         getNoLoggedInView()
         .padding()
         Spacer()
-        
+
         VStack {
             Button {
                 signupSheetVisible = true
@@ -230,8 +183,6 @@ struct RecentsView: View {
             }
             .sheet(isPresented: $signupSheetVisible) {
                 SignupSheetView(
-                    completed: $isLoggedIn,
-                    failed: $loginFailed,
                     otpRetryTimer: otpRetryTimer ?? 0,
                     errorMessage: errorMessage)
             }
@@ -247,8 +198,22 @@ struct RecentsView: View {
                     .frame(maxWidth: .infinity)
             }
             .sheet(isPresented: $loginSheetVisible) {
-                LoginSheetView(completed: $isLoggedIn,
-                               failed: $loginFailed)
+//                LoginSheetView(isLoggedIn: $isLoggedIn)
+            }
+            .buttonStyle(.bordered)
+            .padding(.bottom, 10)
+            .controlSize(.large)
+
+            Button {
+                loginSheetVisible = true
+            } label: {
+                Text("Continue without internet")
+                    .bold()
+                    .frame(maxWidth: .infinity)
+            }
+            .sheet(isPresented: $loginSheetVisible) {
+//                LoginSheetView(completed: $isLoggedIn,
+//                               failed: $loginFailed, isLoggedIn: $isLoggedIn)
             }
             .buttonStyle(.bordered)
             .controlSize(.large)
@@ -257,89 +222,12 @@ struct RecentsView: View {
         .padding()
         Spacer()
     }
-    
-    @ViewBuilder
-    func sentMessages() -> some View {
-        ZStack(alignment: .bottomTrailing) {
-            VStack {
-                List {
-                    ForEach(messages, id: \.self) { message in
-                        NavigationLink(
-                            destination: getPlatformView(
-                                message: Messages(
-                                    subject: message.subject!,
-                                    data: message.body!,
-                                    fromAccount: message.fromAccount!,
-                                    toAccount: message.toAccount!,
-                                    platformName: message.platformName!,
-                                    date: Int(message.date)))) {
-                            Card(logo: getImageForPlatform(name: message.platformName!),
-                                 subject: message.subject!,
-                                 toAccount: message.toAccount!,
-                                 messageBody: message.body!,
-                                 date: Int(message.date))
-                        }
-                    }
-                }
-            }
-            
-            VStack {
-                VStack {
-                    Button(action: {
-                        showComposePlatforms = true
-                    }, label: {
-                        Image(systemName: "square.and.pencil")
-                            .font(.system(.title))
-                            .frame(width: 57, height: 50)
-                            .foregroundColor(Color.white)
-                            .padding(.bottom, 7)
-                    })
-                    .background(Color.blue)
-                    .cornerRadius(18)
-                    .shadow(color: Color.black.opacity(0.3),
-                            radius: 3,
-                            x: 3,
-                            y: 3)
-                    
-                }.background(
-                    NavigationLink(
-                        destination: OfflineAvailablePlatformsSheetsView(), isActive: $showComposePlatforms) {
-                                EmptyView()
-                            }
-                )
-                    
-                VStack {
-                    Button(action: {
-                        showAvailablePlatforms = true
-                    }, label: {
-                        Image(systemName: "rectangle.stack.badge.plus")
-                            .font(.system(.title))
-                            .frame(width: 57, height: 50)
-                            .foregroundColor(Color.white)
-                            .padding(.bottom, 7)
-                    })
-                    .background(Color.blue)
-                    .cornerRadius(18)
-                    .shadow(color: Color.black.opacity(0.3),
-                            radius: 3,
-                            x: 3,
-                            y: 3)
-                }.background(
-                    NavigationLink(destination: OnlineAvailablePlatformsSheetsView(codeVerifier: $codeVerifier), isActive: $showAvailablePlatforms) {
-                        EmptyView()
-                    }
-                )
-            }
-            .padding()
-        }
-        
-    }
-    
+
     @ViewBuilder
     func noSentMessages() -> some View {
         getNoRecentsView()
                 .padding()
-        
+
         VStack {
             Button {
                 showComposePlatforms = true
@@ -351,7 +239,7 @@ struct RecentsView: View {
             .buttonStyle(.borderedProminent)
             .controlSize(.large)
             .padding(.bottom, 10)
-            
+
             Button {
                 showAvailablePlatforms = true
             } label: {
@@ -361,7 +249,7 @@ struct RecentsView: View {
             }
             .buttonStyle(.bordered)
             .controlSize(.large)
-            
+
         }
         .padding()
         .background(
@@ -383,15 +271,21 @@ struct RecentsView: View {
 
 }
 
-struct RecentsView_Preview: PreviewProvider {
-    static var previews: some View {
-        @State var codeVerifier: String = ""
-        @State var isLoggedIn: Bool = false
-        
-        let container = createInMemoryPersistentContainer()
-        populateMockData(container: container)
+#Preview {
+    @State var codeVerifier: String = ""
+    @State var isLoggedIn: Bool = true
 
-        return RecentsView(codeVerifier: $codeVerifier, isLoggedIn: $isLoggedIn)
-            .environment(\.managedObjectContext, container.viewContext)
-    }
+    let container = createInMemoryPersistentContainer()
+    populateMockData(container: container)
+
+    return RecentsView(codeVerifier: $codeVerifier, isLoggedIn: $isLoggedIn)
+        .environment(\.managedObjectContext, container.viewContext)
 }
+
+#Preview {
+    @State var codeVerifier: String = ""
+    @State var isLoggedIn: Bool = false
+
+    return RecentsView(codeVerifier: $codeVerifier, isLoggedIn: $isLoggedIn)
+}
+
