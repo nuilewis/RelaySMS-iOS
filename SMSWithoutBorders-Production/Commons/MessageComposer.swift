@@ -19,6 +19,7 @@ struct MessageComposer {
     var deviceID: [UInt8]?
     var context: NSManagedObjectContext
     var useDeviceID: Bool
+    var languageCode: [UInt8]
 
     init(SK: [UInt8]?, 
          AD: [UInt8],
@@ -33,6 +34,8 @@ struct MessageComposer {
         self.deviceID = deviceID
         self.context = context
         self.useDeviceID = useDeviceID
+        self.languageCode = Array(LanguagePreferencesManager.getStoredLanguageCode().utf8)
+
 
         let fetchStates = try fetchStates()
 //        print("AD in message composer: \(AD.toBase64())")
@@ -108,6 +111,22 @@ struct MessageComposer {
         }
     }
     
+    public func emailComposerV1(platform_letter: UInt8, from: String, to: String, cc: String, bcc: String,
+                              subject: String,
+                              body: String) throws -> String {
+        let content = "\(from):\(to):\(cc):\(bcc):\(subject):\(body)".data(using: .utf8)!.withUnsafeBytes { data in
+            return Array(data)
+        }
+        do {
+            let (header, cipherText) = try Ratchet.encrypt(state: self.state, data: content, AD: self.AD)
+            try saveState()
+            return formatTransmissionV1(header: header, cipherText: cipherText, platform_letter: platform_letter)
+        } catch {
+            print("Error saving state message cannot be sent: \(error)")
+            throw error
+        }
+    }
+    
     public func textComposer(platform_letter: UInt8,
                              sender: String, text: String) throws -> String {
         let content = "\(sender):\(text)".data(using: .utf8)!.withUnsafeBytes { data in
@@ -117,6 +136,22 @@ struct MessageComposer {
             let (header, cipherText) = try Ratchet.encrypt(state: self.state, data: content, AD: self.AD)
             try saveState()
             return formatTransmission(header: header, cipherText: cipherText, platform_letter: platform_letter)
+        } catch {
+            print("Error saving state message cannot be sent: \(error)")
+            throw error
+        }
+    }
+    
+    
+    public func textComposerV1(platform_letter: UInt8,
+                             sender: String, text: String) throws -> String {
+        let content = "\(sender):\(text)".data(using: .utf8)!.withUnsafeBytes { data in
+            return Array(data)
+        }
+        do {
+            let (header, cipherText) = try Ratchet.encrypt(state: self.state, data: content, AD: self.AD)
+            try saveState()
+            return formatTransmissionV1(header: header, cipherText: cipherText, platform_letter: platform_letter)
         } catch {
             print("Error saving state message cannot be sent: \(error)")
             throw error
@@ -142,6 +177,26 @@ struct MessageComposer {
         }
     }
     
+    public func messageComposerV1(
+        platform_letter: UInt8,
+        sender: String,
+        receiver: String,
+        message: String
+    ) throws -> String {
+        let content = "\(sender):\(receiver):\(message)".data(using: .utf8)!.withUnsafeBytes { data in
+            return Array(data)
+        }
+        do {
+            let (header, cipherText) = try Ratchet.encrypt(state: self.state, data: content, AD: self.AD)
+            try saveState()
+            return formatTransmissionV1(header: header, cipherText: cipherText, platform_letter: platform_letter)
+        } catch {
+            print("Error saving state message cannot be sent: \(error)")
+            throw error
+        }
+    }
+    
+    
     public func bridgeEmailComposer(
         to: String,
         cc: String,
@@ -160,6 +215,7 @@ struct MessageComposer {
         return formatBridgeTransmission(header: header, cipherText: cipherText)
     }
     
+    // Helper methods to format payload
     private func formatBridgeTransmission(header: HEADERS, cipherText: [UInt8]) -> Data {
         let sHeader = header.serialize()
         
@@ -209,6 +265,72 @@ struct MessageComposer {
 
         return data.base64EncodedString()
     }
+    
+    
+    private func formatTransmissionV1(header: HEADERS,
+                                    cipherText: [UInt8],
+                                    platform_letter: UInt8) -> String {
+        let sHeader = header.serialize()
+        
+        // Convert PN to Data
+        var bytesHeaderLen = Data(count: 2)
+        bytesHeaderLen.withUnsafeMutableBytes {
+            $0.storeBytes(of: UInt32(sHeader.count).littleEndian, as: UInt32.self)
+        }
+        
+        var bytesVersionMarker = Data(Array("1".utf8))
+        bytesVersionMarker.withUnsafeMutableBytes {
+            $0.storeBytes(of: UInt32(1).littleEndian, as: UInt32.self)
+        }
+        
+        
+        var bytesDeviceIdLength = Data(count: 1)
+        bytesDeviceIdLength.withUnsafeMutableBytes {
+            $0.storeBytes(of: UInt32(1).littleEndian, as: UInt32.self)
+        }
+        
+        
+        var encryptedContentPayload = Data()
+        encryptedContentPayload.append(bytesHeaderLen)
+        encryptedContentPayload.append(sHeader)
+        encryptedContentPayload.append(Data(cipherText))
+        
+        
+        var payloadLen = Data(count: 2 )
+        payloadLen.withUnsafeMutableBytes {
+            $0.storeBytes(of: UInt32(encryptedContentPayload.count).littleEndian, as: UInt32.self)
+        }
+        
+        // Data to send
+        /// Visual Representation of data
+        /// ```plaintext
+        /// +----------------+-------------------+------------------+--------------------+-----------------+-----------------+---------------+
+        /// | Version Marker | Ciphertext Length | Device ID Length | Platform shortcode | Ciphertext      | Device ID       | Language Code |
+        /// | (1 byte)       | (2 bytes)         | (1 byte)         | (1 byte)           | (Variable size) | (Variable size) | (2 bytes)     |
+        /// +----------------+-------------------+------------------+--------------------+-----------------+-----------------+---------------+
+        /// ```
+        
+        var data = Data()
+        //Version
+        data.append(bytesVersionMarker)
+        //Payload length
+        data.append(payloadLen)
+        //Device ID length
+        data.append(bytesDeviceIdLength)
+        //Platform shortcode
+        data.append(platform_letter)
+        //Encrypted message content/Ciphertext/payload
+        data.append(encryptedContentPayload)
+        if useDeviceID && deviceID != nil {
+            data.append(Data(deviceID!))
+        }
+        //LanguageCode
+        data.append(Data(languageCode))
+        print("Sending: \(data.base64EncodedString())")
+        return data.base64EncodedString()
+    }
+    
+    
     
     public func decryptBridgeMessage(payload: [UInt8]) throws -> [UInt8]? {
         let lenHeader = Data(payload[0..<4]).withUnsafeBytes { $0.load(as: Int32.self) }.littleEndian
