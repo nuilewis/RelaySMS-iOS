@@ -19,6 +19,8 @@ struct AvailablePlatformView: View {
     @Binding var composeViewRequested: Bool
     @Binding var loading: Bool
     @Binding var codeVerifier: String
+    @Binding var storePlatformOnDevice: Bool
+    @State private var showStoreAlert: Bool = false
 
     var platform: PlatformsEntity?
     var callback: (() -> Void)?
@@ -49,6 +51,26 @@ struct AvailablePlatformView: View {
                     .padding()
             }
 
+            // Only show the toggle when attempting to authenticate to available paltforms
+            if platformRequestedType == .available && platform != nil {
+                Toggle("Store platform on this device", isOn: $storePlatformOnDevice)
+                    .onChange(of: storePlatformOnDevice) { newValue in
+                               if newValue {
+                                   showStoreAlert = true
+                               } else {
+                                   showStoreAlert = false
+                               }
+                           }
+                //TODO: Figure out why this alert doesnt pop up.
+                .alert(isPresented: $showStoreAlert) {
+                    Alert(
+                        title: Text("Store platorm on this device"),
+                          message: Text("This will store your platfom on this specific device. This means you wont be able to access your platfoms if you lose this device"),
+                          dismissButton: .default(Text("I understand"))
+                    )
+                }.padding(.horizontal, 16)
+            }
+ 
             Spacer().frame(maxHeight: 120)
             if phoneNumberAuthenticationRequested {
                 PhoneNumberSheetView(
@@ -135,6 +157,7 @@ struct AvailablePlatformView: View {
     @State var composeViewRequested: Bool = false
     @State var loading: Bool = false
     @State var codeVerifier: String = ""
+    @State var storePlatfomOnDevice: Bool = false
 
     AvailablePlatformView(
         platformRequestedType: $platformRequestedType,
@@ -145,9 +168,11 @@ struct AvailablePlatformView: View {
         composeViewRequested: $composeViewRequested,
         loading: $loading,
         codeVerifier: $codeVerifier,
+        storePlatformOnDevice: $storePlatfomOnDevice,
         platform: platform,
         callback: callback,
         description: description,
         composeDescription: composeDescription
+
     )
 }

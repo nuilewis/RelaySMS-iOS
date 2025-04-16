@@ -35,6 +35,7 @@ struct PlatformDetailsBottomsheet: View {
     @Binding var platformRequestedType: PlatformsRequestedType
     @Binding var composeViewRequested: Bool
     @Binding var refreshParent: Bool
+    @State var storePlatformOnDevice: Bool = false
 
     var callback: (() -> Void)?
 
@@ -132,6 +133,7 @@ struct PlatformDetailsBottomsheet: View {
                     composeViewRequested: $composeViewRequested,
                     loading: $loading,
                     codeVerifier: $codeVerifier,
+                    storePlatformOnDevice: $storePlatformOnDevice,
                     platform: platform,
                     callback: callback,
                     description: description,
@@ -147,7 +149,8 @@ struct PlatformDetailsBottomsheet: View {
                     try Publisher.processIncomingUrls(
                         context: context,
                         url: url,
-                        codeVerifier: codeVerifier
+                        codeVerifier: codeVerifier,
+                        storeOnDevice: storePlatformOnDevice
                     )
                     parentIsEnabled = true
                     dismiss()
