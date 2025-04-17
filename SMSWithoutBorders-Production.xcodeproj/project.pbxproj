@@ -64,19 +64,8 @@
 		F6790DEC2DAE66C30070A55E /* PBXFileSystemSynchronizedBuildFileExceptionSet */ = {
 			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
 			membershipExceptions = (
-				Commons/ContactPickerService.swift,
-				Commons/CountryUtils.swift,
-				Commons/CSecurity.swift,
-				Commons/DataController.swift,
-				Commons/Errors.swift,
-				Commons/OperatorHandlers.swift,
-				Commons/PublisherHandler.swift,
 				Commons/Theme/Fonts/unbounded.ttf,
 				Datastore.xcdatamodeld,
-				Modules/GatewayClients.swift,
-				Modules/gRPCHandler.swift,
-				Modules/Helpers.swift,
-				Modules/Messages.swift,
 				Notes.txt,
 				Proto/relay_publisher.grpc.swift,
 				Proto/relay_publisher.pb.swift,
@@ -86,27 +75,13 @@
 				Proto/vault.proto,
 				"static-x25519-staging.json",
 				"static-x25519.json",
-				Views/Components/Extensions.swift,
-				Views/Components/MessageCard.swift,
-				Views/Components/RelayButton.swift,
-				Views/Components/RelayTextFieldStyle.swift,
-				Views/Components/SucccessAnimations.swift,
 				Views/PlatformComposeViews/SMSComposeMessageUIView.swift,
-				Views/Platforms/Components/AvailablePlatformView.swift,
-				Views/Platforms/Components/PlatformCard.swift,
-				Views/Platforms/Components/PlatformDetailsBottomsheet.swift,
-				Views/Platforms/Components/SaveRevokePlatform.swift,
-				Views/Platforms/EmailPlatformView.swift,
-				Views/Platforms/TextPlatformView.swift,
-				Views/Settings/SecuritySettingsView.swift,
 			);
 			target = 16F0E68E28C6308800FDD12C /* SMSWithoutBorders-ProductionTests */;
 		};
 		F6790DED2DAE66C30070A55E /* PBXFileSystemSynchronizedBuildFileExceptionSet */ = {
 			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
 			membershipExceptions = (
-				Commons/CSecurity.swift,
-				Modules/gRPCHandler.swift,
 				Proto/relay_publisher.grpc.swift,
 				Proto/relay_publisher.pb.swift,
 				Proto/relay_publisher.proto,
@@ -114,11 +89,6 @@
 				Proto/vault.pb.swift,
 				Proto/vault.proto,
 				"static-x25519-staging.json",
-				Views/Components/Extensions.swift,
-				Views/Components/MessageCard.swift,
-				Views/Components/RelayButton.swift,
-				Views/Components/RelayTextFieldStyle.swift,
-				Views/Components/SucccessAnimations.swift,
 			);
 			target = 16F0E69828C6308800FDD12C /* SMSWithoutBorders-ProductionUITests */;
 		};
