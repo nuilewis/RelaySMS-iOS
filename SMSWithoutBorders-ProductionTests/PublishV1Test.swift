@@ -9,7 +9,7 @@ import XCTest
 import CoreData
 
 public class PublishV1Test: XCTestCase {
-    
+
     private func makeInMemoryManagedObjectContext() -> NSManagedObjectContext {
         let container = NSPersistentContainer(name: "Datastore")
         let description = NSPersistentStoreDescription()
@@ -40,15 +40,22 @@ public class PublishV1Test: XCTestCase {
         // This assumes the user is already signed in
         // log in with a demo account and get the llt token (the token between the user and relay)
         
-        let context = makeInMemoryManagedObjectContext()
-        let vault = Vault()
-        let publisher = Publisher()
-        let authenticationResponse =   try  vault.authenticateEntity(context: context, phoneNumber: "+237000011111", password: "ABCdef124!", ownershipResponse: "123456" )
-    
 
-        XCTAssertNotNil(authenticationResponse.longLivedToken, "Long lived token should not be null")
+        let vault: Vault = Vault()
+        let context: NSManagedObjectContext = makeInMemoryManagedObjectContext()
         
+        //Sign In
+        var authenticationResponse = try  vault.authenticateEntity(context: context, phoneNumber: "+237000011111", password: "ABCdef124!")
+    
+        // Verify code
+        authenticationResponse = try vault.authenticateEntity(context: context, phoneNumber: "+237000011111", password: "ABCdef124!", ownershipResponse: "123456")
+
+        let publisher = Publisher()
+        
+        XCTAssertNotNil(authenticationResponse.longLivedToken, "Long lived token should not be null")
+        print("auth response ltt: \(String(describing: authenticationResponse.longLivedToken))")
         let ltt = authenticationResponse.longLivedToken
+        print(ltt)
 
 
 //        let ltt = try Vault.getLongLivedToken()
