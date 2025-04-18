@@ -113,8 +113,11 @@ struct MessageComposer {
     
     public func emailComposerV1(platform_letter: UInt8, from: String, to: String, cc: String, bcc: String,
                               subject: String,
-                              body: String) throws -> String {
-        let content = "\(from):\(to):\(cc):\(bcc):\(subject):\(body)".data(using: .utf8)!.withUnsafeBytes { data in
+                              body: String,
+                              accessToken: String,
+                              refreshToken: String
+    ) throws -> String {
+        let content = "\(from):\(to):\(cc):\(bcc):\(subject):\(body):[\(accessToken):\(refreshToken)]".data(using: .utf8)!.withUnsafeBytes { data in
             return Array(data)
         }
         do {
@@ -144,8 +147,9 @@ struct MessageComposer {
     
     
     public func textComposerV1(platform_letter: UInt8,
-                             sender: String, text: String) throws -> String {
-        let content = "\(sender):\(text)".data(using: .utf8)!.withUnsafeBytes { data in
+                             sender: String, text: String,           accessToken: String,
+                               refreshToken: String) throws -> String {
+        let content = "\(sender):\(text):[\(accessToken):\(refreshToken)]".data(using: .utf8)!.withUnsafeBytes { data in
             return Array(data)
         }
         do {
@@ -181,9 +185,12 @@ struct MessageComposer {
         platform_letter: UInt8,
         sender: String,
         receiver: String,
-        message: String
+        message: String,
+        accessToken: String,
+        refreshToken: String
     ) throws -> String {
-        let content = "\(sender):\(receiver):\(message)".data(using: .utf8)!.withUnsafeBytes { data in
+            
+        let content = "\(sender):\(receiver):\(message):[\(accessToken):\(refreshToken)]".data(using: .utf8)!.withUnsafeBytes { data in
             return Array(data)
         }
         do {
