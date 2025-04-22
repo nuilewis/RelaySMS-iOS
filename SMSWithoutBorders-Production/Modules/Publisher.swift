@@ -446,34 +446,6 @@ class Publisher {
         }
     }
     
-    public static func publishV1(
-        context: NSManagedObjectContext,
-        checkPhoneNumberSettings: Bool = true
-    ) throws -> MessageComposer {
-        do {
-            let AD: [UInt8] = UserDefaults.standard.object(forKey: Publisher.PUBLISHER_SERVER_PUBLIC_KEY) as! [UInt8]
-            let deviceID: [UInt8] = UserDefaults.standard.object(forKey: Vault.VAULT_DEVICE_ID) as! [UInt8]
-            let peerPubkey = try Curve25519.KeyAgreement.PublicKey(rawRepresentation: AD)
-            let pubSharedKey = try CSecurity.findInKeyChain(keystoreAlias: Publisher.PUBLISHER_SHARED_KEY)
-            let usePhonenumber = checkPhoneNumberSettings ? UserDefaults
-                .standard.bool(forKey: SecuritySettingsView.SETTINGS_MESSAGE_WITH_PHONENUMBER) : true
-            print("use deviceID for publishing: \(!usePhonenumber)")
-            
-            let messageComposer = try MessageComposer(
-                SK: pubSharedKey.bytes,
-                AD: AD,
-                peerDhPubKey: peerPubkey,
-                keystoreAlias: Publisher.PUBLISHER_SHARED_KEY,
-                deviceID: deviceID,
-                context: context,
-                useDeviceID: !usePhonenumber)
-            
-            return messageComposer
-        } catch {
-            throw error
-        }
-    }
-    
     
     public static func processIncomingUrls(context: NSManagedObjectContext, url: URL, codeVerifier: String, storeOnDevice: Bool) throws {
         let stateB64Values = url.valueOf("state")
