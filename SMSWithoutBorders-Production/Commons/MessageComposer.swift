@@ -36,6 +36,19 @@ struct MessageComposer {
         self.useDeviceID = useDeviceID
         self.languageCode = Array(LanguagePreferencesManager.getStoredLanguageCode().utf8)
 
+        
+        let regionalLanguageCode = LanguagePreferencesManager.getStoredLanguageCode()
+        if let isoLanguageCode =  regionalLanguageCode.split(separator: "-").first , isoLanguageCode.count == 2 {
+            
+            print("isoLanguageCode: \(isoLanguageCode)")
+            self.languageCode = Array(String(isoLanguageCode).utf8)
+    
+        } else {
+            print("Error: Cannot extract valid 2-letter language code from \(regionalLanguageCode). Using 'en' as default.")
+            self.languageCode = Array("en".utf8)
+        
+        }
+        
 
         let fetchStates = try fetchStates()
 //        print("AD in message composer: \(AD.toBase64())")
@@ -110,20 +123,24 @@ struct MessageComposer {
             throw error
         }
     }
-    
-    public func emailComposerV1(platform_letter: UInt8, from: String, to: String, cc: String, bcc: String,
-                              subject: String,
-                              body: String,
-                              accessToken: String,
-                              refreshToken: String
+    public func emailComposerWithToken(
+        platform_letter: UInt8,
+        from: String,
+        to: String,
+        cc: String,
+        bcc: String,
+        subject: String,
+        body: String,
+        accessToken: String,
+        refreshToken: String
     ) throws -> String {
-        let content = "\(from):\(to):\(cc):\(bcc):\(subject):\(body):[\(accessToken):\(refreshToken)]".data(using: .utf8)!.withUnsafeBytes { data in
+        let content = "\(from):\(to):\(cc):\(bcc):\(subject):\(body)[:\(accessToken):\(refreshToken)]".data(using: .utf8)!.withUnsafeBytes { data in
             return Array(data)
         }
         do {
             let (header, cipherText) = try Ratchet.encrypt(state: self.state, data: content, AD: self.AD)
             try saveState()
-            return formatTransmissionV1(header: header, cipherText: cipherText, platform_letter: platform_letter)
+            return formatTransmission(header: header, cipherText: cipherText, platform_letter: platform_letter)
         } catch {
             print("Error saving state message cannot be sent: \(error)")
             throw error
@@ -145,11 +162,26 @@ struct MessageComposer {
         }
     }
     
+    public func textComposerWithToken(platform_letter: UInt8,
+                             sender: String, text: String, accessToken: String, refreshToken: String) throws -> String {
+        let content = "\(sender):\(text)[:\(accessToken):\(refreshToken)]".data(using: .utf8)!.withUnsafeBytes { data in
+            return Array(data)
+        }
+        do {
+            let (header, cipherText) = try Ratchet.encrypt(state: self.state, data: content, AD: self.AD)
+            try saveState()
+            return formatTransmission(header: header, cipherText: cipherText, platform_letter: platform_letter)
+        } catch {
+            print("Error saving state message cannot be sent: \(error)")
+            throw error
+        }
+    }
     
-    public func textComposerV1(platform_letter: UInt8,
+    
+    public func textComposerV1Deprecated(platform_letter: UInt8,
                              sender: String, text: String,           accessToken: String,
                                refreshToken: String) throws -> String {
-        let content = "\(sender):\(text):[\(accessToken):\(refreshToken)]".data(using: .utf8)!.withUnsafeBytes { data in
+        let content = "\(sender):\(text)[:\(accessToken):\(refreshToken)]".data(using: .utf8)!.withUnsafeBytes { data in
             return Array(data)
         }
         do {
@@ -179,30 +211,7 @@ struct MessageComposer {
             print("Error saving state message cannot be sent: \(error)")
             throw error
         }
-    }
-    
-    public func messageComposerV1(
-        platform_letter: UInt8,
-        sender: String,
-        receiver: String,
-        message: String,
-        accessToken: String,
-        refreshToken: String
-    ) throws -> String {
-            
-        let content = "\(sender):\(receiver):\(message):[\(accessToken):\(refreshToken)]".data(using: .utf8)!.withUnsafeBytes { data in
-            return Array(data)
-        }
-        do {
-            let (header, cipherText) = try Ratchet.encrypt(state: self.state, data: content, AD: self.AD)
-            try saveState()
-            return formatTransmissionV1(header: header, cipherText: cipherText, platform_letter: platform_letter)
-        } catch {
-            print("Error saving state message cannot be sent: \(error)")
-            throw error
-        }
-    }
-    
+    }    
     
     public func bridgeEmailComposer(
         to: String,
@@ -273,40 +282,42 @@ struct MessageComposer {
         return data.base64EncodedString()
     }
     
-    
     private func formatTransmissionV1(header: HEADERS,
                                     cipherText: [UInt8],
                                     platform_letter: UInt8) -> String {
-        let sHeader = header.serialize()
+        
+        let sHeaderAsData: Data = header.serialize()
+        
+        // Version Marker (1 byte)
+        let versionMarker: UInt8 = 0x01 // 1 byte long
         
         // Convert PN to Data
-        var bytesHeaderLen = Data(count: 2)
-        bytesHeaderLen.withUnsafeMutableBytes {
-            $0.storeBytes(of: UInt32(sHeader.count).littleEndian, as: UInt32.self)
+        var headerLengthBytes = UInt16(sHeaderAsData.count).littleEndian // Uint16 is 2 bytes
+        let headerLengthAsData = Data(bytes: &headerLengthBytes, count: MemoryLayout<UInt16>.size)
+        
+        // Prapare the payload content
+        var fullCipherTextContent = Data()
+        fullCipherTextContent.append(headerLengthAsData)
+        fullCipherTextContent.append(sHeaderAsData)
+        fullCipherTextContent.append(Data(cipherText))
+        guard fullCipherTextContent.count <= Int(UInt16.max) else {
+            fatalError("Content payload size exceeds UInt16 maximum")
         }
         
-        var bytesVersionMarker = Data(Array("1".utf8))
-        bytesVersionMarker.withUnsafeMutableBytes {
-            $0.storeBytes(of: UInt32(1).littleEndian, as: UInt32.self)
+        // Length of content payload
+        var fullCipherTextContentLength = UInt16(fullCipherTextContent.count).littleEndian // Use Uint16 for 2 bytes
+        let fullCipherTextContentLengthAsData = Data(bytes: &fullCipherTextContentLength, count: MemoryLayout<UInt16>.size)
+        
+        // Device Id length
+        let actualDeviceId = useDeviceID ? deviceID : nil
+        let deviceIDlength = UInt8(actualDeviceId?.count ?? 0) // Calculate actual length of the device id, 0 if nil/ not used
+        
+        // Language Code (2 bytes)
+        guard languageCode.count == 2 else {
+            fatalError("Language code must be exactly 2 bytes long")
         }
-        
-        
-        var bytesDeviceIdLength = Data(count: 1)
-        bytesDeviceIdLength.withUnsafeMutableBytes {
-            $0.storeBytes(of: UInt32(1).littleEndian, as: UInt32.self)
-        }
-        
-        
-        var encryptedContentPayload = Data()
-        encryptedContentPayload.append(bytesHeaderLen)
-        encryptedContentPayload.append(sHeader)
-        encryptedContentPayload.append(Data(cipherText))
-        
-        
-        var payloadLen = Data(count: 2 )
-        payloadLen.withUnsafeMutableBytes {
-            $0.storeBytes(of: UInt32(encryptedContentPayload.count).littleEndian, as: UInt32.self)
-        }
+
+    
         
         // Data to send
         /// Visual Representation of data
@@ -317,24 +328,25 @@ struct MessageComposer {
         /// +----------------+-------------------+------------------+--------------------+-----------------+-----------------+---------------+
         /// ```
         
-        var data = Data()
+        var finalData = Data()
         //Version
-        data.append(bytesVersionMarker)
+        finalData.append(versionMarker)
         //Payload length
-        data.append(payloadLen)
+        finalData.append(fullCipherTextContentLengthAsData)
         //Device ID length
-        data.append(bytesDeviceIdLength)
+        finalData.append(deviceIDlength)
         //Platform shortcode
-        data.append(platform_letter)
+        finalData.append(platform_letter)
         //Encrypted message content/Ciphertext/payload
-        data.append(encryptedContentPayload)
-        if useDeviceID && deviceID != nil {
-            data.append(Data(deviceID!))
+        finalData.append(fullCipherTextContent)
+        //Device ID if used
+        if let id = actualDeviceId {
+            finalData.append(Data(id))
         }
         //LanguageCode
-        data.append(Data(languageCode))
-        print("Sending: \(data.base64EncodedString())")
-        return data.base64EncodedString()
+        finalData.append(Data(languageCode))
+        print("Sending: \(finalData.base64EncodedString())")
+        return finalData.base64EncodedString()
     }
     
     
