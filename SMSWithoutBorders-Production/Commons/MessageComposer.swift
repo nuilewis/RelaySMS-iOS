@@ -134,7 +134,7 @@ struct MessageComposer {
         accessToken: String,
         refreshToken: String
     ) throws -> String {
-        let content = "\(from):\(to):\(cc):\(bcc):\(subject):\(body)[:\(accessToken):\(refreshToken)]".data(using: .utf8)!.withUnsafeBytes { data in
+        let content = "\(from):\(to):\(cc):\(bcc):\(subject):\(body):\(accessToken):\(refreshToken)".data(using: .utf8)!.withUnsafeBytes { data in
             return Array(data)
         }
         do {
@@ -164,7 +164,7 @@ struct MessageComposer {
     
     public func textComposerWithToken(platform_letter: UInt8,
                              sender: String, text: String, accessToken: String, refreshToken: String) throws -> String {
-        let content = "\(sender):\(text)[:\(accessToken):\(refreshToken)]".data(using: .utf8)!.withUnsafeBytes { data in
+        let content = "\(sender):\(text):\(accessToken):\(refreshToken)".data(using: .utf8)!.withUnsafeBytes { data in
             return Array(data)
         }
         do {
@@ -177,22 +177,6 @@ struct MessageComposer {
         }
     }
     
-    
-    public func textComposerV1Deprecated(platform_letter: UInt8,
-                             sender: String, text: String,           accessToken: String,
-                               refreshToken: String) throws -> String {
-        let content = "\(sender):\(text)[:\(accessToken):\(refreshToken)]".data(using: .utf8)!.withUnsafeBytes { data in
-            return Array(data)
-        }
-        do {
-            let (header, cipherText) = try Ratchet.encrypt(state: self.state, data: content, AD: self.AD)
-            try saveState()
-            return formatTransmissionV1(header: header, cipherText: cipherText, platform_letter: platform_letter)
-        } catch {
-            print("Error saving state message cannot be sent: \(error)")
-            throw error
-        }
-    }
     
     public func messageComposer(
         platform_letter: UInt8,
