@@ -50,6 +50,7 @@
     <entity name="StoredPlatformsEntity" representedClassName="StoredPlatformsEntity" syncable="YES" codeGenerationType="class">
         <attribute name="account" optional="YES" attributeType="String"/>
         <attribute name="id" optional="YES" attributeType="String"/>
+        <attribute name="isStoredOnDevice" optional="YES" attributeType="Boolean" usesScalarValueType="YES"/>
         <attribute name="name" optional="YES" attributeType="String"/>
         <uniquenessConstraints>
             <uniquenessConstraint>
