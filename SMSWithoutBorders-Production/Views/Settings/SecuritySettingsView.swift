@@ -7,14 +7,24 @@
 
 import SwiftUI
 
+
+struct SettingsKeys {
+    public static let SETTINGS_MESSAGE_WITH_PHONENUMBER: String = "SETTINGS_MESSAGE_WITH_PHONENUMBER"
+    public static let SETTINGS_STORE_PLATFORMS_ON_DEVICE: String = "SETTINGS_STORE_PLATFORMS_ON_DEVICE"
+}
+
+
 struct SecuritySettingsView: View {
-    public static var SETTINGS_MESSAGE_WITH_PHONENUMBER = "SETTINGS_MESSAGE_WITH_PHONENUMBER"
+
     @State private var selected: UUID?
     @State private var deleteProcessing = false
     
     @State private var isShowingRevoke = false
     @State var showIsLoggingOut: Bool = false
     @State var showIsDeleting: Bool = false
+    
+    @AppStorage(SettingsKeys.SETTINGS_STORE_PLATFORMS_ON_DEVICE)
+    private var storePlatformsOnDevice: Bool = false
 
     @Binding var isLoggedIn: Bool
     
@@ -26,10 +36,19 @@ struct SecuritySettingsView: View {
     var body: some View {
         VStack(alignment: .leading) {
             List {
+                Section(header: Text("Security")) {
+                    Toggle("Store platforms on this device", isOn: $storePlatformsOnDevice).padding([.top], 12)
+                        Text(String(localized:"This will store your platforms on this specific device, and migrate any existing platforms to this device. \nThis means you won't be able to access your platfoms if you lose this device"))
+                            .font(RelayTypography.bodyMedium)
+                            .foregroundStyle(RelayColors.colorScheme.onSurface.opacity(0.6)).padding([.bottom], 12)
+                    
+                }.listRowSeparator(.hidden)
+                
                 Section(header: Text("Account")) {
                     Button("Log out") {
                         showIsLoggingOut.toggle()
-                    }.confirmationDialog("", isPresented: $showIsLoggingOut) {
+                    }
+                    .confirmationDialog("", isPresented: $showIsLoggingOut) {
                         Button("Log out", role: .destructive, action: logout)
                     } message: {
                         Text(String(localized:"You can log back in at anytime. All the messages sent would be deleted.", comment: "Explains that you can log into your account at any time, and all the messages sent would be deleted"))
@@ -48,11 +67,21 @@ struct SecuritySettingsView: View {
                         }
                         .disabled(!isLoggedIn)
                     }
-                }
+                }.listRowSeparator(.hidden)
             }
         }
         .navigationTitle("Security")
         .navigationBarTitleDisplayMode(.inline)
+    }
+    
+    
+    func configureDefaults() {
+        let storePlatformOnDevice: Bool? = UserDefaults.standard.bool(forKey: SettingsKeys.SETTINGS_STORE_PLATFORMS_ON_DEVICE)
+        if storePlatformOnDevice == nil {
+            UserDefaults.standard.register(defaults: [
+                SettingsKeys.SETTINGS_STORE_PLATFORMS_ON_DEVICE: false
+            ])
+        }
     }
     
     func logout() {

@@ -118,7 +118,7 @@ struct EmailComposeView: View {
         private var defaultGatewayClientMsisdn: String = ""
     #endif
     
-    @AppStorage(SecuritySettingsView.SETTINGS_MESSAGE_WITH_PHONENUMBER)
+    @AppStorage(SettingsKeys.SETTINGS_MESSAGE_WITH_PHONENUMBER)
     private var messageWithPhoneNumber = false
 
     @State private var encryptedFormattedContent: String = ""

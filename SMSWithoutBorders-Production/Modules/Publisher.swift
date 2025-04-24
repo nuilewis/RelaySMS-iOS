@@ -428,7 +428,7 @@ class Publisher {
             let peerPubkey = try Curve25519.KeyAgreement.PublicKey(rawRepresentation: AD)
             let pubSharedKey = try CSecurity.findInKeyChain(keystoreAlias: Publisher.PUBLISHER_SHARED_KEY)
             let usePhonenumber = checkPhoneNumberSettings ? UserDefaults
-                .standard.bool(forKey: SecuritySettingsView.SETTINGS_MESSAGE_WITH_PHONENUMBER) : true
+                .standard.bool(forKey: SettingsKeys.SETTINGS_MESSAGE_WITH_PHONENUMBER) : true
             print("use deviceID for publishing: \(!usePhonenumber)")
             
             let messageComposer = try MessageComposer(

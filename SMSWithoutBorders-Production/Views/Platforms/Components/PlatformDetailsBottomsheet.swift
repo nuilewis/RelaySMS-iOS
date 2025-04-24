@@ -133,7 +133,6 @@ struct PlatformDetailsBottomsheet: View {
                     composeViewRequested: $composeViewRequested,
                     loading: $loading,
                     codeVerifier: $codeVerifier,
-                    storePlatformOnDevice: $storePlatformOnDevice,
                     platform: platform,
                     callback: callback,
                     description: description,
