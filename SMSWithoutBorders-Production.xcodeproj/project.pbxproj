@@ -65,7 +65,6 @@
 			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
 			membershipExceptions = (
 				Commons/Theme/Fonts/unbounded.ttf,
-				Datastore.xcdatamodeld,
 				Notes.txt,
 				Proto/relay_publisher.grpc.swift,
 				Proto/relay_publisher.pb.swift,

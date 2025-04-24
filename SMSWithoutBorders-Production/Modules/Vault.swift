@@ -454,51 +454,51 @@ struct Vault {
         return true
     }
     
-    func migratePlatformsToDevice(ltt: String, context: NSManagedObjectContext) throws -> Bool {
-        print("Migrating stored platforms to devce...")
-        let vault = Vault()
-        do {
-            let storedTokens = try vault.listStoredEntityToken(longLiveToken: ltt, migrateToDevice: true)
-            try Vault.clear(context: context, shouldSave: false)
-            for storedToken in storedTokens.storedTokens {
-                let storedPlatformEntity = StoredPlatformsEntity(context: context)
-                storedPlatformEntity.name = storedToken.platform
-                storedPlatformEntity.account = storedToken.accountIdentifier
-                storedPlatformEntity.isStoredOnDevice = storedToken.isStoredOnDevice
-                storedPlatformEntity.id = Vault.deriveUniqueKey(platformName: storedToken.platform, accountIdentifier: storedToken.accountIdentifier)
-                
-                // Optionally populate the token fields if not null
-               if let refreshToken = storedToken.accountTokens["refresh_token"] {
-                   storedPlatformEntity.refreshToken = refreshToken
-               }
-                if let accessToken = storedToken.accountTokens["access_token"] {
-                    storedPlatformEntity.accessToken = accessToken
-                }
-                if let idToken = storedToken.accountTokens["id_token"] {
-                    storedPlatformEntity.idToken = idToken
-                }
-
-            
-            }
-            
-            
-            DispatchQueue.main.async {
-                do {
-                    try context.save()
-                } catch {
-                    print("Failed to migrate and store entities")
-                }
-            }
-        } catch Exceptions.unauthenticatedLLT(let status){
-            try Vault.resetKeystore(context: context)
-            try DataController.resetDatabase(context: context)
-            return false
-        } catch {
-            print("Error fetching while migrating stored tokens to device: \(error)")
-            throw error
-        }
-        return true
-    }
+//    func migratePlatformsToDevice(ltt: String, context: NSManagedObjectContext) throws -> Bool {
+//        print("Migrating stored platforms to devce...")
+//        let vault = Vault()
+//        do {
+//            let storedTokens = try vault.listStoredEntityToken(longLiveToken: ltt, migrateToDevice: true)
+//            try Vault.clear(context: context, shouldSave: false)
+//            for storedToken in storedTokens.storedTokens {
+//                let storedPlatformEntity = StoredPlatformsEntity(context: context)
+//                storedPlatformEntity.name = storedToken.platform
+//                storedPlatformEntity.account = storedToken.accountIdentifier
+//                storedPlatformEntity.isStoredOnDevice = storedToken.isStoredOnDevice
+//                storedPlatformEntity.id = Vault.deriveUniqueKey(platformName: storedToken.platform, accountIdentifier: storedToken.accountIdentifier)
+//                
+//                // Optionally populate the token fields if not null
+//               if let refreshToken = storedToken.accountTokens["refresh_token"] {
+//                   storedPlatformEntity.refreshToken = refreshToken
+//               }
+//                if let accessToken = storedToken.accountTokens["access_token"] {
+//                    storedPlatformEntity.accessToken = accessToken
+//                }
+//                if let idToken = storedToken.accountTokens["id_token"] {
+//                    storedPlatformEntity.idToken = idToken
+//                }
+//
+//            
+//            }
+//            
+//            
+//            DispatchQueue.main.async {
+//                do {
+//                    try context.save()
+//                } catch {
+//                    print("Failed to migrate and store entities")
+//                }
+//            }
+//        } catch Exceptions.unauthenticatedLLT(let status){
+//            try Vault.resetKeystore(context: context)
+//            try DataController.resetDatabase(context: context)
+//            return false
+//        } catch {
+//            print("Error fetching while migrating stored tokens to device: \(error)")
+//            throw error
+//        }
+//        return true
+//    }
     
     static func clear(context: NSManagedObjectContext, shouldSave: Bool = true) throws {
         print("Clearing platforms...")
