@@ -110,33 +110,23 @@ struct MessageComposer {
     
     public func emailComposer(platform_letter: UInt8, from: String, to: String, cc: String, bcc: String,
                               subject: String,
-                              body: String) throws -> String {
-        let content = "\(from):\(to):\(cc):\(bcc):\(subject):\(body)".data(using: .utf8)!.withUnsafeBytes { data in
-            return Array(data)
+                              body: String, accessToken: String? = nil, refreshToken: String? = nil) throws -> String {
+        
+        var content: [UInt8]
+        var contentString = "\(from):\(to):\(cc):\(bcc):\(subject):\(body)"
+    
+        // Append the access token and refresh token if they not nil or empty
+        if let accToken = accessToken, !accToken.isEmpty,
+           let refToken = refreshToken, !refToken.isEmpty {
+            contentString += ":\(accToken):\(refToken)"
         }
-        do {
-            let (header, cipherText) = try Ratchet.encrypt(state: self.state, data: content, AD: self.AD)
-            try saveState()
-            return formatTransmission(header: header, cipherText: cipherText, platform_letter: platform_letter)
-        } catch {
-            print("Error saving state message cannot be sent: \(error)")
-            throw error
-        }
-    }
-    public func emailComposerWithToken(
-        platform_letter: UInt8,
-        from: String,
-        to: String,
-        cc: String,
-        bcc: String,
-        subject: String,
-        body: String,
-        accessToken: String,
-        refreshToken: String
-    ) throws -> String {
-        let content = "\(from):\(to):\(cc):\(bcc):\(subject):\(body):\(accessToken):\(refreshToken)".data(using: .utf8)!.withUnsafeBytes { data in
-            return Array(data)
-        }
+
+        // Potentially more verbose, might be easier to just call Array(contentString.ut8)
+//        content = contentString.data(using: .utf8)!.withUnsafeBytes { data in
+//            return Array(data)
+//        }
+        content = Array(contentString.utf8)
+        
         do {
             let (header, cipherText) = try Ratchet.encrypt(state: self.state, data: content, AD: self.AD)
             try saveState()
@@ -148,10 +138,26 @@ struct MessageComposer {
     }
     
     public func textComposer(platform_letter: UInt8,
-                             sender: String, text: String) throws -> String {
-        let content = "\(sender):\(text)".data(using: .utf8)!.withUnsafeBytes { data in
-            return Array(data)
+                             sender: String,
+                             text: String,
+                             accessToken: String? = nil,
+                             refreshToken: String? = nil) throws -> String {
+        
+        var content: [UInt8]
+        var contentString = "\(sender):\(text)"
+    
+        // Append the access token and refresh token if they not nil or empty
+        if let accToken = accessToken, !accToken.isEmpty,
+           let refToken = refreshToken, !refToken.isEmpty {
+            contentString += ":\(accToken):\(refToken)"
         }
+
+        // Potentially more verbose, might be easier to just call Array(contentString.ut8)
+//        content = contentString.data(using: .utf8)!.withUnsafeBytes { data in
+//            return Array(data)
+//        }
+        content = Array(contentString.utf8)
+
         do {
             let (header, cipherText) = try Ratchet.encrypt(state: self.state, data: content, AD: self.AD)
             try saveState()
@@ -161,22 +167,6 @@ struct MessageComposer {
             throw error
         }
     }
-    
-    public func textComposerWithToken(platform_letter: UInt8,
-                             sender: String, text: String, accessToken: String, refreshToken: String) throws -> String {
-        let content = "\(sender):\(text):\(accessToken):\(refreshToken)".data(using: .utf8)!.withUnsafeBytes { data in
-            return Array(data)
-        }
-        do {
-            let (header, cipherText) = try Ratchet.encrypt(state: self.state, data: content, AD: self.AD)
-            try saveState()
-            return formatTransmission(header: header, cipherText: cipherText, platform_letter: platform_letter)
-        } catch {
-            print("Error saving state message cannot be sent: \(error)")
-            throw error
-        }
-    }
-    
     
     public func messageComposer(
         platform_letter: UInt8,

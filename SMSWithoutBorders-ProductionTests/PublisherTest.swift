@@ -81,7 +81,6 @@ class PublisherTest : XCTestCase {
         XCTAssertFalse(authenticationResponse.longLivedToken == "", "Long lived token should not be empty")
         let encryptedLlt = authenticationResponse.longLivedToken
         print("encryptedLlt: \(encryptedLlt)")
-        // i think i have to decrrypt the ltt before using.
         // call Vault.deriveStoredLTT before using but is already called when calling authenticated entity, so the llt is already decrypted and stored.
         
         let decryptedLlt = try Vault.getLongLivedToken()
@@ -130,7 +129,7 @@ class PublisherTest : XCTestCase {
         let sender: String = "nuilewis"
         let message: String = "Hello World"
         let twitterPlatfomLetter = "t".utf8.first!
-        let twitterComposerResponse = try publishMessageComposer.textComposerWithToken(
+        let twitterComposerResponse = try publishMessageComposer.textComposer(
             platform_letter: twitterPlatfomLetter,
             sender: sender,
             text: message,
@@ -146,7 +145,7 @@ class PublisherTest : XCTestCase {
         let subject: String = "Test email from RelaySMS"
         let body: String = "Hello World"
         let gmailPlatformLetter = "g".utf8.first!
-        let gmailComposerResponse = try publishMessageComposer.emailComposerWithToken(
+        let gmailComposerResponse = try publishMessageComposer.emailComposer(
             platform_letter: gmailPlatformLetter,
             from: from,
             to: to,
