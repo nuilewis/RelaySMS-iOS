@@ -7,75 +7,157 @@
 
 import SwiftUI
 
-
 struct SettingsKeys {
-    public static let SETTINGS_MESSAGE_WITH_PHONENUMBER: String = "SETTINGS_MESSAGE_WITH_PHONENUMBER"
-    public static let SETTINGS_STORE_PLATFORMS_ON_DEVICE: String = "SETTINGS_STORE_PLATFORMS_ON_DEVICE"
+    public static let SETTINGS_MESSAGE_WITH_PHONENUMBER: String =
+        "SETTINGS_MESSAGE_WITH_PHONENUMBER"
+    public static let SETTINGS_STORE_PLATFORMS_ON_DEVICE: String =
+        "SETTINGS_STORE_PLATFORMS_ON_DEVICE"
 }
-
 
 struct SecuritySettingsView: View {
 
     @State private var selected: UUID?
     @State private var deleteProcessing = false
-    
+
     @State private var isShowingRevoke = false
     @State var showIsLoggingOut: Bool = false
     @State var showIsDeleting: Bool = false
     @State var showAlert: Bool = false
+    @State var showRevokingAlert: Bool = false
     @State var alertTitle: String = ""
     @State var alertMessage: String = ""
-    
+    @State private var isLoading = false
+
     @AppStorage(SettingsKeys.SETTINGS_STORE_PLATFORMS_ON_DEVICE)
     private var storePlatformsOnDevice: Bool = false
 
     @Binding var isLoggedIn: Bool
-    
+
     @Environment(\.dismiss) var dismiss
     @Environment(\.managedObjectContext) var viewContext
-    @FetchRequest(sortDescriptors: []) var storedPlatforms: FetchedResults<StoredPlatformsEntity>
-    @FetchRequest(sortDescriptors: []) var platforms: FetchedResults<PlatformsEntity>
+    @FetchRequest(sortDescriptors: []) var storedPlatforms:
+        FetchedResults<StoredPlatformsEntity>
+    @FetchRequest(sortDescriptors: []) var platforms:
+        FetchedResults<PlatformsEntity>
 
     var body: some View {
         VStack(alignment: .leading) {
             List {
                 Section(header: Text("Security")) {
-                    Toggle("Store platforms on this device", isOn: $storePlatformsOnDevice).onChange(of: storePlatformsOnDevice) { newValue in
-                        
+                    Toggle(
+                        "Store platforms on this device",
+                        isOn: $storePlatformsOnDevice
+                    ).onChange(of: storePlatformsOnDevice) { newValue in
+
                         if newValue {
                             // Trigger a refresh
                             let vault = Vault()
                             do {
                                 let llt: String = try Vault.getLongLivedToken()
-                                vault.migratePlatformsToDevice(llt: llt, context: viewContext)
-                                
+                                vault.migratePlatformsToDevice(
+                                    llt: llt, context: viewContext)
+
                                 showAlert = true
                                 alertTitle = "Success"
-                                alertMessage = "Your platforms have been migrated to this device successfully!"
+                                alertMessage =
+                                    "Your platforms have been migrated to this device successfully!"
                             } catch {
                                 showAlert = true
                                 alertTitle = "Error"
-                                alertMessage = "An error occurred while trying to migrate your platforms. Please try again later."
+                                alertMessage =
+                                    "An error occurred while trying to migrate your platforms. Please try again later."
                                 print(error)
                             }
                         }
                         
-                        //TODO: I think you should revoke the platforms if this is set to false so the user can add them again let them be added to the vault
-                        
                         if !newValue {
-                            //TODO: Revoke platfomrs and clear accounts here
+                            // If user turns off token storage accounts
+                            showRevokingAlert.toggle()
+                            alertTitle = "Beware"
+                            alertMessage = "Turning this off will delete all tokens stored on this device and on the server. \nThis would revoke all accounts. You would have to add your accounts again."
                         }
-                    }.alert(isPresented: $showAlert) {
-                        Alert(title: Text(alertTitle), message: Text(alertMessage), dismissButton: .default(Text("OK")))
                     }
-                
-                        .padding([.top], 12)
-                        Text(String(localized:"This will store your platforms on this specific device, and migrate any existing platforms to this device. \nThis means you won't be able to access your platfoms if you lose this device"))
-                            .font(RelayTypography.bodyMedium)
-                            .foregroundStyle(RelayColors.colorScheme.onSurface.opacity(0.6)).padding([.bottom], 12)
-                    
+                    .alert(isPresented: $showAlert) {
+                        Alert(
+                            title: Text(alertTitle),
+                            message: Text(alertMessage),
+                            dismissButton: .default(Text("OK")))
+
+                    }.alert(isPresented: $showRevokingAlert) {
+                        Alert(
+                            title: Text(alertTitle),
+                            message: Text(alertMessage),
+                            primaryButton: .destructive(
+                                Text("Continue"),
+                                action: {
+                                    isLoading.toggle()
+                                    print("Atrempting to revoke accounts")
+
+                                    do {
+                                        let llt = try Vault.getLongLivedToken()
+                                        let backgroundQueue = DispatchQueue(
+                                            label: "revokeAccountQueue",
+                                            qos: .background)
+                                        
+                                        // Revoke accounts in a background thread
+                                        backgroundQueue.async {
+                                            do {
+                                                let vault: Vault = Vault()
+                                                let llt: String =
+                                                    try Vault.getLongLivedToken()
+                                                let publisher = Publisher()
+
+                                                // loop through all platforms and revoke them
+                                                // Then loop through all accounts within each platfoms and revoke them
+                                                let platformEntity = platforms
+
+                                                for platform in platformEntity {
+                                                    print( "Revoking: \(platform.name ?? "Platform")...")
+
+                                                    let storedPlatformEntitiesToDelete =
+                                                        storedPlatforms
+                                                    for storedPlatformEntity in storedPlatformEntitiesToDelete {
+                                                        print("Deleteting stored platform entity: \(storedPlatformEntity.account ?? "Unknowdn account")  \(storedPlatformEntity.name ?? "Uknown Platform")")
+
+                                                        let result: Bool =
+                                                            try publisher
+                                                            .revokePlatform(
+                                                                llt: llt,
+                                                                platform:platform.name!,
+                                                                account: storedPlatformEntity.account!,
+                                                                protocolType: platform.protocol_type!
+                                                            )
+                                                        viewContext.delete(storedPlatformEntity)
+                                                    }
+                                                }
+                                                
+                                                // Save all updates after deleting to CoreData
+                                                try viewContext.save()
+
+                                                // Refresh stored tokens... should return empty
+                                                var _ = try vault.refreshStoredTokens(llt: llt, context: viewContext)
+                                                
+                                                // Deleted stored tokens
+                                                StoredTokensEntityManager(context: viewContext).deleteAllStoredTokens()
+                                                
+                                                //Dismiss
+                                                DispatchQueue.main.async {dismiss()}
+                                                }
+                                            catch {print("Unable to revoke accounts \(error)")}
+                                            }
+                                    } catch { print("Unable to revoke accounts \(error)")}
+                                }
+                            ),
+                            secondaryButton: .default(Text("Cancel")) {
+                                showRevokingAlert.toggle()
+                            })
+                    }
+                    .padding([.top], 12)
+                    Text(String(localized:"This will store your platforms on this specific device, and migrate any existing platforms to this device. \nThis means you won't be able to access your platfoms if you lose this device"))
+                    .font(RelayTypography.bodyMedium)
+                    .foregroundStyle(RelayColors.colorScheme.onSurface.opacity(0.6)).padding([.bottom], 12)
                 }.listRowSeparator(.hidden)
-                
+
                 Section(header: Text("Account")) {
                     Button("Log out") {
                         showIsLoggingOut.toggle()
@@ -93,7 +175,9 @@ struct SecuritySettingsView: View {
                         Button("Delete Account", role: .destructive) {
                             showIsDeleting.toggle()
                         }.confirmationDialog("", isPresented: $showIsDeleting) {
-                            Button("Continue Deleting", role: .destructive, action: deleteAccount)
+                            Button(
+                                "Continue Deleting", role: .destructive,
+                                action: deleteAccount)
                         } message: {
                             Text(String(localized:"You can create another account anytime. All your stored tokens would be revoked from the Vault and all data deleted", comment: "Explains that you can always create an account at a later date, but all previously stored tokens and platforms for your old account will be revoked and data deleted"))
                         }
@@ -102,20 +186,22 @@ struct SecuritySettingsView: View {
                 }.listRowSeparator(.hidden)
             }
         }
+        .overlay {
+              if isLoading {
+                  ZStack {
+                      Color.black
+                          .opacity(0.2)
+                          .edgesIgnoringSafeArea(.all)
+                      ProgressView("Revoking...")//.foregroundStyle(Color.white)
+                          .padding()
+                  }
+              }
+              }
         .navigationTitle("Security")
         .navigationBarTitleDisplayMode(.inline)
     }
-    
-    
-    func configureDefaults() {
-        let storePlatformOnDevice: Bool? = UserDefaults.standard.bool(forKey: SettingsKeys.SETTINGS_STORE_PLATFORMS_ON_DEVICE)
-        if storePlatformOnDevice == nil {
-            UserDefaults.standard.register(defaults: [
-                SettingsKeys.SETTINGS_STORE_PLATFORMS_ON_DEVICE: false
-            ])
-        }
-    }
-    
+
+
     func logout() {
         logoutAccount(context: viewContext)
         do {
@@ -125,33 +211,34 @@ struct SecuritySettingsView: View {
         }
         dismiss()
     }
-    
-    
+
     func deleteAccount() {
         deleteProcessing = true
-        DispatchQueue.background(background: {
-            do {
-                let llt = try Vault.getLongLivedToken()
-                try Vault.completeDeleteEntity(
-                    context: viewContext,
-                    longLiveToken: llt,
-                    storedTokenEntities: storedPlatforms,
-                    platforms: platforms)
-            } catch {
-                print("Error deleting: \(error)")
-            }
-            deleteProcessing = false
-        }, completion: {
-            DispatchQueue.main.async {
-                logoutAccount(context: viewContext)
+        DispatchQueue.background(
+            background: {
                 do {
-                    isLoggedIn = try !Vault.getLongLivedToken().isEmpty
+                    let llt = try Vault.getLongLivedToken()
+                    try Vault.completeDeleteEntity(
+                        context: viewContext,
+                        longLiveToken: llt,
+                        storedTokenEntities: storedPlatforms,
+                        platforms: platforms)
                 } catch {
-                    print(error)
+                    print("Error deleting: \(error)")
                 }
-                dismiss()
-            }
-        })
+                deleteProcessing = false
+            },
+            completion: {
+                DispatchQueue.main.async {
+                    logoutAccount(context: viewContext)
+                    do {
+                        isLoggedIn = try !Vault.getLongLivedToken().isEmpty
+                    } catch {
+                        print(error)
+                    }
+                    dismiss()
+                }
+            })
     }
 }
 
