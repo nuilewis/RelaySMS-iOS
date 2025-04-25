@@ -23,6 +23,9 @@ struct TextComposeView: View {
         @AppStorage(GatewayClients.DEFAULT_GATEWAY_CLIENT_MSISDN)
         private var defaultGatewayClientMsisdn: String = ""
     #endif
+    
+    @AppStorage(SettingsKeys.SETTINGS_STORE_PLATFORMS_ON_DEVICE)
+    private var isPlatformsStoredOnDevice: Bool = false
 
     @State var textBody: String = ""
     @State var placeHolder: String = "What's happening?"
@@ -43,7 +46,6 @@ struct TextComposeView: View {
     init(platformName: Binding<String>, message: Binding<Messages?>) {
         _platformName = platformName
         _message = message
-
         let platformNameWrapped = platformName.wrappedValue
         _storedPlatforms = FetchRequest<StoredPlatformsEntity>(
             sortDescriptors: [],
@@ -117,13 +119,41 @@ struct TextComposeView: View {
                     DispatchQueue.background(background: {
                         do {
                             let messageComposer = try Publisher.publish( context: context)
+                            let tokenManager = StoredTokensEntityManager(context: context)
                             var shortcode: UInt8? = nil
                             shortcode = platform.shortcode!.bytes[0]
                             
+                            // Get the stored platform and use the tokens if the platform tokens exist
+                            let storedPlatformEntity = storedPlatforms.first {$0.account == fromAccount} // Gets the speciic account that matches the currently selected `fromAccount`
+                            var tokensExists: Bool = false
+                            var storedTokenForPlatform: StoredToken?
+                            
+                            if let entity = storedPlatformEntity, entity.isStoredOnDevice {
+                                print("Platform is stored on device.. Will use saved tokens for publishing if tokens are available")
+                                tokensExists = tokenManager.storedTokenExists(forPlarform: entity.id ?? "")
+                                
+                                // Get tokens if they exist
+                                if tokensExists {
+                                    storedTokenForPlatform = tokenManager.getStoredToken(forPlatform: entity.id!)
+                                }
+                                
+                                // Trigger a refresh if tokens are lost
+                                if !tokensExists && entity.isStoredOnDevice {
+                                    // TODO: Alert the user to revoke the platform or something.
+                                }
+                            } else {
+                                print("Platform is not stored on device")
+                            }
+            
                             encryptedFormattedContent = try messageComposer.textComposer(
                                 platform_letter: shortcode!,
                                 sender: fromAccount,
-                                text: textBody)
+                                text: textBody,
+                                accessToken: tokensExists ? storedTokenForPlatform?.accessToken : nil,
+                                refreshToken: tokensExists ? storedTokenForPlatform?.refreshToken : nil
+                            )
+                            
+                     
                             print("Transmitting to sms app: \(encryptedFormattedContent)")
                             
                             isPosting = false

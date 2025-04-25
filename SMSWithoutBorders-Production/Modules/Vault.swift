@@ -492,8 +492,8 @@ struct Vault {
                             print("Platform has already been migrated to device, tokens no longer exist on the server")
                         } else {
                             print("Saving platform to device...")
-                            // Attempt to get tokens
-                            var platformToken: StoredToken = StoredToken(
+                            // Attempt to get tokens                            
+                            let platformToken: StoredToken = StoredToken(
                                 id: platformId,
                                 accessToken: platform.accountTokens["access_token"]
                                     ?? "",

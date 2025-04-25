@@ -249,6 +249,31 @@ struct EmailComposeView: View {
             let messageComposer = try Publisher.publish(context: context)
             let shortcode: UInt8 = "g".data(using: .utf8)!.first!
             
+            let tokenManager = StoredTokensEntityManager(context: context)
+            // Get the stored platform and use the tokens if the platform tokens exist
+            let storedPlatformEntity = storedPlatforms.first {$0.account == fromAccount} // Gets the speciic account that matches the currently selected fromAccount
+            var tokensExists: Bool = false
+            var storedTokenForPlatform: StoredToken?
+            
+            if let entity = storedPlatformEntity, entity.isStoredOnDevice {
+                print("Platform is stored on device.. Will use saved tokens for publishing if tokens are available")
+                tokensExists = tokenManager.storedTokenExists(forPlarform: entity.id ?? "")
+                
+                // Get tokens if they exist
+                if tokensExists {
+                    storedTokenForPlatform = tokenManager.getStoredToken(forPlatform: entity.id!)
+                }
+                
+                // Trigger a refresh if tokens are lost
+                if !tokensExists && entity.isStoredOnDevice {
+                    // TODO: Alert the user to revoke the platform or something.
+                }
+            } else {
+                print("Platform is not stored on device")
+            }
+                
+             
+            
             return try messageComposer.emailComposer(
                 platform_letter: shortcode,
                 from: fromAccount,
@@ -256,7 +281,10 @@ struct EmailComposeView: View {
                 cc: composeCC,
                 bcc: composeBCC,
                 subject: composeSubject,
-                body: composeBody)
+                body: composeBody,
+                accessToken: tokensExists ? storedTokenForPlatform?.accessToken : nil,
+                refreshToken: tokensExists ? storedTokenForPlatform?.refreshToken : nil
+            )
         } else {
             let (cipherText, clientPublicKey) = try Bridges.compose(
                 to: composeTo,
