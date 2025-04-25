@@ -10,7 +10,7 @@ import CoreData
 struct StoredTokensEntityManager {
     let context: NSManagedObjectContext
     
-    // CRUD OPS
+    // C R U D   O P S
     func getAllStoredTokens() -> [StoredToken] {
         print("Getting all stored tokens")
         let fetchRequest: NSFetchRequest<StoredTokenEntity> = StoredTokenEntity.fetchRequest() as NSFetchRequest<StoredTokenEntity>
@@ -138,6 +138,23 @@ struct StoredTokensEntityManager {
             print("Unable to delete token: \(error)")
         }
         
+    }
+    
+    
+    // H E L P E R   M E T H O D S
+    func storedTokenExists(forPlarform platformId: String) -> Bool {
+        print("Checking if token for platform id exists: \(platformId)")
+        let storedToken = getStoredToken(forPlatform: platformId)
+        var tokenExists: Bool = false
+        if let token = storedToken {
+            tokenExists =  !token.accessToken.isEmpty  && !token.refreshToken.isEmpty
+        }
+        if tokenExists {
+            print("Token Exists for platform id: \(platformId)")
+        } else {
+            print("Token does not exist for platform with id: \(platformId)")
+        }
+        return tokenExists
     }
     
 }
