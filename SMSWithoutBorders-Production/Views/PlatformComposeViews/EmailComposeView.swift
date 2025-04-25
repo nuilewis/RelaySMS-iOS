@@ -296,6 +296,7 @@ struct EmailComposeView: View {
                                             $0.account == fromAccount
                                         }
                                     if let entityToDelete = storedPlatformEntityToDelete {
+                                        StoredTokensEntityManager(context: context).deleteStoredTokenById(forPlatform: entityToDelete.id!)
                                         context.delete(entityToDelete)
                                     }
 
@@ -314,7 +315,7 @@ struct EmailComposeView: View {
                                                 var _ = try vault.refreshStoredTokens(llt: llt, context: context)
 
                                                 try context.save()
-                                                print( "Successfully revoked platform")
+                                                print("Successfully revoked platform")
                                                 dismiss()
 
                                             } catch {

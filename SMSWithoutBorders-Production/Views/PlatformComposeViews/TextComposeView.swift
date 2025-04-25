@@ -231,6 +231,7 @@ struct TextComposeView: View {
                                         $0.account == fromAccount
                                     }
                                     if let entityToDelete = storedPlatformEntityToDelete {
+                                        StoredTokensEntityManager(context: context).deleteStoredTokenById(forPlatform: entityToDelete.id!)
                                         context.delete(entityToDelete)
                                     }
                                    
