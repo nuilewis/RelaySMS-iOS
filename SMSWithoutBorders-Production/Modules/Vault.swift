@@ -419,7 +419,7 @@ struct Vault {
             forKey: OnboardingView.ONBOARDING_COMPLETED)
         let defaultGatewayClient =
             UserDefaults.standard.string(
-                forKey: GatewayClients.DEFAULT_GATEWAY_CLIENT_MSISDN) as? String
+                forKey: GatewayClients.DEFAULT_GATEWAY_CLIENT_MSISDN)
             ?? ""
 
         if let appDomain = Bundle.main.bundleIdentifier {
@@ -483,26 +483,22 @@ struct Vault {
                     platform.isStoredOnDevice
                 storedPlatformEntity.id = platformId
 
-                
-                if shouldStorePlatformsOnDevice {
-                    if platform.isStoredOnDevice {
-                        print("Migrating platform to device... attempting to get the tokens")
-                        let accessToken = platform.accountTokens["access_token"] ?? ""
-                        if accessToken.isEmpty {
-                            print("Platform has already been migrated to device, tokens no longer exist on the server")
-                        } else {
-                            print("Saving platform to device...")
-                            // Attempt to get tokens                            
-                            let platformToken: StoredToken = StoredToken(
-                                id: platformId,
-                                accessToken: platform.accountTokens["access_token"]
-                                    ?? "",
-                                refreshToken: platform.accountTokens["refresh_token"]
-                                    ?? "",
-                                idToken: platform.accountTokens["id_token"] ?? "")
-                            // Save the token to manager
-                            storedTokenManager.putStoredToken(token: platformToken)
-                        }
+                if shouldStorePlatformsOnDevice, platform.isStoredOnDevice {
+                    let accessToken = platform.accountTokens["access_token"] ?? ""
+                    if accessToken.isEmpty {
+                        print("Platform '\(platform.platform.localizedCapitalized)' has already been migrated to device, tokens no longer exist on the server.. skipping")
+                    } else {
+                        print("Saving platform '\(platform.platform.localizedCapitalized)' token to device...")
+                        // Attempt to get tokens
+                        let platformToken: StoredToken = StoredToken(
+                            id: platformId,
+                            accessToken: platform.accountTokens["access_token"]
+                                ?? "",
+                            refreshToken: platform.accountTokens["refresh_token"]
+                                ?? "",
+                            idToken: platform.accountTokens["id_token"] ?? "")
+                        // Save the token to manager
+                        storedTokenManager.putStoredToken(token: platformToken)
                     }
                 }
             }
@@ -515,7 +511,7 @@ struct Vault {
                 }
             }
         } catch Exceptions.unauthenticatedLLT(let status) {
-            print("Should delete invalid llt: \(status.message)")
+            print("Should delete invalid llt: \(String(describing: status.message))")
             try Vault.resetKeystore(context: context)
             try DataController.resetDatabase(context: context)
             return false
@@ -524,6 +520,18 @@ struct Vault {
             throw error
         }
         return true
+    }
+    
+    func migratePlatformsToDevice(llt: String, context: NSManagedObjectContext) {
+        do {
+            print("Migrating platforms to device...")
+            let result: Bool =  try refreshStoredTokens(llt: llt, context: context)
+            if result {
+                print("Successfully migrated platforms to device")
+            }
+        } catch {
+            print("An error occurred while trying to migrate platforms to device: \(error)")
+        }
     }
 
     static func clear(context: NSManagedObjectContext, shouldSave: Bool = true)
@@ -556,7 +564,7 @@ struct Vault {
             let storedTokens = try vault.listStoredEntityToken(
                 longLiveToken: llt)
         } catch Exceptions.unauthenticatedLLT(let status) {
-            print("Should delete invalid llt: \(status.message)")
+            print("Should delete invalid llt: \(String(describing: status.message))")
             return false
         } catch {
             print("Error fetching stored tokens: \(error)")

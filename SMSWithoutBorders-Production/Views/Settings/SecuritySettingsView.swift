@@ -22,6 +22,9 @@ struct SecuritySettingsView: View {
     @State private var isShowingRevoke = false
     @State var showIsLoggingOut: Bool = false
     @State var showIsDeleting: Bool = false
+    @State var showAlert: Bool = false
+    @State var alertTitle: String = ""
+    @State var alertMessage: String = ""
     
     @AppStorage(SettingsKeys.SETTINGS_STORE_PLATFORMS_ON_DEVICE)
     private var storePlatformsOnDevice: Bool = false
@@ -37,7 +40,36 @@ struct SecuritySettingsView: View {
         VStack(alignment: .leading) {
             List {
                 Section(header: Text("Security")) {
-                    Toggle("Store platforms on this device", isOn: $storePlatformsOnDevice).padding([.top], 12)
+                    Toggle("Store platforms on this device", isOn: $storePlatformsOnDevice).onChange(of: storePlatformsOnDevice) { newValue in
+                        
+                        if newValue {
+                            // Trigger a refresh
+                            let vault = Vault()
+                            do {
+                                let llt: String = try Vault.getLongLivedToken()
+                                vault.migratePlatformsToDevice(llt: llt, context: viewContext)
+                                
+                                showAlert = true
+                                alertTitle = "Success"
+                                alertMessage = "Your platforms have been migrated to this device successfully!"
+                            } catch {
+                                showAlert = true
+                                alertTitle = "Error"
+                                alertMessage = "An error occurred while trying to migrate your platforms. Please try again later."
+                                print(error)
+                            }
+                        }
+                        
+                        //TODO: I think you should revoke the platforms if this is set to false so the user can add them again let them be added to the vault
+                        
+                        if !newValue {
+                            //TODO: Revoke platfomrs and clear accounts here
+                        }
+                    }.alert(isPresented: $showAlert) {
+                        Alert(title: Text(alertTitle), message: Text(alertMessage), dismissButton: .default(Text("OK")))
+                    }
+                
+                        .padding([.top], 12)
                         Text(String(localized:"This will store your platforms on this specific device, and migrate any existing platforms to this device. \nThis means you won't be able to access your platfoms if you lose this device"))
                             .font(RelayTypography.bodyMedium)
                             .foregroundStyle(RelayColors.colorScheme.onSurface.opacity(0.6)).padding([.bottom], 12)
