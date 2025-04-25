@@ -8,32 +8,50 @@
 import SwiftUI
 import CoreData
 
-struct AccountView: View {
-    var accountName: String
-    var platformName: String
+struct AccountListItem: View {
+    var platform: StoredPlatformsEntity
+    private var platformIsTwitter: Bool
+    private var accountName: String
+    private var platformName: String
+    
+    
+    init(platform: StoredPlatformsEntity) {
+        self.platform = platform
+        self.accountName = platform.account ?? "Unknown account"
+        self.platformName = platform.name ?? "Unknown platform"
+        self.platformIsTwitter = platformName == "twitter"
+        
+    }
     var body : some View {
         VStack {
             HStack {
-                Image(systemName: "person.crop.circle.fill")
+                Image(systemName: "person.crop.circle")
                     .resizable()
                     .frame(width: 50, height: 50)
+                    .foregroundStyle(RelayColors.colorScheme.primary)
                 VStack {
-                    Text(accountName)
+                    Text(platformIsTwitter ? "@\(accountName)" : accountName)
                         .font(RelayTypography.bodyMedium)
                         .frame(maxWidth: .infinity, alignment: .leading)
                         .lineLimit(1)
-//                    Text(platformName)
-//                        .font(.caption2)
-//                        .frame(maxWidth: .infinity, alignment: .leading)
-//                        .foregroundStyle(.gray)
+                    Text(platformName.localizedCapitalized)
+                        .font(.caption2)
+                        .frame(maxWidth: .infinity, alignment: .leading)
+                        .foregroundStyle(.gray)
                 }
                 .padding()
+                if platform.isStoredOnDevice {
+                    Image(systemName: "checkmark.circle").foregroundStyle(RelayColors.colorScheme.tertiary)
+                    
+                }
+      
+                
             }
         }
     }
 }
 
-struct AccountSheetView: View {
+struct SelectAccountSheetView: View {
     @Environment(\.dismiss) var dismiss
     @Environment(\.managedObjectContext) var context
     
@@ -77,14 +95,11 @@ struct AccountSheetView: View {
                         }
                         callback()
                     }) {
-                        AccountView(
-                            accountName: platform.account!,
-                            platformName: platform.name!
-                        )
+                        AccountListItem(platform: platform)
                     }
                 }
             }
-            .navigationTitle("\(platformName) accounts")
+            .navigationTitle("\(platformName.localizedCapitalized) accounts")
             .frame(maxWidth: .infinity, maxHeight: .infinity)
             .toolbar {
                 ToolbarItem(placement: .topBarTrailing) {
@@ -110,7 +125,7 @@ struct AccountSheetView_Preview: PreviewProvider {
         @State var messagePlatformViewFromAccount: String = ""
         @State var fromAccount: String = ""
 
-        return AccountSheetView(
+        return SelectAccountSheetView(
             filter: "twitter",
             fromAccount: $fromAccount,
             dismissParent: $globalDismiss

@@ -240,7 +240,7 @@ struct MessagingView: View {
                 .padding()
             }
             .sheet(isPresented: $requestToChooseAccount) {
-                AccountSheetView(
+                SelectAccountSheetView(
                     filter: platformName,
                     fromAccount: $fromAccount,
                     dismissParent: $dissmissRequested

@@ -72,7 +72,7 @@ struct PlatformDetailsBottomsheet: View {
                 )
             }
             else if accountSheetRequested && platform != nil {
-                AccountSheetView(
+                SelectAccountSheetView(
                     filter: platform!.name!,
                     fromAccount: $fromAccount,
                     dismissParent: $parentIsEnabled
