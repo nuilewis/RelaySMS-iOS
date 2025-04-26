@@ -96,11 +96,11 @@ struct PlatformsView: View {
                                         composeNewMessageRequested: $composeNewMessageRequested,
                                         platformRequestType: $requestType,
                                         composeViewRequested: getBindingComposeVariable(
-                                            type: item.service_type!),
+                                            type: item.service_type ?? "Unkown"),
                                         parentRefreshRequested: $refreshRequested,
                                         requestedPlatformName: $requestedPlatformName,
                                         platform: item,
-                                        serviceType: getServiceType(type: item.service_type!),
+                                        serviceType: getServiceType(type: item.service_type ?? "Unkown"),
                                         callback: callback
                                     )
                                 }

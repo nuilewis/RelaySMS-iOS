@@ -23,7 +23,7 @@ struct SecuritySettingsView: View {
     @State var showIsLoggingOut: Bool = false
     @State var showIsDeleting: Bool = false
     @State var showAlert: Bool = false
-    @State var showRevokingAlert: Bool = false
+    @State var shouldTurnOffLocalTokenStorage: Bool = false
     @State var alertTitle: String = ""
     @State var alertMessage: String = ""
     @State private var isLoading = false
@@ -68,89 +68,46 @@ struct SecuritySettingsView: View {
                                     "An error occurred while trying to migrate your platforms. Please try again later."
                                 print(error)
                             }
-                        }
-                        
-                        if !newValue {
+                        } else {
                             // If user turns off token storage accounts
-                            showRevokingAlert.toggle()
+                            shouldTurnOffLocalTokenStorage = true
+                            showAlert = true
                             alertTitle = "Beware"
                             alertMessage = "Turning this off will delete all tokens stored on this device and on the server. \nThis would revoke all accounts. You would have to add your accounts again."
                         }
-                    }
-                    .alert(isPresented: $showAlert) {
-                        Alert(
-                            title: Text(alertTitle),
-                            message: Text(alertMessage),
-                            dismissButton: .default(Text("OK")))
-
-                    }.alert(isPresented: $showRevokingAlert) {
-                        Alert(
-                            title: Text(alertTitle),
-                            message: Text(alertMessage),
-                            primaryButton: .destructive(
-                                Text("Continue"),
-                                action: {
-                                    isLoading.toggle()
-                                    print("Atrempting to revoke accounts")
-
+                    }.alert(isPresented: $showAlert) {
+                        if (shouldTurnOffLocalTokenStorage) {
+                            // Show the revoking alert if you're turning off local storage of tokens
+                            Alert(
+                                title: Text(alertTitle),
+                                message: Text(alertMessage),
+                                primaryButton: .destructive(
+                                    Text("Continue"),
+                                    action: {
+                                        revokeAllAccounts()
+                                    }
+                                ),
+                                secondaryButton: .default(Text("Cancel")) {
+                                    showAlert = false
+                                    storePlatformsOnDevice = true
+                                })
+                        } else {
+                            // Should the regular alert if turning on local storage of tokens
+                            Alert(
+                                title: Text(alertTitle),
+                                message: Text(alertMessage),
+                                dismissButton: .default(Text("OK"), action: {
                                     do {
-                                        let llt = try Vault.getLongLivedToken()
-                                        let backgroundQueue = DispatchQueue(
-                                            label: "revokeAccountQueue",
-                                            qos: .background)
-                                        
-                                        // Revoke accounts in a background thread
-                                        backgroundQueue.async {
-                                            do {
-                                                let vault: Vault = Vault()
-                                                let llt: String =
-                                                    try Vault.getLongLivedToken()
-                                                let publisher = Publisher()
-
-                                                // loop through all platforms and revoke them
-                                                // Then loop through all accounts within each platfoms and revoke them
-                                                let platformEntity = platforms
-
-                                                for platform in platformEntity {
-                                                    print( "Revoking: \(platform.name ?? "Platform")...")
-
-                                                    let storedPlatformEntitiesToDelete =
-                                                        storedPlatforms
-                                                    for storedPlatformEntity in storedPlatformEntitiesToDelete {
-                                                        print("Deleteting stored platform entity: \(storedPlatformEntity.account ?? "Unknowdn account")  \(storedPlatformEntity.name ?? "Uknown Platform")")
-
-                                                        let result: Bool =
-                                                            try publisher
-                                                            .revokePlatform(
-                                                                llt: llt,
-                                                                platform:platform.name!,
-                                                                account: storedPlatformEntity.account!,
-                                                                protocolType: platform.protocol_type!
-                                                            )
-                                                        viewContext.delete(storedPlatformEntity)
-                                                    }
-                                                }
-                                                
-                                                // Save all updates after deleting to CoreData
-                                                try viewContext.save()
-
-                                                // Refresh stored tokens... should return empty
-                                                var _ = try vault.refreshStoredTokens(llt: llt, context: viewContext)
-                                                
-                                                // Deleted stored tokens
-                                                StoredTokensEntityManager(context: viewContext).deleteAllStoredTokens()
-                                                
-                                                //Dismiss
-                                                DispatchQueue.main.async {dismiss()}
-                                                }
-                                            catch {print("Unable to revoke accounts \(error)")}
-                                            }
-                                    } catch { print("Unable to revoke accounts \(error)")}
-                                }
-                            ),
-                            secondaryButton: .default(Text("Cancel")) {
-                                showRevokingAlert.toggle()
-                            })
+                                        dismiss()
+                                    } catch {
+                                    }
+                                 
+                                })
+                            )
+                        }
+                        
+                        
+                      
                     }
                     .padding([.top], 12)
                     Text(String(localized:"This will store your platforms on this specific device, and migrate any existing platforms to this device. \nThis means you won't be able to access your platfoms if you lose this device"))
@@ -239,6 +196,112 @@ struct SecuritySettingsView: View {
                     dismiss()
                 }
             })
+    }
+    
+    
+    func revokeAllAccounts() {
+        DispatchQueue.main.async {
+            self.isLoading = true
+        }
+        
+        print("Attempting to revoke accounts")
+        
+        let backgroundQueue = DispatchQueue(label: "revokeQueue", qos: .background)
+        
+        backgroundQueue.async {
+            var success = true
+            var errorMessage: String? = nil
+            var entitiesToDelete: [StoredPlatformsEntity] = []
+            
+            do {
+                let vault: Vault = Vault()
+                let llt: String = try Vault.getLongLivedToken()
+                let publisher = Publisher()
+                
+                let platformEntities = platforms
+                
+                // Loop through all platfoms
+                for platform in platformEntities {
+                    print("Revoking: \(String(describing: platform.name))...")
+                    
+                    // Filter sored accounts for current platform onlu
+                    let matchingStoredPlatformsEntities = storedPlatforms.filter {storedPlatformEntity in
+                        storedPlatformEntity.name == platform.name
+                    }
+                    
+                    if matchingStoredPlatformsEntities.isEmpty {
+                        print("No accounts for platform \(platform.name ?? "Unkown platform"), skipping")
+                    } else {
+                        for storedPlatformEntity in matchingStoredPlatformsEntities {
+                            print("Attempting to revoke API token for account: \(storedPlatformEntity.account ?? "Unkown account") on platform: \(storedPlatformEntity.name ?? "Unkown platform")...")
+                            
+                            do {
+                                let result: Bool = try publisher.revokePlatform(
+                                    llt: llt, platform: platform.name!, account: storedPlatformEntity.account!, protocolType: platform.protocol_type!)
+                                
+                                if result {
+                                    print("API revocation successful for \(storedPlatformEntity.account ?? "Unkown account"). Marking for local deletion")
+                                    entitiesToDelete.append(storedPlatformEntity)
+                                }
+                                
+                                else {
+                                    print("API revocation failed for \(storedPlatformEntity.account ?? "Unkown account"). Server reported failure")
+                                    success = false
+                                    errorMessage = "Failed to revoke one or more accounts."
+                                }
+                            } catch {
+                                print("Error during API revocation for \(storedPlatformEntity.account ?? "Unknown account"): \(error)")
+                                errorMessage = "An error occurred during API communication."
+                                success = false
+                            }
+                            
+                        } // End loop
+                    }
+                }
+                
+                // Reset Database
+                try DataController.resetDatabase(context: self.viewContext)
+                var _ = try vault.refreshStoredTokens(llt: llt, context: self.viewContext)
+                
+                // Delete and refresh platforms
+                viewContext.perform {
+                    print("Performing Core Data deletion on main thread context")
+                    
+                    for platform in platforms {
+                        self.viewContext.delete(platform)
+                        print("Deleted platform entity: \(platform.name ?? "Unknown Platform")")
+                    }
+                    Publisher.refreshPlatforms(context: self.viewContext)
+                    
+                    do {
+                        try self.viewContext.save()
+                        print("Core Data context saved")
+                    } catch {
+                        print("Error saving Core Data context after revocation: \(error)")
+                        errorMessage = "Failed to save local data: \(error.localizedDescription)"
+                        success = false
+                    }
+                }
+                isLoading = false
+                self.alertTitle = "Success"
+                self.alertMessage = "All selected accounts successfully revoked."
+                self.showAlert = true
+                self.shouldTurnOffLocalTokenStorage = false
+                
+           
+                
+            } catch {
+                print("Unable to initiate revocation process: \(error)")
+                          errorMessage = "An initial error occurred: \(error.localizedDescription)"
+                          success = false // Mark overall process failure
+                  DispatchQueue.main.async {
+                      self.isLoading = false // Hide the spinner
+                      self.alertTitle = "Error"
+                      self.alertMessage = errorMessage ?? "An unknown error occurred."
+                      self.showAlert = true
+                  }
+            }
+        }
     }
 }
 

@@ -24,6 +24,7 @@ class DataController: ObservableObject {
 
     public static func resetDatabase(context: NSManagedObjectContext) throws {
         // This deletes everything except the default Gateway Clients
+        print("Resetting Database")
         do {
             try context.persistentStoreCoordinator!.managedObjectModel.entities.forEach { (entity) in
                 if let name = entity.name {
