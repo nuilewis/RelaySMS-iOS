@@ -483,7 +483,7 @@ struct Vault {
                     platform.isStoredOnDevice
                 storedPlatformEntity.id = platformId
 
-                if shouldStorePlatformsOnDevice, platform.isStoredOnDevice {
+                if shouldStorePlatformsOnDevice {
                     let accessToken = platform.accountTokens["access_token"] ?? ""
                     if accessToken.isEmpty {
                         print("Platform '\(platform.platform.localizedCapitalized)' has already been migrated to device, tokens no longer exist on the server.. skipping")
@@ -507,7 +507,7 @@ struct Vault {
                 do {
                     try context.save()
                 } catch {
-                    print("Failed to refresh entities: \(error)")
+                    print("Failed to save context after refreshing entities: \(error)")
                 }
             }
         } catch Exceptions.unauthenticatedLLT(let status) {
@@ -522,7 +522,7 @@ struct Vault {
         return true
     }
     
-    func migratePlatformsToDevice(llt: String, context: NSManagedObjectContext) {
+    func migratePlatformsToDevice(llt: String, context: NSManagedObjectContext) throws {
         do {
             print("Migrating platforms to device...")
             let result: Bool =  try refreshStoredTokens(llt: llt, context: context)
@@ -531,6 +531,7 @@ struct Vault {
             }
         } catch {
             print("An error occurred while trying to migrate platforms to device: \(error)")
+            throw error
         }
     }
 

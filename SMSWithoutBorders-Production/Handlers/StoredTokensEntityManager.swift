@@ -150,9 +150,9 @@ struct StoredTokensEntityManager {
             tokenExists =  !token.accessToken.isEmpty  && !token.refreshToken.isEmpty
         }
         if tokenExists {
-            print("Token Exists for platform id: \(platformId)")
+            print("Yes, token exists for platform id: \(platformId)")
         } else {
-            print("Token does not exist for platform with id: \(platformId)")
+            print("No, token does not exist for platform with id: \(platformId)")
         }
         return tokenExists
     }

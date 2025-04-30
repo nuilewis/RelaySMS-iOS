@@ -47,7 +47,7 @@ struct AccountListItem: View {
                     if !tokenExist {
                         Image(systemName: "x.circle").foregroundStyle(Color.red)
                     } else {
-                        Image(systemName: "checkmark.circle").foregroundStyle(RelayColors.colorScheme.tertiary)
+                        Image(systemName: "checkmark.circle").foregroundStyle(Color.green)
                     }
                 }
       

@@ -82,7 +82,7 @@ struct TextComposeView: View {
                 #if DEBUG
                     Button("Present missing token error alert") {
                         showAlert = true
-                        alertTitle = "Tokens Missing"
+                        alertTitle = "Missing Tokens"
                         alertMessage = "Your tokens have not been found on this device. Please revoke access to your account and log back in to continue."
                     }
                 #endif
@@ -163,8 +163,8 @@ struct TextComposeView: View {
                                 // Trigger a refresh if tokens are lost
                                 if !tokensExists && entity.isStoredOnDevice {
                                     showAlert = true
-                                    alertTitle = "Tokens Missing"
-                                    alertMessage = "Your tokens have not been found on this device. Please revoke access to your account and log back in to continue."
+                                    alertTitle = "Missing Tokens"
+                                    alertMessage = "Your tokens have not been found on this device. Please revoke access to your account and add the platform again to continue"
                                 }
                             } else {
                                 print("Platform is not stored on device")
@@ -183,7 +183,7 @@ struct TextComposeView: View {
                                         : nil
                                 )
 
-                            print( "Transmitting to sms app: \(encryptedFormattedContent)")
+                            print("Transmitting to sms app: \(encryptedFormattedContent)")
 
                             isPosting = false
                             isShowingMessages.toggle()
@@ -210,66 +210,7 @@ struct TextComposeView: View {
                 primaryButton: .destructive(
                     Text("Revoke Account"),
                     action: {
-                        isLoading.toggle()
-                        print("Atrempting to revoke account")
-                        let backgroundQueue = DispatchQueue( label: "revokeAccountQueue", qos: .background)
-
-                        backgroundQueue.async {
-                            do {
-                                let vault: Vault = Vault()
-                                let llt: String = try Vault.getLongLivedToken()
-                                let publisher = Publisher()
-
-                                let platformEntity = platforms.first {
-                                    $0.name == platformName
-                                }
-
-                                if let unwrappedPlatform = platformEntity {
-                                    print("platform is: \(unwrappedPlatform)")
-                                    print("Triggered revoking method")
-                                    let storedPlatformEntityToDelete = storedPlatforms.first {
-                                        $0.account == fromAccount
-                                    }
-                                    if let entityToDelete = storedPlatformEntityToDelete {
-                                        StoredTokensEntityManager(context: context).deleteStoredTokenById(forPlatform: entityToDelete.id!)
-                                        context.delete(entityToDelete)
-                                    }
-                                   
-
-                                    let result: Bool =
-                                        try publisher.revokePlatform(
-                                            llt: llt,
-                                            platform: unwrappedPlatform.name!,
-                                            account: fromAccount,
-                                            protocolType:unwrappedPlatform.protocol_type!
-                                        )
-
-                                    if result {
-                                        DispatchQueue.main.async {
-                                            do {
-                                                let llt = try Vault.getLongLivedToken()
-                                                var _ = try vault.refreshStoredTokens(llt: llt, context: context)
-                                     
-                                                try context.save()
-                                                print("Successfully revoked platform")
-                                                dismiss()
-                                    
-                                            } catch {
-                                                print(error)
-                                            }
-                                        }
-                                    }
-                                } else {
-                                    print(
-                                        "Platform is null, so cant revoke"
-                                    )
-                                }
-                            } catch {
-                                print(
-                                    "Unable to revoke platform: \(error)"
-                                )
-                            }
-                        }
+                        revokeAccount()
                     }),
                 secondaryButton: .default(Text("Cancel")){
                     showAlert.toggle()
@@ -317,6 +258,68 @@ struct TextComposeView: View {
             break
         @unknown default:
             break
+        }
+    }
+    
+    func revokeAccount(){
+        isLoading.toggle()
+        print("Atrempting to revoke account")
+        let backgroundQueue = DispatchQueue( label: "revokeAccountQueue", qos: .background)
+        backgroundQueue.async {
+            do {
+                let vault: Vault = Vault()
+                let llt: String = try Vault.getLongLivedToken()
+                let publisher = Publisher()
+
+                let platformEntity = platforms.first {
+                    $0.name == platformName
+                }
+
+                if let unwrappedPlatform = platformEntity {
+                    print("platform is: \(unwrappedPlatform)")
+                    print("Triggered revoking method")
+                    let storedPlatformEntityToDelete = storedPlatforms.first {
+                        $0.account == fromAccount
+                    }
+                    if let entityToDelete = storedPlatformEntityToDelete {
+                        StoredTokensEntityManager(context: context).deleteStoredTokenById(forPlatform: entityToDelete.id!)
+                        context.delete(entityToDelete)
+                    }
+                   
+
+                    let result: Bool =
+                        try publisher.revokePlatform(
+                            llt: llt,
+                            platform: unwrappedPlatform.name!,
+                            account: fromAccount,
+                            protocolType:unwrappedPlatform.protocol_type!
+                        )
+
+                    if result {
+                        DispatchQueue.main.async {
+                            do {
+                                let llt = try Vault.getLongLivedToken()
+                                var _ = try vault.refreshStoredTokens(llt: llt, context: context)
+                     
+                                try context.save()
+                                print("Successfully revoked platform")
+                                dismiss()
+                    
+                            } catch {
+                                print(error)
+                            }
+                        }
+                    }
+                } else {
+                    print(
+                        "Platform is null, so cant revoke"
+                    )
+                }
+            } catch {
+                print(
+                    "Unable to revoke platform: \(error)"
+                )
+            }
         }
     }
 }
