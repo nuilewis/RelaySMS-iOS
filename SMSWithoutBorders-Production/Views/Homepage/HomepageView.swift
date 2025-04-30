@@ -20,6 +20,14 @@ struct HomepageView: View {
 
     @State var selectedTab: HomepageTabs = .recents
     @State var platformRequestType: PlatformsRequestedType = .available
+    
+    
+    @AppStorage(SettingsKeys.SETTINGS_DO_NOT_NOTIFY_OF_MISSING_TOKENS)
+    private var doNotNotifyOfMissingTokens: Bool = false
+    
+    @State private var storedPlatformsWithMissingTokens: [StoredPlatformsEntity] = []
+    @State private var showMissingTokensSheet: Bool = false
+    @State private var showMissingTokensAlert: Bool = false
 
     @State var composeNewMessageRequested: Bool = false
     @State var composeTextRequested: Bool = false
@@ -246,6 +254,39 @@ struct HomepageView: View {
                     
                 
             }
+            .task {
+                searchForPlatformsWithMissingTokens()
+            }
+            .alert(isPresented: $showMissingTokensAlert) {
+                Alert(
+                    title: Text("Missing Tokens"),
+                    message: Text("Some for the following platforms could not be found, please revoke these accounts and add them again"),
+                    primaryButton: .default(
+                        Text("OK"),
+                        action: {
+                            showMissingTokensSheet = true
+                        }),
+                    secondaryButton: .default(
+                            Text("Don't show this again"),
+                            action: {
+                                doNotNotifyOfMissingTokens = true
+                            }
+                      )
+                )
+            }.sheet(isPresented: $showMissingTokensSheet, onDismiss: {
+                storedPlatformsWithMissingTokens.removeAll()
+            }) {
+                VStack(alignment: .leading) {
+                    Text("Platforms with missing tokens")
+                        .font(RelayTypography.titleMedium)
+                        .padding(16)
+                        .padding(.top, 16)
+                    List(storedPlatformsWithMissingTokens, id: \.self) { platform in
+                        AccountListItem(platform: platform, context: context)
+                    }.listStyle(.plain)
+                }
+                .applyPresentationDetentsIfAvailable()
+            }
 
         }
 //        .onChange(of: isLoggedIn) { state in
@@ -269,6 +310,29 @@ struct HomepageView: View {
             } catch {
                 print(error)
             }
+        }
+    }
+    
+    
+    func searchForPlatformsWithMissingTokens() {
+        print("Searching for platforms with missing tokens...")
+         storedPlatformsWithMissingTokens = []
+        for account in storedPlatforms {
+            if account.isStoredOnDevice {
+                let tokenForAccountExists: Bool = StoredTokensEntityManager(context: context).storedTokenExists(forPlarform: account.id!)
+                if !tokenForAccountExists{
+                    storedPlatformsWithMissingTokens.append(account)
+                }
+            }
+        }
+        
+        if !storedPlatformsWithMissingTokens.isEmpty {
+            print("Platforms with missing tokens found.")
+            if !doNotNotifyOfMissingTokens {
+                showMissingTokensAlert = true
+            }
+        } else {
+            print("All stored platforms have tokens.")
         }
     }
 }

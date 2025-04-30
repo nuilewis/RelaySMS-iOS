@@ -12,6 +12,7 @@ struct SettingsKeys {
         "SETTINGS_MESSAGE_WITH_PHONENUMBER"
     public static let SETTINGS_STORE_PLATFORMS_ON_DEVICE: String =
         "SETTINGS_STORE_PLATFORMS_ON_DEVICE"
+    public static let SETTINGS_DO_NOT_NOTIFY_OF_MISSING_TOKENS: String = "SETTINGS_DO_NOT_NOTIFY_OF_MISSING_TOKENS"
 }
 
 enum SecurityAlertType {
@@ -55,13 +56,10 @@ struct SecuritySettingsView: View {
         VStack(alignment: .leading) {
             List {
                 Section(header: Text("Security")) {
-                    Toggle(
-                        "Store platform tokens on this device?",
-                        isOn: $storeTokensOnDevice
-                    ).onChange(of: storeTokensOnDevice) { newValue in
+                    Toggle("Store platform tokens on this device?", isOn: $storeTokensOnDevice)
+                        .onChange(of: storeTokensOnDevice) { newValue in
                         
-                        // Do not invoke this onChanged if the user is perfomaing an account action
-                        // like logging out or deleting their account
+                        // Do not invoke this onChanged if the user is perfomaing an account action like logging out or deleting their account
                         guard !isPerformingAccountAction else {
                             print("onChange(storeTokensOnDevice) skipped due to account action.")
                             return
@@ -78,8 +76,11 @@ struct SecuritySettingsView: View {
                                     platformsAlreadyMigrated = true
                                 }
                                 let llt: String = try Vault.getLongLivedToken()
-                                vault.migratePlatformsToDevice(
+                                try vault.migratePlatformsToDevice(
                                     llt: llt, context: viewContext)
+                                
+                                viewContext.refreshAllObjects()
+                                
                                 activeAlertType = .migrationStatus
                                 showAlert = true
                                 migrationSuccessful = true

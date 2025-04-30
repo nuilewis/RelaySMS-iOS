@@ -173,6 +173,8 @@ struct PlatformsView: View {
             return String(localized:"Available Platforms")
         }
     }
+    
+
 
 
     func getServiceType(type: String) -> Publisher.ServiceTypes {
