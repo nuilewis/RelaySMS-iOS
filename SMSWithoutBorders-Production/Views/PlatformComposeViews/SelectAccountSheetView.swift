@@ -13,14 +13,17 @@ struct AccountListItem: View {
     private var platformIsTwitter: Bool
     private var accountName: String
     private var platformName: String
+    var context: NSManagedObjectContext
+    private var tokenExist: Bool = false
     
     
-    init(platform: StoredPlatformsEntity) {
+    init(platform: StoredPlatformsEntity, context: NSManagedObjectContext) {
         self.platform = platform
         self.accountName = platform.account ?? "Unknown account"
         self.platformName = platform.name ?? "Unknown platform"
         self.platformIsTwitter = platformName == "twitter"
-        
+        self.context = context
+        self.tokenExist = StoredTokensEntityManager(context: context).storedTokenExists(forPlarform: platform.id!)
     }
     var body : some View {
         VStack {
@@ -40,9 +43,12 @@ struct AccountListItem: View {
                         .foregroundStyle(.gray)
                 }
                 .padding()
-                if platform.isStoredOnDevice {
-                    Image(systemName: "checkmark.circle").foregroundStyle(RelayColors.colorScheme.tertiary)
-                    
+                if platform.isStoredOnDevice{
+                    if !tokenExist {
+                        Image(systemName: "x.circle").foregroundStyle(Color.red)
+                    } else {
+                        Image(systemName: "checkmark.circle").foregroundStyle(RelayColors.colorScheme.tertiary)
+                    }
                 }
       
                 
@@ -95,7 +101,7 @@ struct SelectAccountSheetView: View {
                         }
                         callback()
                     }) {
-                        AccountListItem(platform: platform)
+                        AccountListItem(platform: platform, context: context)
                     }
                 }
             }
