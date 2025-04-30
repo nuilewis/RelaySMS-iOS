@@ -24,10 +24,20 @@ struct HomepageView: View {
     
     @AppStorage(SettingsKeys.SETTINGS_DO_NOT_NOTIFY_OF_MISSING_TOKENS)
     private var doNotNotifyOfMissingTokens: Bool = false
-    
     @State private var storedPlatformsWithMissingTokens: [StoredPlatformsEntity] = []
     @State private var showMissingTokensSheet: Bool = false
     @State private var showMissingTokensAlert: Bool = false
+    @FetchRequest(sortDescriptors: [NSSortDescriptor(
+        keyPath: \PlatformsEntity.name,
+        ascending: true)]
+    ) var platforms: FetchedResults<PlatformsEntity>
+
+    @FetchRequest(sortDescriptors: [NSSortDescriptor(
+        keyPath: \StoredPlatformsEntity.name,
+        ascending: true)]
+    ) var storedPlatforms: FetchedResults<StoredPlatformsEntity>
+
+    
 
     @State var composeNewMessageRequested: Bool = false
     @State var composeTextRequested: Bool = false

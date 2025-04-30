@@ -306,7 +306,7 @@ struct EmailComposeView: View {
             var tokensExists: Bool = false
             var storedTokenForPlatform: StoredToken?
 
-            if let entity = storedPlatformEntity, entity.isStoredOnDevice {
+            if let entity = storedPlatformEntity {
                 print(
                     "Platform is stored on device.. Will use saved tokens for publishing if tokens are available"
                 )
