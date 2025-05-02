@@ -150,9 +150,9 @@ struct TextComposeView: View {
                             var storedTokenForPlatform: StoredToken?
 
                             if let entity = storedPlatformEntity, entity.isStoredOnDevice {
-                                print(
-                                    "Platform is stored on device.. Will use saved tokens for publishing if tokens are available"
-                                )
+//                                print(
+//                                    "Platform is stored on device.. Will use saved tokens for publishing if tokens are available"
+//                                )
                                 tokensExists = tokenManager.storedTokenExists(forPlarform: entity.id ?? "")
 
                                 // Get tokens if they exist

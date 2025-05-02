@@ -118,7 +118,10 @@ struct MessageComposer {
         // Append the access token and refresh token if they not nil or empty
         if let accToken = accessToken, !accToken.isEmpty,
            let refToken = refreshToken, !refToken.isEmpty {
+            print("[Message Composer]: Tokens are available, will use them for composing")
             contentString += ":\(accToken):\(refToken)"
+        } else {
+            print("[Message Composer]: No tokens are available, will compsoe without")
         }
 
         // Potentially more verbose, might be easier to just call Array(contentString.ut8)
@@ -149,7 +152,10 @@ struct MessageComposer {
         // Append the access token and refresh token if they not nil or empty
         if let accToken = accessToken, !accToken.isEmpty,
            let refToken = refreshToken, !refToken.isEmpty {
+            print("[Message Composer]: Tokens are available, will use them for composing")
             contentString += ":\(accToken):\(refToken)"
+        } else {
+            print("[Message Composer]: No tokens are available, will compsoe without")
         }
 
         // Potentially more verbose, might be easier to just call Array(contentString.ut8)

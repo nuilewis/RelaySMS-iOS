@@ -241,6 +241,8 @@ struct SecuritySettingsView: View {
 
     func logout() {
         logoutAccount(context: viewContext)
+        // Delete all stored tokens when logging out
+        StoredTokensEntityManager(context: viewContext).deleteAllStoredTokens()
         do {
             isLoggedIn = try !Vault.getLongLivedToken().isEmpty
         } catch {
@@ -260,6 +262,8 @@ struct SecuritySettingsView: View {
                         longLiveToken: llt,
                         storedTokenEntities: storedPlatforms,
                         platforms: platforms)
+                    // Delete all stored tokens when logging out
+                    StoredTokensEntityManager(context: viewContext).deleteAllStoredTokens()
                 } catch {
                     print("Error deleting: \(error)")
                 }

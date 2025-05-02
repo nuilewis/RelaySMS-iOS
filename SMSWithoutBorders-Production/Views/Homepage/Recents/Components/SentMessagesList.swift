@@ -38,7 +38,7 @@ struct SentMessagesList: View {
                 VStack {
                     List(messages, id: \.id) { message in
                         MessageCard(
-                            logo: getImageForPlatform(name: message.platformName!),
+                            logo: getImageForPlatform(name: message.platformName ?? "unkown"),
                             subject: message.subject!,
                             toAccount: message.toAccount!,
                             messageBody: message.body!,

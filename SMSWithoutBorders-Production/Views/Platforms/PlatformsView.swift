@@ -112,6 +112,7 @@ struct PlatformsView: View {
                 .id(id)
                 .onChange(of: refreshRequested) { refresh in
                     if refresh {
+                        Publisher.refreshPlatforms(context: context)
                         print("refreshing....")
                         id = UUID()
                     }
