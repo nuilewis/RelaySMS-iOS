@@ -233,7 +233,6 @@ struct HomepageView: View {
                             requestedMessage = nil
                             requestedPlatformName = ""
                         }
-
                     }
 
                     InboxView(
@@ -291,7 +290,7 @@ struct HomepageView: View {
                         .font(RelayTypography.titleMedium)
                         .padding(16)
                         .padding(.top, 16)
-                    List(storedPlatformsWithMissingTokens, id: \.self) { platform in
+                    List(storedPlatformsWithMissingTokens.removeDuplicates, id: \.self) { platform in
                         AccountListItem(platform: platform, context: context)
                     }.listStyle(.plain)
                 }

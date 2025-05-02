@@ -31,3 +31,9 @@ extension DispatchQueue {
     }
 
 }
+
+extension Array {
+    var removeDuplicates: [Element] {
+        NSOrderedSet(array: self).array.compactMap({ $0 as? Element })
+    }
+}
