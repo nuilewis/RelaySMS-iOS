@@ -112,11 +112,13 @@ class Publisher {
                                     platform: String,
                                     code: String,
                                     codeVerifier: String? = nil,
+                                    storeOnDevice: Bool,
                                     supportsUrlSchemes: Bool = false) throws -> Publisher_V1_ExchangeOAuth2CodeAndStoreResponse {
         let authorizationRequest: Publisher_V1_ExchangeOAuth2CodeAndStoreRequest = .with {
             $0.platform = platform
             $0.authorizationCode = code
             $0.longLivedToken = llt
+            $0.storeOnDevice = storeOnDevice
             if(codeVerifier != nil || !codeVerifier!.isEmpty) {
                 $0.codeVerifier = codeVerifier!
             }
@@ -426,7 +428,7 @@ class Publisher {
             let peerPubkey = try Curve25519.KeyAgreement.PublicKey(rawRepresentation: AD)
             let pubSharedKey = try CSecurity.findInKeyChain(keystoreAlias: Publisher.PUBLISHER_SHARED_KEY)
             let usePhonenumber = checkPhoneNumberSettings ? UserDefaults
-                .standard.bool(forKey: SecuritySettingsView.SETTINGS_MESSAGE_WITH_PHONENUMBER) : true
+                .standard.bool(forKey: SettingsKeys.SETTINGS_MESSAGE_WITH_PHONENUMBER) : true
             print("use deviceID for publishing: \(!usePhonenumber)")
             
             let messageComposer = try MessageComposer(
@@ -444,7 +446,8 @@ class Publisher {
         }
     }
     
-    public static func processIncomingUrls(context: NSManagedObjectContext, url: URL, codeVerifier: String) throws {
+    
+    public static func processIncomingUrls(context: NSManagedObjectContext, url: URL, codeVerifier: String, storeOnDevice: Bool) throws {
         let stateB64Values = url.valueOf("state")
         // Decode the Base64 string to Data
         guard let decodedData = Data(base64Encoded: stateB64Values!) else {
@@ -465,7 +468,7 @@ class Publisher {
         if(code == nil) {
             return
         }
-        print("state: \(state)\ncode: \(code)\ncodeVerifier: \(codeVerifier)")
+        print("state: \(state)\ncode: \(code)\ncodeVerifier: \(codeVerifier)\nstoreOnDevice: \(storeOnDevice)")
         
         do {
             let llt = try Vault.getLongLivedToken()
@@ -476,7 +479,9 @@ class Publisher {
                 platform: String(state),
                 code: code!,
                 codeVerifier: codeVerifier,
-                supportsUrlSchemes: supportsUrlScheme)
+                storeOnDevice: storeOnDevice,
+                supportsUrlSchemes: supportsUrlScheme
+            )
             
             print("Saved new account successfully....")
             

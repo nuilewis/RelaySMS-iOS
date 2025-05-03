@@ -81,11 +81,11 @@ struct PlatformsView: View {
                                         composeNewMessageRequested: $composeNewMessageRequested,
                                         platformRequestType: $requestType,
                                         composeViewRequested: getBindingComposeVariable(
-                                            type: item.service_type!),
+                                            type: item.service_type ?? "Unknown"),
                                         parentRefreshRequested: $refreshRequested,
                                         requestedPlatformName: $requestedPlatformName,
                                         platform: item,
-                                        serviceType: getServiceType(type: item.service_type!),
+                                        serviceType: getServiceType(type: item.service_type ?? "Unknown"),
                                         callback: callback
                                     )
                                 }
@@ -96,11 +96,11 @@ struct PlatformsView: View {
                                         composeNewMessageRequested: $composeNewMessageRequested,
                                         platformRequestType: $requestType,
                                         composeViewRequested: getBindingComposeVariable(
-                                            type: item.service_type!),
+                                            type: item.service_type ?? "Unkown"),
                                         parentRefreshRequested: $refreshRequested,
                                         requestedPlatformName: $requestedPlatformName,
                                         platform: item,
-                                        serviceType: getServiceType(type: item.service_type!),
+                                        serviceType: getServiceType(type: item.service_type ?? "Unkown"),
                                         callback: callback
                                     )
                                 }
@@ -112,6 +112,7 @@ struct PlatformsView: View {
                 .id(id)
                 .onChange(of: refreshRequested) { refresh in
                     if refresh {
+                        Publisher.refreshPlatforms(context: context)
                         print("refreshing....")
                         id = UUID()
                     }
@@ -173,6 +174,8 @@ struct PlatformsView: View {
             return String(localized:"Available Platforms")
         }
     }
+    
+
 
 
     func getServiceType(type: String) -> Publisher.ServiceTypes {

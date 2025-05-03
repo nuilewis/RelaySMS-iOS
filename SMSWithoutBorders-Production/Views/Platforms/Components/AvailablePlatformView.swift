@@ -135,6 +135,7 @@ struct AvailablePlatformView: View {
     @State var composeViewRequested: Bool = false
     @State var loading: Bool = false
     @State var codeVerifier: String = ""
+    @State var storePlatfomOnDevice: Bool = false
 
     AvailablePlatformView(
         platformRequestedType: $platformRequestedType,
@@ -149,5 +150,6 @@ struct AvailablePlatformView: View {
         callback: callback,
         description: description,
         composeDescription: composeDescription
+
     )
 }

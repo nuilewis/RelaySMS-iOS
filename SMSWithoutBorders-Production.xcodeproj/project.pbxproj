@@ -26,6 +26,7 @@
 		3BF117B52C30F2BF003D5BB6 /* CryptoSwift in Frameworks */ = {isa = PBXBuildFile; productRef = 3BF117B42C30F2BF003D5BB6 /* CryptoSwift */; };
 		3BF3D1532C32DC6B003A3AFB /* CountryPicker in Frameworks */ = {isa = PBXBuildFile; productRef = 3BF3D1522C32DC6B003A3AFB /* CountryPicker */; };
 		3BF3D1642C349907003A3AFB /* CryptoSwift in Frameworks */ = {isa = PBXBuildFile; productRef = 3BF3D1632C349907003A3AFB /* CryptoSwift */; };
+		F6F2D1D02DAE88790017BD59 /* SwiftProtobuf in Frameworks */ = {isa = PBXBuildFile; productRef = F6F2D1CF2DAE88790017BD59 /* SwiftProtobuf */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -63,19 +64,7 @@
 		F6790DEC2DAE66C30070A55E /* PBXFileSystemSynchronizedBuildFileExceptionSet */ = {
 			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
 			membershipExceptions = (
-				Commons/ContactPickerService.swift,
-				Commons/CountryUtils.swift,
-				Commons/CSecurity.swift,
-				Commons/DataController.swift,
-				Commons/Errors.swift,
-				Commons/OperatorHandlers.swift,
-				Commons/PublisherHandler.swift,
 				Commons/Theme/Fonts/unbounded.ttf,
-				Datastore.xcdatamodeld,
-				Modules/GatewayClients.swift,
-				Modules/gRPCHandler.swift,
-				Modules/Helpers.swift,
-				Modules/Messages.swift,
 				Notes.txt,
 				Proto/relay_publisher.grpc.swift,
 				Proto/relay_publisher.pb.swift,
@@ -85,27 +74,13 @@
 				Proto/vault.proto,
 				"static-x25519-staging.json",
 				"static-x25519.json",
-				Views/Components/Extensions.swift,
-				Views/Components/MessageCard.swift,
-				Views/Components/RelayButton.swift,
-				Views/Components/RelayTextFieldStyle.swift,
-				Views/Components/SucccessAnimations.swift,
 				Views/PlatformComposeViews/SMSComposeMessageUIView.swift,
-				Views/Platforms/Components/AvailablePlatformView.swift,
-				Views/Platforms/Components/PlatformCard.swift,
-				Views/Platforms/Components/PlatformDetailsBottomsheet.swift,
-				Views/Platforms/Components/SaveRevokePlatform.swift,
-				Views/Platforms/EmailPlatformView.swift,
-				Views/Platforms/TextPlatformView.swift,
-				Views/Settings/SecuritySettingsView.swift,
 			);
 			target = 16F0E68E28C6308800FDD12C /* SMSWithoutBorders-ProductionTests */;
 		};
 		F6790DED2DAE66C30070A55E /* PBXFileSystemSynchronizedBuildFileExceptionSet */ = {
 			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
 			membershipExceptions = (
-				Commons/CSecurity.swift,
-				Modules/gRPCHandler.swift,
 				Proto/relay_publisher.grpc.swift,
 				Proto/relay_publisher.pb.swift,
 				Proto/relay_publisher.proto,
@@ -113,11 +88,6 @@
 				Proto/vault.pb.swift,
 				Proto/vault.proto,
 				"static-x25519-staging.json",
-				Views/Components/Extensions.swift,
-				Views/Components/MessageCard.swift,
-				Views/Components/RelayButton.swift,
-				Views/Components/RelayTextFieldStyle.swift,
-				Views/Components/SucccessAnimations.swift,
 			);
 			target = 16F0E69828C6308800FDD12C /* SMSWithoutBorders-ProductionUITests */;
 		};
@@ -138,6 +108,7 @@
 				3BCBA3A72C49ADFD00736B9B /* CachedAsyncImage in Frameworks */,
 				3B7EEE3B2C5BD87D00611092 /* SwobDoubleRatchet in Frameworks */,
 				3BF117702C28F3F4003D5BB6 /* CGRPCZlib in Frameworks */,
+				F6F2D1D02DAE88790017BD59 /* SwiftProtobuf in Frameworks */,
 				3BF117742C28F3F4003D5BB6 /* GRPCReflectionService in Frameworks */,
 				3B082A9C2C3D24C700C7DE41 /* SwiftSVG in Frameworks */,
 				3BF3D1532C32DC6B003A3AFB /* CountryPicker in Frameworks */,
@@ -231,6 +202,7 @@
 				3B082A9B2C3D24C700C7DE41 /* SwiftSVG */,
 				3BCBA3A62C49ADFD00736B9B /* CachedAsyncImage */,
 				3B7EEE3A2C5BD87D00611092 /* SwobDoubleRatchet */,
+				F6F2D1CF2DAE88790017BD59 /* SwiftProtobuf */,
 			);
 			productName = "SMSWithoutBorders-Production";
 			productReference = 16F0E67F28C6308600FDD12C /* SMSWithoutBorders.app */;
@@ -337,6 +309,7 @@
 				3B082A9A2C3D24C700C7DE41 /* XCRemoteSwiftPackageReference "SwiftSVG" */,
 				3BCBA3A52C49ADFD00736B9B /* XCRemoteSwiftPackageReference "swiftui-cached-async-image" */,
 				3B6ADC482C5B960000D4EB30 /* XCRemoteSwiftPackageReference "lib_signal_double_ratchet_ios" */,
+				F6F2D1CE2DAE88600017BD59 /* XCRemoteSwiftPackageReference "swift-protobuf" */,
 			);
 			productRefGroup = 16F0E68028C6308600FDD12C /* Products */;
 			projectDirPath = "";
@@ -616,7 +589,7 @@
 				BUNDLE_LOADER = "$(TEST_HOST)";
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
-				DEVELOPMENT_TEAM = "";
+				DEVELOPMENT_TEAM = Q42NLHCB95;
 				GENERATE_INFOPLIST_FILE = YES;
 				IPHONEOS_DEPLOYMENT_TARGET = 15.0;
 				MARKETING_VERSION = 1.0;
@@ -638,7 +611,7 @@
 				BUNDLE_LOADER = "$(TEST_HOST)";
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
-				DEVELOPMENT_TEAM = "";
+				DEVELOPMENT_TEAM = Q42NLHCB95;
 				GENERATE_INFOPLIST_FILE = YES;
 				IPHONEOS_DEPLOYMENT_TARGET = 15.0;
 				MARKETING_VERSION = 1.0;
@@ -767,7 +740,7 @@
 			repositoryURL = "https://github.com/grpc/grpc-swift.git";
 			requirement = {
 				kind = upToNextMajorVersion;
-				minimumVersion = 1.23.0;
+				minimumVersion = 1.24.2;
 			};
 		};
 		3BF117AA2C2F5154003D5BB6 /* XCRemoteSwiftPackageReference "fernet" */ = {
@@ -792,6 +765,14 @@
 			requirement = {
 				kind = upToNextMajorVersion;
 				minimumVersion = 2.0.3;
+			};
+		};
+		F6F2D1CE2DAE88600017BD59 /* XCRemoteSwiftPackageReference "swift-protobuf" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/apple/swift-protobuf.git";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 1.28.2;
 			};
 		};
 /* End XCRemoteSwiftPackageReference section */
@@ -886,6 +867,11 @@
 			isa = XCSwiftPackageProductDependency;
 			package = 3BF117B32C30F2BF003D5BB6 /* XCRemoteSwiftPackageReference "CryptoSwift" */;
 			productName = CryptoSwift;
+		};
+		F6F2D1CF2DAE88790017BD59 /* SwiftProtobuf */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = F6F2D1CE2DAE88600017BD59 /* XCRemoteSwiftPackageReference "swift-protobuf" */;
+			productName = SwiftProtobuf;
 		};
 /* End XCSwiftPackageProductDependency section */
 	};

@@ -8,32 +8,56 @@
 import SwiftUI
 import CoreData
 
-struct AccountView: View {
-    var accountName: String
-    var platformName: String
+struct AccountListItem: View {
+    var platform: StoredPlatformsEntity
+    private var platformIsTwitter: Bool
+    private var accountName: String
+    private var platformName: String
+    var context: NSManagedObjectContext
+    private var tokenExist: Bool = false
+    
+    
+    init(platform: StoredPlatformsEntity, context: NSManagedObjectContext) {
+        self.platform = platform
+        self.accountName = platform.account ?? "Unknown account"
+        self.platformName = platform.name ?? "Unknown platform"
+        self.platformIsTwitter = platformName == "twitter"
+        self.context = context
+        self.tokenExist = StoredTokensEntityManager(context: context).storedTokenExists(forPlarform: platform.id!)
+    }
     var body : some View {
         VStack {
             HStack {
-                Image(systemName: "person.crop.circle.fill")
+                Image(systemName: "person.crop.circle")
                     .resizable()
                     .frame(width: 50, height: 50)
+                    .foregroundStyle(RelayColors.colorScheme.primary)
                 VStack {
-                    Text(accountName)
+                    Text(platformIsTwitter ? "@\(accountName)" : accountName)
                         .font(RelayTypography.bodyMedium)
                         .frame(maxWidth: .infinity, alignment: .leading)
                         .lineLimit(1)
-//                    Text(platformName)
-//                        .font(.caption2)
-//                        .frame(maxWidth: .infinity, alignment: .leading)
-//                        .foregroundStyle(.gray)
+                    Text(platformName.localizedCapitalized)
+                        .font(.caption2)
+                        .frame(maxWidth: .infinity, alignment: .leading)
+                        .foregroundStyle(.gray)
                 }
                 .padding()
+                if platform.isStoredOnDevice{
+                    if !tokenExist {
+                        Image(systemName: "x.circle").foregroundStyle(Color.red)
+                    } else {
+                        Image(systemName: "checkmark.circle").foregroundStyle(Color.green)
+                    }
+                }
+      
+                
             }
         }
     }
 }
 
-struct AccountSheetView: View {
+struct SelectAccountSheetView: View {
     @Environment(\.dismiss) var dismiss
     @Environment(\.managedObjectContext) var context
     
@@ -77,14 +101,11 @@ struct AccountSheetView: View {
                         }
                         callback()
                     }) {
-                        AccountView(
-                            accountName: platform.account!,
-                            platformName: platform.name!
-                        )
+                        AccountListItem(platform: platform, context: context)
                     }
                 }
             }
-            .navigationTitle("\(platformName) accounts")
+            .navigationTitle("\(platformName.localizedCapitalized) accounts")
             .frame(maxWidth: .infinity, maxHeight: .infinity)
             .toolbar {
                 ToolbarItem(placement: .topBarTrailing) {
@@ -110,7 +131,7 @@ struct AccountSheetView_Preview: PreviewProvider {
         @State var messagePlatformViewFromAccount: String = ""
         @State var fromAccount: String = ""
 
-        return AccountSheetView(
+        return SelectAccountSheetView(
             filter: "twitter",
             fromAccount: $fromAccount,
             dismissParent: $globalDismiss

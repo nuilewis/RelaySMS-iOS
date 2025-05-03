@@ -27,6 +27,12 @@ struct PlatformDetailsBottomsheet: View {
     @State var errorMessage: String = ""
 
     var platform: PlatformsEntity?
+    @FetchRequest(sortDescriptors: [NSSortDescriptor(
+        keyPath: \StoredPlatformsEntity.name,
+        ascending: true)]
+    ) private var storedPlatforms: FetchedResults<StoredPlatformsEntity>
+    
+    
     @State private var codeVerifier: String = ""
     @State private var fromAccount: String = ""
 
@@ -35,6 +41,7 @@ struct PlatformDetailsBottomsheet: View {
     @Binding var platformRequestedType: PlatformsRequestedType
     @Binding var composeViewRequested: Bool
     @Binding var refreshParent: Bool
+    @State var storePlatformOnDevice: Bool = false
 
     var callback: (() -> Void)?
 
@@ -59,6 +66,10 @@ struct PlatformDetailsBottomsheet: View {
         _composeViewRequested = composeViewRequested
         _refreshParent = refreshParent
         self.callback = callback
+        
+        _storedPlatforms = FetchRequest<StoredPlatformsEntity>(
+            sortDescriptors: [],
+            predicate: NSPredicate(format: "name == %@", platform?.name ?? "unkown"))
     }
 
     var body: some View {
@@ -71,7 +82,7 @@ struct PlatformDetailsBottomsheet: View {
                 )
             }
             else if accountSheetRequested && platform != nil {
-                AccountSheetView(
+                SelectAccountSheetView(
                     filter: platform!.name!,
                     fromAccount: $fromAccount,
                     dismissParent: $parentIsEnabled
@@ -94,7 +105,15 @@ struct PlatformDetailsBottomsheet: View {
                                     account: fromAccount,
                                     protocolType: platform!.protocol_type!
                                 )
-
+                                
+                                // Delete token for the account beign revoked
+                                print("Searching for token for the platform for: \(platform!.name?.localizedCapitalized ?? "unkown" ) beign revoked to delete")
+                                for storedEntity in storedPlatforms {
+                                    if storedEntity.name  == platform!.name! {
+                                        StoredTokensEntityManager(context: context).deleteStoredTokenById(forPlatform: storedEntity.id!)
+                                    }
+                                }
+                              
                                 if response {
                                     let vault = Vault()
                                     do {
@@ -147,7 +166,8 @@ struct PlatformDetailsBottomsheet: View {
                     try Publisher.processIncomingUrls(
                         context: context,
                         url: url,
-                        codeVerifier: codeVerifier
+                        codeVerifier: codeVerifier,
+                        storeOnDevice: storePlatformOnDevice
                     )
                     parentIsEnabled = true
                     dismiss()

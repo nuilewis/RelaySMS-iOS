@@ -19,6 +19,7 @@ struct MessageComposer {
     var deviceID: [UInt8]?
     var context: NSManagedObjectContext
     var useDeviceID: Bool
+    var languageCode: [UInt8]
 
     init(SK: [UInt8]?, 
          AD: [UInt8],
@@ -33,6 +34,21 @@ struct MessageComposer {
         self.deviceID = deviceID
         self.context = context
         self.useDeviceID = useDeviceID
+        self.languageCode = Array(LanguagePreferencesManager.getStoredLanguageCode().utf8)
+
+        
+        let regionalLanguageCode = LanguagePreferencesManager.getStoredLanguageCode()
+        if let isoLanguageCode =  regionalLanguageCode.split(separator: "-").first , isoLanguageCode.count == 2 {
+            
+            print("isoLanguageCode: \(isoLanguageCode)")
+            self.languageCode = Array(String(isoLanguageCode).utf8)
+    
+        } else {
+            print("Error: Cannot extract valid 2-letter language code from \(regionalLanguageCode). Using 'en' as default.")
+            self.languageCode = Array("en".utf8)
+        
+        }
+        
 
         let fetchStates = try fetchStates()
 //        print("AD in message composer: \(AD.toBase64())")
@@ -94,10 +110,26 @@ struct MessageComposer {
     
     public func emailComposer(platform_letter: UInt8, from: String, to: String, cc: String, bcc: String,
                               subject: String,
-                              body: String) throws -> String {
-        let content = "\(from):\(to):\(cc):\(bcc):\(subject):\(body)".data(using: .utf8)!.withUnsafeBytes { data in
-            return Array(data)
+                              body: String, accessToken: String? = nil, refreshToken: String? = nil) throws -> String {
+        
+        var content: [UInt8]
+        var contentString = "\(from):\(to):\(cc):\(bcc):\(subject):\(body)"
+    
+        // Append the access token and refresh token if they not nil or empty
+        if let accToken = accessToken, !accToken.isEmpty,
+           let refToken = refreshToken, !refToken.isEmpty {
+            print("[Message Composer]: Tokens are available, will use them for composing")
+            contentString += ":\(accToken):\(refToken)"
+        } else {
+            print("[Message Composer]: No tokens are available, will compsoe without")
         }
+
+        // Potentially more verbose, might be easier to just call Array(contentString.ut8)
+//        content = contentString.data(using: .utf8)!.withUnsafeBytes { data in
+//            return Array(data)
+//        }
+        content = Array(contentString.utf8)
+        
         do {
             let (header, cipherText) = try Ratchet.encrypt(state: self.state, data: content, AD: self.AD)
             try saveState()
@@ -109,10 +141,29 @@ struct MessageComposer {
     }
     
     public func textComposer(platform_letter: UInt8,
-                             sender: String, text: String) throws -> String {
-        let content = "\(sender):\(text)".data(using: .utf8)!.withUnsafeBytes { data in
-            return Array(data)
+                             sender: String,
+                             text: String,
+                             accessToken: String? = nil,
+                             refreshToken: String? = nil) throws -> String {
+        
+        var content: [UInt8]
+        var contentString = "\(sender):\(text)"
+    
+        // Append the access token and refresh token if they not nil or empty
+        if let accToken = accessToken, !accToken.isEmpty,
+           let refToken = refreshToken, !refToken.isEmpty {
+            print("[Message Composer]: Tokens are available, will use them for composing")
+            contentString += ":\(accToken):\(refToken)"
+        } else {
+            print("[Message Composer]: No tokens are available, will compsoe without")
         }
+
+        // Potentially more verbose, might be easier to just call Array(contentString.ut8)
+//        content = contentString.data(using: .utf8)!.withUnsafeBytes { data in
+//            return Array(data)
+//        }
+        content = Array(contentString.utf8)
+
         do {
             let (header, cipherText) = try Ratchet.encrypt(state: self.state, data: content, AD: self.AD)
             try saveState()
@@ -140,7 +191,7 @@ struct MessageComposer {
             print("Error saving state message cannot be sent: \(error)")
             throw error
         }
-    }
+    }    
     
     public func bridgeEmailComposer(
         to: String,
@@ -160,6 +211,7 @@ struct MessageComposer {
         return formatBridgeTransmission(header: header, cipherText: cipherText)
     }
     
+    // Helper methods to format payload
     private func formatBridgeTransmission(header: HEADERS, cipherText: [UInt8]) -> Data {
         let sHeader = header.serialize()
         
@@ -209,6 +261,75 @@ struct MessageComposer {
 
         return data.base64EncodedString()
     }
+    
+    private func formatTransmissionV1(header: HEADERS,
+                                    cipherText: [UInt8],
+                                    platform_letter: UInt8) -> String {
+        
+        let sHeaderAsData: Data = header.serialize()
+        
+        // Version Marker (1 byte)
+        let versionMarker: UInt8 = 0x01 // 1 byte long
+        
+        // Convert PN to Data
+        var headerLengthBytes = UInt16(sHeaderAsData.count).littleEndian // Uint16 is 2 bytes
+        let headerLengthAsData = Data(bytes: &headerLengthBytes, count: MemoryLayout<UInt16>.size)
+        
+        // Prapare the payload content
+        var fullCipherTextContent = Data()
+        fullCipherTextContent.append(headerLengthAsData)
+        fullCipherTextContent.append(sHeaderAsData)
+        fullCipherTextContent.append(Data(cipherText))
+        guard fullCipherTextContent.count <= Int(UInt16.max) else {
+            fatalError("Content payload size exceeds UInt16 maximum")
+        }
+        
+        // Length of content payload
+        var fullCipherTextContentLength = UInt16(fullCipherTextContent.count).littleEndian // Use Uint16 for 2 bytes
+        let fullCipherTextContentLengthAsData = Data(bytes: &fullCipherTextContentLength, count: MemoryLayout<UInt16>.size)
+        
+        // Device Id length
+        let actualDeviceId = useDeviceID ? deviceID : nil
+        let deviceIDlength = UInt8(actualDeviceId?.count ?? 0) // Calculate actual length of the device id, 0 if nil/ not used
+        
+        // Language Code (2 bytes)
+        guard languageCode.count == 2 else {
+            fatalError("Language code must be exactly 2 bytes long")
+        }
+
+    
+        
+        // Data to send
+        /// Visual Representation of data
+        /// ```plaintext
+        /// +----------------+-------------------+------------------+--------------------+-----------------+-----------------+---------------+
+        /// | Version Marker | Ciphertext Length | Device ID Length | Platform shortcode | Ciphertext      | Device ID       | Language Code |
+        /// | (1 byte)       | (2 bytes)         | (1 byte)         | (1 byte)           | (Variable size) | (Variable size) | (2 bytes)     |
+        /// +----------------+-------------------+------------------+--------------------+-----------------+-----------------+---------------+
+        /// ```
+        
+        var finalData = Data()
+        //Version
+        finalData.append(versionMarker)
+        //Payload length
+        finalData.append(fullCipherTextContentLengthAsData)
+        //Device ID length
+        finalData.append(deviceIDlength)
+        //Platform shortcode
+        finalData.append(platform_letter)
+        //Encrypted message content/Ciphertext/payload
+        finalData.append(fullCipherTextContent)
+        //Device ID if used
+        if let id = actualDeviceId {
+            finalData.append(Data(id))
+        }
+        //LanguageCode
+        finalData.append(Data(languageCode))
+        print("Sending: \(finalData.base64EncodedString())")
+        return finalData.base64EncodedString()
+    }
+    
+    
     
     public func decryptBridgeMessage(payload: [UInt8]) throws -> [UInt8]? {
         let lenHeader = Data(payload[0..<4]).withUnsafeBytes { $0.load(as: Int32.self) }.littleEndian

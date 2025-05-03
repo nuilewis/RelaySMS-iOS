@@ -99,6 +99,9 @@ struct Publisher_V1_ExchangeOAuth2CodeAndStoreRequest: Sendable {
   /// Optional redirect URL for the OAuth2 application
   var redirectURL: String = String()
 
+  /// Indicates if the token should be stored on the device instead of the cloud
+  var storeOnDevice: Bool = false
+
   var unknownFields = SwiftProtobuf.UnknownStorage()
 
   init() {}
@@ -115,6 +118,9 @@ struct Publisher_V1_ExchangeOAuth2CodeAndStoreResponse: Sendable {
 
   /// A response message
   var message: String = String()
+
+  /// Access and refresh tokens
+  var tokens: Dictionary<String,String> = [:]
 
   var unknownFields = SwiftProtobuf.UnknownStorage()
 
@@ -448,6 +454,7 @@ extension Publisher_V1_ExchangeOAuth2CodeAndStoreRequest: SwiftProtobuf.Message,
     3: .standard(proto: "authorization_code"),
     4: .standard(proto: "code_verifier"),
     5: .standard(proto: "redirect_url"),
+    6: .standard(proto: "store_on_device"),
   ]
 
   mutating func decodeMessage<D: SwiftProtobuf.Decoder>(decoder: inout D) throws {
@@ -461,6 +468,7 @@ extension Publisher_V1_ExchangeOAuth2CodeAndStoreRequest: SwiftProtobuf.Message,
       case 3: try { try decoder.decodeSingularStringField(value: &self.authorizationCode) }()
       case 4: try { try decoder.decodeSingularStringField(value: &self.codeVerifier) }()
       case 5: try { try decoder.decodeSingularStringField(value: &self.redirectURL) }()
+      case 6: try { try decoder.decodeSingularBoolField(value: &self.storeOnDevice) }()
       default: break
       }
     }
@@ -482,6 +490,9 @@ extension Publisher_V1_ExchangeOAuth2CodeAndStoreRequest: SwiftProtobuf.Message,
     if !self.redirectURL.isEmpty {
       try visitor.visitSingularStringField(value: self.redirectURL, fieldNumber: 5)
     }
+    if self.storeOnDevice != false {
+      try visitor.visitSingularBoolField(value: self.storeOnDevice, fieldNumber: 6)
+    }
     try unknownFields.traverse(visitor: &visitor)
   }
 
@@ -491,6 +502,7 @@ extension Publisher_V1_ExchangeOAuth2CodeAndStoreRequest: SwiftProtobuf.Message,
     if lhs.authorizationCode != rhs.authorizationCode {return false}
     if lhs.codeVerifier != rhs.codeVerifier {return false}
     if lhs.redirectURL != rhs.redirectURL {return false}
+    if lhs.storeOnDevice != rhs.storeOnDevice {return false}
     if lhs.unknownFields != rhs.unknownFields {return false}
     return true
   }
@@ -501,6 +513,7 @@ extension Publisher_V1_ExchangeOAuth2CodeAndStoreResponse: SwiftProtobuf.Message
   static let _protobuf_nameMap: SwiftProtobuf._NameMap = [
     1: .same(proto: "success"),
     2: .same(proto: "message"),
+    3: .same(proto: "tokens"),
   ]
 
   mutating func decodeMessage<D: SwiftProtobuf.Decoder>(decoder: inout D) throws {
@@ -511,6 +524,7 @@ extension Publisher_V1_ExchangeOAuth2CodeAndStoreResponse: SwiftProtobuf.Message
       switch fieldNumber {
       case 1: try { try decoder.decodeSingularBoolField(value: &self.success) }()
       case 2: try { try decoder.decodeSingularStringField(value: &self.message) }()
+      case 3: try { try decoder.decodeMapField(fieldType: SwiftProtobuf._ProtobufMap<SwiftProtobuf.ProtobufString,SwiftProtobuf.ProtobufString>.self, value: &self.tokens) }()
       default: break
       }
     }
@@ -523,12 +537,16 @@ extension Publisher_V1_ExchangeOAuth2CodeAndStoreResponse: SwiftProtobuf.Message
     if !self.message.isEmpty {
       try visitor.visitSingularStringField(value: self.message, fieldNumber: 2)
     }
+    if !self.tokens.isEmpty {
+      try visitor.visitMapField(fieldType: SwiftProtobuf._ProtobufMap<SwiftProtobuf.ProtobufString,SwiftProtobuf.ProtobufString>.self, value: self.tokens, fieldNumber: 3)
+    }
     try unknownFields.traverse(visitor: &visitor)
   }
 
   static func ==(lhs: Publisher_V1_ExchangeOAuth2CodeAndStoreResponse, rhs: Publisher_V1_ExchangeOAuth2CodeAndStoreResponse) -> Bool {
     if lhs.success != rhs.success {return false}
     if lhs.message != rhs.message {return false}
+    if lhs.tokens != rhs.tokens {return false}
     if lhs.unknownFields != rhs.unknownFields {return false}
     return true
   }
