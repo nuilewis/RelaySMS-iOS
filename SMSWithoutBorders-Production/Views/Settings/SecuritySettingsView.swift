@@ -55,8 +55,10 @@ struct SecuritySettingsView: View {
     var body: some View {
         VStack(alignment: .leading) {
             List {
+                
                 Section(header: Text("Security")) {
                     Toggle("Store platform tokens on this device?", isOn: $storeTokensOnDevice)
+                        .disabled(!isLoggedIn)
                         .onChange(of: storeTokensOnDevice) { newValue in
                         
                         // Do not invoke this onChanged if the user is perfomaing an account action like logging out or deleting their account
