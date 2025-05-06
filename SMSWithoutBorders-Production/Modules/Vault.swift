@@ -488,6 +488,9 @@ struct Vault {
                     if accessToken.isEmpty {
                         print("Platform '\(platform.platform.localizedCapitalized)' has already been migrated to device, tokens no longer exist on the server.. skipping")
                     } else {
+                        // Force set isStoredOnDevice = true if tokens are available regardless of platform.isStoredOnDevice
+                        storedPlatformEntity.isStoredOnDevice = true
+
                         print("Saving platform '\(platform.platform.localizedCapitalized)' token to device...")
                         // Attempt to get tokens
                         let platformToken: StoredToken = StoredToken(

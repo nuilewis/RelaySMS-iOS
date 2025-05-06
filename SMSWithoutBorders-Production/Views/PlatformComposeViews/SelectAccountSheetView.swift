@@ -5,8 +5,8 @@
 //  Created by sh3rlock on 23/07/2024.
 //
 
-import SwiftUI
 import CoreData
+import SwiftUI
 
 struct AccountListItem: View {
     var platform: StoredPlatformsEntity
@@ -25,7 +25,7 @@ struct AccountListItem: View {
         self.context = context
         self.tokenExist = StoredTokensEntityManager(context: context).storedTokenExists(forPlarform: platform.id!)
     }
-    var body : some View {
+    var body: some View {
         VStack {
             HStack {
                 Image(systemName: "person.crop.circle")
@@ -43,15 +43,14 @@ struct AccountListItem: View {
                         .foregroundStyle(.gray)
                 }
                 .padding()
-                if platform.isStoredOnDevice{
-                    if !tokenExist {
-                        Image(systemName: "x.circle").foregroundStyle(Color.red)
+                if platform.isStoredOnDevice {
+                    if tokenExist {
+                        Image(systemName: "checkmark.circle").foregroundStyle(
+                            Color.green)
                     } else {
-                        Image(systemName: "checkmark.circle").foregroundStyle(Color.green)
+                        Image(systemName: "x.circle").foregroundStyle(Color.red)
                     }
                 }
-      
-                
             }
         }
     }
@@ -60,16 +59,16 @@ struct AccountListItem: View {
 struct SelectAccountSheetView: View {
     @Environment(\.dismiss) var dismiss
     @Environment(\.managedObjectContext) var context
-    
+
     @FetchRequest var storedPlatforms: FetchedResults<StoredPlatformsEntity>
     @FetchRequest var platforms: FetchedResults<PlatformsEntity>
     
     @Binding var fromAccount: String
     @Binding var dissmissParent: Bool
     private var platformName: String
-    
+
     var callback: () -> Void = {}
-    
+
     init(
         filter: String,
         fromAccount: Binding<String>,
@@ -77,9 +76,9 @@ struct SelectAccountSheetView: View {
         callback: @escaping () -> Void = {}
     ) {
         _storedPlatforms = FetchRequest<StoredPlatformsEntity>(
-            sortDescriptors: [], 
+            sortDescriptors: [],
             predicate: NSPredicate(format: "name == %@", filter))
-        
+
         _platforms = FetchRequest<PlatformsEntity>(
             sortDescriptors: [],
             predicate: NSPredicate(format: "name == %@", filter))
@@ -87,7 +86,7 @@ struct SelectAccountSheetView: View {
         self.platformName = filter
         _fromAccount = fromAccount
         _dissmissParent = dismissParent
-        
+
         self.callback = callback
     }
     
@@ -101,7 +100,8 @@ struct SelectAccountSheetView: View {
                         }
                         callback()
                     }) {
-                        AccountListItem(platform: platform, context: context)
+                        AccountListItem(
+                            platform: platform, context: context)
                     }
                 }
             }
@@ -125,7 +125,7 @@ struct AccountSheetView_Preview: PreviewProvider {
     static var previews: some View {
         let container = createInMemoryPersistentContainer()
         populateMockData(container: container)
-        
+
         @State var globalDismiss = false
         @State var messagePlatformViewRequested = false
         @State var messagePlatformViewFromAccount: String = ""
