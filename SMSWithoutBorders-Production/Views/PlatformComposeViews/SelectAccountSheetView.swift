@@ -15,15 +15,15 @@ struct AccountListItem: View {
     private var platformName: String
     var context: NSManagedObjectContext
     private var tokenExist: Bool = false
-    
-    
+
     init(platform: StoredPlatformsEntity, context: NSManagedObjectContext) {
         self.platform = platform
         self.accountName = platform.account ?? "Unknown account"
         self.platformName = platform.name ?? "Unknown platform"
         self.platformIsTwitter = platformName == "twitter"
         self.context = context
-        self.tokenExist = StoredTokensEntityManager(context: context).storedTokenExists(forPlarform: platform.id!)
+        self.tokenExist = StoredTokensEntityManager(context: context)
+            .storedTokenExists(forPlarform: platform.id!)
     }
     var body: some View {
         VStack {
@@ -62,7 +62,8 @@ struct SelectAccountSheetView: View {
 
     @FetchRequest var storedPlatforms: FetchedResults<StoredPlatformsEntity>
     @FetchRequest var platforms: FetchedResults<PlatformsEntity>
-    
+    @State private var publishablePlatforms: [StoredPlatformsEntity] = []
+
     @Binding var fromAccount: String
     @Binding var dissmissParent: Bool
     private var platformName: String
@@ -82,18 +83,41 @@ struct SelectAccountSheetView: View {
         _platforms = FetchRequest<PlatformsEntity>(
             sortDescriptors: [],
             predicate: NSPredicate(format: "name == %@", filter))
-        
+
         self.platformName = filter
         _fromAccount = fromAccount
         _dissmissParent = dismissParent
 
         self.callback = callback
     }
-    
+
+    // Only show accounts which can publish
+    func getPublishablePlatorms(
+        storedPlatforms: FetchedResults<StoredPlatformsEntity>,
+        context: NSManagedObjectContext
+    ) -> [StoredPlatformsEntity] {
+        print("Searching for platforms which can publish")
+        var publishableAccounts: [StoredPlatformsEntity] = []
+        for account in storedPlatforms {
+            if account.isStoredOnDevice {
+                // Pass the context to the manager if it needs it
+                let tokenForAccountExists: Bool = StoredTokensEntityManager(
+                    context: context
+                ).storedTokenExists(forPlarform: account.id!)
+                if tokenForAccountExists {
+                    publishableAccounts.append(account)
+                }
+            } else {
+                publishableAccounts.append(account)
+            }
+        }
+        return publishableAccounts
+    }
+
     var body: some View {
         NavigationView {
             VStack(alignment: .leading) {
-                List(storedPlatforms, id: \.self) { platform in
+                List(publishablePlatforms, id: \.self) { platform in
                     Button(action: {
                         if fromAccount != nil {
                             fromAccount = platform.account!
@@ -116,6 +140,10 @@ struct SelectAccountSheetView: View {
                         Image(systemName: "xmark.circle.fill")
                     }
                 }
+            }
+            .onAppear {
+                publishablePlatforms = getPublishablePlatorms(
+                    storedPlatforms: storedPlatforms, context: context)
             }
         }
     }
