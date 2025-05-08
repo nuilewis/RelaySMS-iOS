@@ -140,6 +140,75 @@ struct MessageComposer {
         }
     }
     
+    public func emailComposerV1(platform_letter: UInt8, from: String, to: String, cc: String, bcc: String,
+                              subject: String,
+                              body: String, accessToken: String? = nil, refreshToken: String? = nil) throws -> String {
+        
+        let fromData = Data(from.utf8)
+        let toData = Data(to.utf8)
+        let ccData = Data(cc.utf8)
+        let bccData = Data(bcc.utf8)
+        let subjectData = Data(subject.utf8) // Subject length is UInt8!
+        let bodyData = Data(body.utf8)
+        
+        let fromLength: UInt8 = UInt8(min(fromData.count, Int(UInt8.max)))
+        let toLength: UInt16 = UInt16(min(toData.count, Int(UInt16.max)))
+        let ccLength: UInt16 = UInt16(min(ccData.count, Int(UInt16.max)))
+        let bccLength: UInt16 = UInt16(min(bccData.count, Int(UInt16.max)))
+        let subjectLength: UInt8 = UInt8(min(subjectData.count, Int(UInt8.max))) // Subject length is 1 bytes
+        let bodyLength: UInt16 = UInt16(min(bodyData.count, Int(UInt16.max)))
+        
+  
+        // Handle optional tokens
+        var accessTokenData: Data? = nil
+        var accessTokenLength: UInt8 = 0
+        if let accToken = accessToken, !accToken.isEmpty {
+            accessTokenData = Data(accToken.utf8)
+            accessTokenLength = UInt8(min(accessTokenData!.count, Int(UInt8.max)))
+        }
+        var refreshTokenData: Data? = nil
+        var refreshTokenLength: UInt8 = 0
+        if let refToken = refreshToken, !refToken.isEmpty {
+            refreshTokenData = Data(refToken.utf8)
+            refreshTokenLength = UInt8(min(refreshTokenData!.count, Int(UInt8.max)))
+        }
+        
+        // 2. Build the Binary Data
+        var contentData = Data()
+        
+        // Append Lengths
+        contentData.append(fromLength)
+        contentData.append(contentsOf: withUnsafeBytes(of: toLength.littleEndian) {Data($0)})
+        contentData.append(contentsOf: withUnsafeBytes(of: ccLength.littleEndian) {Data($0)})
+        contentData.append(contentsOf: withUnsafeBytes(of: bccLength.littleEndian) {Data($0)})
+        contentData.append(subjectLength)
+        contentData.append(contentsOf: withUnsafeBytes(of: bodyLength.littleEndian) {Data($0)})
+        contentData.append(accessTokenLength)
+        contentData.append(refreshTokenLength)
+        
+        // Append values only if their length > 0 and in the same order
+        if fromLength > 0 {contentData.append(fromData)}
+        if toLength > 0 {contentData.append(toData)}
+        if ccLength > 0 {contentData.append(ccData)}
+        if bccLength > 0 {contentData.append(bccData)}
+        if subjectLength > 0 {contentData.append(subjectData)}
+        if bodyLength > 0 {contentData.append(bodyData)}
+        if accessTokenLength > 0 {contentData.append(accessTokenData!)}
+        if refreshTokenLength > 0 {contentData.append(refreshTokenData!)}
+        
+        print("[Message Composer]: Successfully formatted binary data for encryption. Size: \(contentData.count) bytes")
+        
+        // Encryption part
+        do {
+            let (header, cipherText) = try Ratchet.encrypt(state: self.state, data: Array(contentData), AD: self.AD)
+            try saveState()
+            return formatTransmission(header: header, cipherText: cipherText, platform_letter: platform_letter)
+        } catch {
+            print("Error saving state message cannot be sent: \(error)")
+            throw error
+        }
+    }
+    
     public func textComposer(platform_letter: UInt8,
                              sender: String,
                              text: String,
@@ -174,11 +243,73 @@ struct MessageComposer {
         }
     }
     
+    public func textComposerV1(platform_letter: UInt8,
+                             sender: String,
+                             text: String,
+                             accessToken: String? = nil,
+                             refreshToken: String? = nil) throws -> String {
+        
+        let fromData = Data(sender.utf8)
+        let bodyData = Data(text.utf8)
+        
+        let fromLength: UInt8 = UInt8(min(fromData.count, Int(UInt8.max)))
+        let toLength: UInt16 = UInt16(0)
+        let ccLength: UInt16 = UInt16(0)
+        let bccLength: UInt16 = UInt16(0)
+        let subjectLength: UInt8 = UInt8(0) // Subject length is 1 byte
+        let bodyLength: UInt16 = UInt16(min(bodyData.count, Int(UInt16.max)))
+        
+  
+        // Handle optional tokens
+        var accessTokenData: Data? = nil
+        var accessTokenLength: UInt8 = 0
+        if let accToken = accessToken, !accToken.isEmpty {
+            accessTokenData = Data(accToken.utf8)
+            accessTokenLength = UInt8(min(accessTokenData!.count, Int(UInt8.max)))
+        }
+        var refreshTokenData: Data? = nil
+        var refreshTokenLength: UInt8 = 0
+        if let refToken = refreshToken, !refToken.isEmpty {
+            refreshTokenData = Data(refToken.utf8)
+            refreshTokenLength = UInt8(min(refreshTokenData!.count, Int(UInt8.max)))
+        }
+        
+        // 2. Build the Binary Data
+        var contentData = Data()
+        
+        // Append Lengths
+        contentData.append(fromLength)
+        contentData.append(contentsOf: withUnsafeBytes(of: toLength.littleEndian) {Data($0)})
+        contentData.append(contentsOf: withUnsafeBytes(of: ccLength.littleEndian) {Data($0)})
+        contentData.append(contentsOf: withUnsafeBytes(of: bccLength.littleEndian) {Data($0)})
+        contentData.append(subjectLength)
+        contentData.append(contentsOf: withUnsafeBytes(of: bodyLength.littleEndian) {Data($0)})
+        contentData.append(accessTokenLength)
+        contentData.append(refreshTokenLength)
+        
+        // Append values only if their length > 0 and in the same order
+        if fromLength > 0 {contentData.append(fromData)}
+        if bodyLength > 0 {contentData.append(bodyData)}
+        if accessTokenLength > 0 {contentData.append(accessTokenData!)}
+        if refreshTokenLength > 0 {contentData.append(refreshTokenData!)}
+        
+        print("[Message Composer]: Successfully formatted binary data for encryption. Size: \(contentData.count) bytes")
+        
+        do {
+            let (header, cipherText) = try Ratchet.encrypt(state: self.state, data: Array(contentData), AD: self.AD)
+            try saveState()
+            return formatTransmission(header: header, cipherText: cipherText, platform_letter: platform_letter)
+        } catch {
+            print("Error saving state message cannot be sent: \(error)")
+            throw error
+        }
+    }
+    
     public func messageComposer(
         platform_letter: UInt8,
         sender: String,
         receiver: String,
-        message: String
+        message: String,
     ) throws -> String {
         let content = "\(sender):\(receiver):\(message)".data(using: .utf8)!.withUnsafeBytes { data in
             return Array(data)
@@ -191,7 +322,58 @@ struct MessageComposer {
             print("Error saving state message cannot be sent: \(error)")
             throw error
         }
-    }    
+    }
+    
+    public func messageComposerV1(
+        platform_letter: UInt8,
+        sender: String,
+        receiver: String,
+        message: String
+    ) throws -> String {
+        
+        let fromData = Data(sender.utf8)
+        let toData = Data(receiver.utf8)
+        let bodyData = Data(message.utf8)
+        
+        let fromLength: UInt8 = UInt8(min(fromData.count, Int(UInt8.max)))
+        let toLength: UInt16 = UInt16(min(toData.count, Int(UInt16.max)))
+        let ccLength: UInt16 = UInt16(0)
+        let bccLength: UInt16 = UInt16(0)
+        let subjectLength: UInt8 = UInt8(0) // Subject length is 1 byte
+        let bodyLength: UInt16 = UInt16(min(bodyData.count, Int(UInt16.max)))
+        var accessTokenLength: UInt8 = UInt8(0)
+        var refreshTokenLength: UInt8 = UInt8(0)
+        
+        // 2. Build the Binary Data
+        var contentData = Data()
+        
+        // Append Lengths
+        contentData.append(fromLength)
+        contentData.append(contentsOf: withUnsafeBytes(of: toLength.littleEndian) {Data($0)})
+        contentData.append(contentsOf: withUnsafeBytes(of: ccLength.littleEndian) {Data($0)})
+        contentData.append(contentsOf: withUnsafeBytes(of: bccLength.littleEndian) {Data($0)})
+        contentData.append(subjectLength)
+        contentData.append(contentsOf: withUnsafeBytes(of: bodyLength.littleEndian) {Data($0)})
+        contentData.append(accessTokenLength)
+        contentData.append(refreshTokenLength)
+        
+        // Append values only if their length > 0 and in the same order
+        if fromLength > 0 {contentData.append(fromData)}
+        if toLength > 0 {contentData.append(toData)}
+        if bodyLength > 0 {contentData.append(bodyData)}
+
+        
+        print("[Message Composer]: Successfully formatted binary data for encryption. Size: \(contentData.count) bytes")
+
+        do {
+            let (header, cipherText) = try Ratchet.encrypt(state: self.state, data: Array(contentData), AD: self.AD)
+            try saveState()
+            return formatTransmission(header: header, cipherText: cipherText, platform_letter: platform_letter)
+        } catch {
+            print("Error saving state message cannot be sent: \(error)")
+            throw error
+        }
+    }
     
     public func bridgeEmailComposer(
         to: String,
