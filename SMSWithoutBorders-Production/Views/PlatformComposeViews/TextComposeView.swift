@@ -105,7 +105,8 @@ struct TextComposeView: View {
                 SelectAccountSheetView(
                     filter: platformName,
                     fromAccount: $fromAccount,
-                    dismissParent: $dismissRequested
+                    dismissParent: $dismissRequested,
+                    isSendingMessage: true
                 ) {
                     requestToChooseAccount.toggle()
 

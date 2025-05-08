@@ -6889,6 +6889,12 @@
             "state" : "translated",
             "value" : "Hifadhi Vianzishi kwenye Kifaa"
           }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Tokenleri Cihazda Sakla"
+          }
         }
       }
     },
@@ -7753,6 +7759,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Wakati wa kuongeza akaunti za majukwaa yanayotumia OAuth2.0 (kama vile Gmail, X), kuwasha hii inahakikisha kuwa vianzishi vyako vya ufikiaji vinahifadhiwa kwenye kifaa chako cha sasa"
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "OAuth2.0 kullanan platformlar için (örneğin Gmail, X) hesap eklerken, bunu etkinleştirmek erişim tokenlarınızın mevcut cihazınızda saklanmasını sağlar"
           }
         }
       }

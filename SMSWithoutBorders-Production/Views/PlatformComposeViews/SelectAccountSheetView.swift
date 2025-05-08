@@ -16,6 +16,7 @@ struct AccountListItem: View {
     var context: NSManagedObjectContext
     private var tokenExist: Bool = false
 
+
     init(platform: StoredPlatformsEntity, context: NSManagedObjectContext) {
         self.platform = platform
         self.accountName = platform.account ?? "Unknown account"
@@ -63,10 +64,12 @@ struct SelectAccountSheetView: View {
     @FetchRequest var storedPlatforms: FetchedResults<StoredPlatformsEntity>
     @FetchRequest var platforms: FetchedResults<PlatformsEntity>
     @State private var publishablePlatforms: [StoredPlatformsEntity] = []
+    @State private var allStoredPlatforms: [StoredPlatformsEntity] = []
 
     @Binding var fromAccount: String
     @Binding var dissmissParent: Bool
     private var platformName: String
+    var isSendingMessage: Bool
 
     var callback: () -> Void = {}
 
@@ -74,7 +77,8 @@ struct SelectAccountSheetView: View {
         filter: String,
         fromAccount: Binding<String>,
         dismissParent: Binding<Bool>,
-        callback: @escaping () -> Void = {}
+        callback: @escaping () -> Void = {},
+        isSendingMessage: Bool = false
     ) {
         _storedPlatforms = FetchRequest<StoredPlatformsEntity>(
             sortDescriptors: [],
@@ -83,6 +87,7 @@ struct SelectAccountSheetView: View {
         _platforms = FetchRequest<PlatformsEntity>(
             sortDescriptors: [],
             predicate: NSPredicate(format: "name == %@", filter))
+        self.isSendingMessage = isSendingMessage
 
         self.platformName = filter
         _fromAccount = fromAccount
@@ -117,7 +122,7 @@ struct SelectAccountSheetView: View {
     var body: some View {
         NavigationView {
             VStack(alignment: .leading) {
-                List(publishablePlatforms, id: \.self) { platform in
+                List(isSendingMessage ? publishablePlatforms : allStoredPlatforms, id: \.self) { platform in
                     Button(action: {
                         if fromAccount != nil {
                             fromAccount = platform.account!
@@ -143,7 +148,12 @@ struct SelectAccountSheetView: View {
             }
             .onAppear {
                 publishablePlatforms = getPublishablePlatorms(
-                    storedPlatforms: storedPlatforms, context: context)
+                        storedPlatforms: storedPlatforms, context: context)
+                
+                allStoredPlatforms = []
+                for platform in storedPlatforms {
+                    allStoredPlatforms.append(platform)
+                }
             }
         }
     }
