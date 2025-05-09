@@ -202,7 +202,7 @@ struct MessageComposer {
         do {
             let (header, cipherText) = try Ratchet.encrypt(state: self.state, data: Array(contentData), AD: self.AD)
             try saveState()
-            return formatTransmission(header: header, cipherText: cipherText, platform_letter: platform_letter)
+            return formatTransmissionV1(header: header, cipherText: cipherText, platform_letter: platform_letter)
         } catch {
             print("Error saving state message cannot be sent: \(error)")
             throw error
@@ -298,7 +298,7 @@ struct MessageComposer {
         do {
             let (header, cipherText) = try Ratchet.encrypt(state: self.state, data: Array(contentData), AD: self.AD)
             try saveState()
-            return formatTransmission(header: header, cipherText: cipherText, platform_letter: platform_letter)
+            return formatTransmissionV1(header: header, cipherText: cipherText, platform_letter: platform_letter)
         } catch {
             print("Error saving state message cannot be sent: \(error)")
             throw error
@@ -309,7 +309,7 @@ struct MessageComposer {
         platform_letter: UInt8,
         sender: String,
         receiver: String,
-        message: String,
+        message: String
     ) throws -> String {
         let content = "\(sender):\(receiver):\(message)".data(using: .utf8)!.withUnsafeBytes { data in
             return Array(data)
@@ -368,7 +368,7 @@ struct MessageComposer {
         do {
             let (header, cipherText) = try Ratchet.encrypt(state: self.state, data: Array(contentData), AD: self.AD)
             try saveState()
-            return formatTransmission(header: header, cipherText: cipherText, platform_letter: platform_letter)
+            return formatTransmissionV1(header: header, cipherText: cipherText, platform_letter: platform_letter)
         } catch {
             print("Error saving state message cannot be sent: \(error)")
             throw error
@@ -448,27 +448,22 @@ struct MessageComposer {
                                     cipherText: [UInt8],
                                     platform_letter: UInt8) -> String {
         
-        let sHeaderAsData: Data = header.serialize()
+        let headerData: Data = header.serialize()
+        var headerLength = UInt16(min(headerData.count, Int(UInt16.max))).littleEndian
         
-        // Version Marker (1 byte)
-        let versionMarker: UInt8 = 0x01 // 1 byte long
-        
-        // Convert PN to Data
-        var headerLengthBytes = UInt16(sHeaderAsData.count).littleEndian // Uint16 is 2 bytes
-        let headerLengthAsData = Data(bytes: &headerLengthBytes, count: MemoryLayout<UInt16>.size)
+        let versionMarkerData: UInt8 = 0x01 // 1 byte long
         
         // Prapare the payload content
         var fullCipherTextContent = Data()
-        fullCipherTextContent.append(headerLengthAsData)
-        fullCipherTextContent.append(sHeaderAsData)
+        fullCipherTextContent.append(withUnsafeBytes(of: headerLength.littleEndian){Data($0)})
+        fullCipherTextContent.append(headerData)
         fullCipherTextContent.append(Data(cipherText))
         guard fullCipherTextContent.count <= Int(UInt16.max) else {
             fatalError("Content payload size exceeds UInt16 maximum")
         }
         
         // Length of content payload
-        var fullCipherTextContentLength = UInt16(fullCipherTextContent.count).littleEndian // Use Uint16 for 2 bytes
-        let fullCipherTextContentLengthAsData = Data(bytes: &fullCipherTextContentLength, count: MemoryLayout<UInt16>.size)
+        var fullCipherTextContentLength = UInt16(min(fullCipherTextContent.count, Int(UInt16.max)))
         
         // Device Id length
         let actualDeviceId = useDeviceID ? deviceID : nil
@@ -479,8 +474,6 @@ struct MessageComposer {
             fatalError("Language code must be exactly 2 bytes long")
         }
 
-    
-        
         // Data to send
         /// Visual Representation of data
         /// ```plaintext
@@ -492,13 +485,13 @@ struct MessageComposer {
         
         var finalData = Data()
         //Version
-        finalData.append(versionMarker)
+        finalData.append(versionMarkerData)
         //Payload length
-        finalData.append(fullCipherTextContentLengthAsData)
+        finalData.append(contentsOf: withUnsafeBytes(of: fullCipherTextContentLength.littleEndian) {Data($0)})
         //Device ID length
-        finalData.append(deviceIDlength)
+        finalData.append(contentsOf: withUnsafeBytes(of: deviceIDlength.littleEndian){Data($0)})
         //Platform shortcode
-        finalData.append(platform_letter)
+        finalData.append(contentsOf: withUnsafeBytes(of: platform_letter.littleEndian){Data($0)})
         //Encrypted message content/Ciphertext/payload
         finalData.append(fullCipherTextContent)
         //Device ID if used
@@ -507,11 +500,9 @@ struct MessageComposer {
         }
         //LanguageCode
         finalData.append(Data(languageCode))
-        print("Sending: \(finalData.base64EncodedString())")
+        print("[Payload Formatter V1] formatted content to send: \(finalData.base64EncodedString())")
         return finalData.base64EncodedString()
     }
-    
-    
     
     public func decryptBridgeMessage(payload: [UInt8]) throws -> [UInt8]? {
         let lenHeader = Data(payload[0..<4]).withUnsafeBytes { $0.load(as: Int32.self) }.littleEndian
