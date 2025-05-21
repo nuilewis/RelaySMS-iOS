@@ -449,13 +449,13 @@ struct MessageComposer {
                                     platform_letter: UInt8) -> String {
         
         let headerData: Data = header.serialize()
-        var headerLength = UInt16(min(headerData.count, Int(UInt16.max))).littleEndian
+        let headerLength = UInt32(min(headerData.count, Int(UInt32.max))).littleEndian // UInt32 because the header length should be 4 bytes
         
         let versionMarkerData: UInt8 = 0x01 // 1 byte long
         
         // Prapare the payload content
         var fullCipherTextContent = Data()
-        fullCipherTextContent.append(withUnsafeBytes(of: headerLength.littleEndian){Data($0)})
+        fullCipherTextContent.append(contentsOf: withUnsafeBytes(of: headerLength.littleEndian) {Data($0)})
         fullCipherTextContent.append(headerData)
         fullCipherTextContent.append(Data(cipherText))
         guard fullCipherTextContent.count <= Int(UInt16.max) else {
