@@ -55,6 +55,8 @@ struct Vault {
         password: String,
         ownershipResponse: String? = nil
     ) throws -> Vault_V1_CreateEntityResponse {
+        
+        print("[Vault]: Creating entity...")
         let clientDeviceIDPrivateKey = try SecurityCurve25519.generateKeyPair()
         let clientDeviceIDPubKey = clientDeviceIDPrivateKey.publicKey
             .rawRepresentation.base64EncodedString()
@@ -78,6 +80,8 @@ struct Vault {
                 )
             }
         }
+        
+        print("[Vault] Create entity request: \(entityCreationRequest)")
 
         let call = vaultEntityStub!.createEntity(entityCreationRequest)
         var response: Vault_V1_CreateEntityResponse
@@ -85,12 +89,14 @@ struct Vault {
         do {
             response = try call.response.wait()
             let status = try call.status.wait()
+            
+            print("[Vault] Create entity response: \(entityCreationRequest)")
 
             #if DEBUG
-                print("status code - raw value: \(status.code.rawValue)")
-                print("response: \(response)")
-                print("status code - description: \(status.code.description)")
-                print("status code - isOk: \(status.isOk)")
+                print("[Vault] status code - raw value: \(status.code.rawValue)")
+                print("[Vault] response: \(response)")
+                print("[Vault] status code - description: \(status.code.description)")
+                print("[Vault] status code - isOk: \(status.isOk)")
             #endif
 
             if !status.isOk {
@@ -105,10 +111,10 @@ struct Vault {
 
                 #if DEBUG
                     print(
-                        "Peer publish: \(response.serverPublishPubKey) : \(response.serverPublishPubKey.count)"
+                        "[Vault] Peer publish: \(response.serverPublishPubKey) : \(response.serverPublishPubKey.count)"
                     )
                     print(
-                        "Peer pubkey: \(response.serverDeviceIDPubKey) : \(response.serverDeviceIDPubKey.count)"
+                        "[Vault] Peer pubkey: \(response.serverDeviceIDPubKey) : \(response.serverDeviceIDPubKey.count)"
                     )
                 #endif
                 try Vault.derivceStoreLLT(
@@ -130,7 +136,7 @@ struct Vault {
                 )
             }
         } catch {
-            print("Some error came back: \(error)")
+            print("[Vault] Some error came back: \(error)")
             throw error
         }
         return response
@@ -174,16 +180,16 @@ struct Vault {
             response = try call.response.wait()
             let status = try call.status.wait()
 
-            print("status code - raw value: \(status.code.rawValue)")
-            print("status code - description: \(status.code.description)")
-            print("status code - isOk: \(status.isOk)")
+            print("[Vault] status code - raw value: \(status.code.rawValue)")
+            print("[Vault] status code - description: \(status.code.description)")
+            print("[Vault] status code - isOk: \(status.isOk)")
 
             if !status.isOk {
                 throw Exceptions.requestNotOK(status: status)
             }
 
             if !response.requiresOwnershipProof {
-                print("\nHere lies the Ad: \(response.serverPublishPubKey)\n")
+                print("[Vault] Here lies the Ad: \(response.serverPublishPubKey)\n")
 
                 UserDefaults.standard.set(
                     [UInt8](Data(base64Encoded: response.serverPublishPubKey)!),
@@ -209,7 +215,7 @@ struct Vault {
                 )
             }
         } catch {
-            print("Some error came back: \(error)")
+            print("[Vault] Some error came back: \(error)")
             throw error
         }
         return response
@@ -229,9 +235,9 @@ struct Vault {
             response = try call.response.wait()
             let status = try call.status.wait()
 
-            print("status code - raw value: \(status.code.rawValue)")
-            print("status code - description: \(status.code.description)")
-            print("status code - isOk: \(status.isOk)")
+            print("[Vault] status code - raw value: \(status.code.rawValue)")
+            print("[Vault] status code - description: \(status.code.description)")
+            print("[Vault] status code - isOk: \(status.isOk)")
 
             if !status.isOk {
                 if status.code.rawValue == 16 {
@@ -240,7 +246,7 @@ struct Vault {
                 throw Exceptions.requestNotOK(status: status)
             }
         } catch {
-            print("Some error came back: \(error)")
+            print("[Vault] Some error came back: \(error)")
             throw error
         }
         return response
@@ -252,6 +258,7 @@ struct Vault {
         newPassword: String,
         ownershipResponse: String? = nil
     ) throws -> Vault_V1_ResetPasswordResponse {
+        print("[Vault] Recovering password...")
         let clientDeviceIDPrivateKey = try SecurityCurve25519.generateKeyPair()
         let clientDeviceIDPubKey = clientDeviceIDPrivateKey.publicKey
             .rawRepresentation.base64EncodedString()
@@ -274,16 +281,20 @@ struct Vault {
                 )
             }
         }
+        
+        print("[Vault] Recovering password request: \(recoverPasswordRequest)")
 
         let call = vaultEntityStub!.resetPassword(recoverPasswordRequest)
         let response: Vault_V1_ResetPasswordResponse
         do {
             response = try call.response.wait()
             let status = try call.status.wait()
+            
+            print("[Vault] Recovering password response: \(response)")
 
-            print("status code - raw value: \(status.code.rawValue)")
-            print("status code - description: \(status.code.description)")
-            print("status code - isOk: \(status.isOk)")
+            print("[Vault] status code - raw value: \(status.code.rawValue)")
+            print("[Vault] status code - description: \(status.code.description)")
+            print("[Vault] status code - isOk: \(status.isOk)")
 
             if !status.isOk {
                 throw Exceptions.requestNotOK(status: status)
@@ -314,7 +325,7 @@ struct Vault {
                 )
             }
         } catch {
-            print("Some error came back: \(error)")
+            print("[Vault] Some error came back: \(error)")
             throw error
         }
         return response
@@ -333,9 +344,9 @@ struct Vault {
             response = try call.response.wait()
             let status = try call.status.wait()
 
-            print("status code - raw value: \(status.code.rawValue)")
-            print("status code - description: \(status.code.description)")
-            print("status code - isOk: \(status.isOk)")
+            print("[Vault] status code - raw value: \(status.code.rawValue)")
+            print("[Vault] status code - description: \(status.code.description)")
+            print("[Vault] status code - isOk: \(status.isOk)")
 
             if !status.isOk {
                 if status.code.rawValue == 16 {
@@ -348,7 +359,7 @@ struct Vault {
             try Vault.resetKeystore(context: context)
 
         } catch {
-            print("Some error came back: \(error)")
+            print("[Vault] Some error came back: \(error)")
             throw error
         }
         return response
@@ -365,7 +376,7 @@ struct Vault {
         do {
             let publisher = Publisher()
             for storedTokenEntity in storedTokenEntities {
-                print("[+] Revoking \(storedTokenEntity.name!)")
+                print("[Vault] [+] Revoking \(storedTokenEntity.name!)")
                 try publisher.revokePlatform(
                     llt: longLiveToken,
                     platform: storedTokenEntity.name!,
@@ -433,7 +444,7 @@ struct Vault {
                 defaultGatewayClient,
                 forKey: GatewayClients.DEFAULT_GATEWAY_CLIENT_MSISDN)
         }
-        print("[important] keystore reset done...")
+        print("[Vault] [important] keystore reset done...")
     }
 
     public static func resetStates(context: NSManagedObjectContext) throws {
@@ -459,7 +470,7 @@ struct Vault {
     func refreshStoredTokens(llt: String, context: NSManagedObjectContext)
         throws -> Bool
     {
-        print("Refreshing stored platforms...")
+        print("[Vault] Refreshing stored platforms...")
         let vault = Vault()
         do {
             let addedPlatforms = try vault.listStoredEntityToken(
@@ -486,12 +497,12 @@ struct Vault {
                 if shouldStorePlatformsOnDevice {
                     let accessToken = platform.accountTokens["access_token"] ?? ""
                     if accessToken.isEmpty {
-                        print("Platform '\(platform.platform.localizedCapitalized)' has already been migrated to device, tokens no longer exist on the server.. skipping")
+                        print("[Vault] Platform '\(platform.platform.localizedCapitalized)' has already been migrated to device, tokens no longer exist on the server.. skipping")
                     } else {
                         // Force set isStoredOnDevice = true if tokens are available regardless of platform.isStoredOnDevice
                         storedPlatformEntity.isStoredOnDevice = true
 
-                        print("Saving platform '\(platform.platform.localizedCapitalized)' token to device...")
+                        print("[Vault] Saving platform '\(platform.platform.localizedCapitalized)' token to device...")
                         // Attempt to get tokens
                         let platformToken: StoredToken = StoredToken(
                             id: platformId,
@@ -510,16 +521,16 @@ struct Vault {
                 do {
                     try context.save()
                 } catch {
-                    print("Failed to save context after refreshing entities: \(error)")
+                    print("[Vault] Failed to save context after refreshing entities: \(error)")
                 }
             }
         } catch Exceptions.unauthenticatedLLT(let status) {
-            print("Should delete invalid llt: \(String(describing: status.message))")
+            print("[Vault] Should delete invalid llt: \(String(describing: status.message))")
             try Vault.resetKeystore(context: context)
             try DataController.resetDatabase(context: context)
             return false
         } catch {
-            print("Error fetching stored tokens: \(error)")
+            print("[Vault] Error fetching stored tokens: \(error)")
             throw error
         }
         return true
@@ -527,13 +538,13 @@ struct Vault {
     
     func migratePlatformsToDevice(llt: String, context: NSManagedObjectContext) throws {
         do {
-            print("Migrating platforms to device...")
+            print("[Vault] Migrating platforms to device...")
             let result: Bool =  try refreshStoredTokens(llt: llt, context: context)
             if result {
-                print("Successfully migrated platforms to device")
+                print("[Vault] Successfully migrated platforms to device")
             }
         } catch {
-            print("An error occurred while trying to migrate platforms to device: \(error)")
+            print("[Vault] An error occurred while trying to migrate platforms to device: \(error)")
             throw error
         }
     }
@@ -541,7 +552,7 @@ struct Vault {
     static func clear(context: NSManagedObjectContext, shouldSave: Bool = true)
         throws
     {
-        print("Clearing platforms...")
+        print("[Vault] Clearing platforms...")
         let fetchRequest = NSFetchRequest<NSFetchRequestResult>(
             entityName: "StoredPlatformsEntity")
         let deleteRequest = NSBatchDeleteRequest(fetchRequest: fetchRequest)  // Use batch delete for efficiency
@@ -554,7 +565,7 @@ struct Vault {
                 try context.save()
             }
         } catch {
-            print("Error clearing PlatformsEntity: \(error)")
+            print("[Vault] Error clearing PlatformsEntity: \(error)")
             context.rollback()
             throw error  // Re-throw the error after rollback
         }
@@ -568,10 +579,10 @@ struct Vault {
             let storedTokens = try vault.listStoredEntityToken(
                 longLiveToken: llt)
         } catch Exceptions.unauthenticatedLLT(let status) {
-            print("Should delete invalid llt: \(String(describing: status.message))")
+            print("[Vault] Should delete invalid llt: \(String(describing: status.message))")
             return false
         } catch {
-            print("Error fetching stored tokens: \(error)")
+            print("[Vault] Error fetching stored tokens: \(error)")
             throw error
         }
         return true
@@ -580,15 +591,15 @@ struct Vault {
     private static func deriveDeviceID(
         derivedKey: [UInt8], phoneNumber: String, publicKey: [UInt8]
     ) throws -> [UInt8] {
-        print("DID key: \(derivedKey.toBase64())")
-        print("DID phoneNumber: \(phoneNumber)")
-        print("DID publicKey: \(publicKey.toBase64())")
+        print("[Vault] DID key: \(derivedKey.toBase64())")
+        print("[Vault] DID phoneNumber: \(phoneNumber)")
+        print("[Vault] DID publicKey: \(publicKey.toBase64())")
         let combinedData = phoneNumber.bytes.withUnsafeBytes {
             return Array($0) + publicKey
         }
         let deviceId = try HMAC(key: derivedKey, variant: .sha2(.sha256))
             .authenticate(combinedData)
-        print("DID id: \(deviceId.toBase64())")
+        print("[Vault] DID id: \(deviceId.toBase64())")
         return deviceId
     }
 
