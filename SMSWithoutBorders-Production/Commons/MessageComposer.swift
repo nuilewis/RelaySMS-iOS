@@ -341,8 +341,8 @@ struct MessageComposer {
         let bccLength: UInt16 = UInt16(0)
         let subjectLength: UInt8 = UInt8(0) // Subject length is 1 byte
         let bodyLength: UInt16 = UInt16(min(bodyData.count, Int(UInt16.max)))
-        var accessTokenLength: UInt8 = UInt8(0)
-        var refreshTokenLength: UInt8 = UInt8(0)
+        let accessTokenLength: UInt8 = UInt8(0)
+        let refreshTokenLength: UInt8 = UInt8(0)
         
         // 2. Build the Binary Data
         var contentData = Data()

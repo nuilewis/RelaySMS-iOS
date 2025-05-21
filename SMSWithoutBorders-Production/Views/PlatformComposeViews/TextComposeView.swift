@@ -172,7 +172,7 @@ struct TextComposeView: View {
                             }
 
                             encryptedFormattedContent =
-                                try messageComposer.textComposer(
+                                try messageComposer.textComposerV1(
                                     platform_letter: shortcode!,
                                     sender: fromAccount,
                                     text: textBody,

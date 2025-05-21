@@ -208,7 +208,7 @@ struct MessagingView: View {
                                 shortcode = platform.shortcode!.bytes[0]
                                 
                                 messageContact = messageContact.filter{ $0.isWholeNumber }
-                                encryptedFormattedContent = try messageComposer.messageComposer(
+                                encryptedFormattedContent = try messageComposer.messageComposerV1(
                                     platform_letter: shortcode!,
                                     sender: fromAccount,
                                     receiver: messageContact,
