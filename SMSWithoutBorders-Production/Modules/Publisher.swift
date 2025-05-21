@@ -228,6 +228,7 @@ class Publisher {
     }
     
     public static func refreshPlatforms(context: NSManagedObjectContext ) {
+        print("Publisher refreshing platforms...")
         Publisher.getPlatforms() { result in
             switch result {
             case .success(let data):
@@ -332,6 +333,7 @@ class Publisher {
 
 
     private static func getPlatforms(completion: @escaping (Result<[PlatformsData], Error>) -> Void) {
+        print("Getting platforms...")
         let platformsUrl = "https://raw.githubusercontent.com/smswithoutborders/SMSWithoutBorders-Publisher/staging/resources/platforms.json"
         
         Task {

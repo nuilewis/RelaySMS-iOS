@@ -20,24 +20,26 @@ struct HomepageView: View {
 
     @State var selectedTab: HomepageTabs = .recents
     @State var platformRequestType: PlatformsRequestedType = .available
-    
-    
+
     @AppStorage(SettingsKeys.SETTINGS_DO_NOT_NOTIFY_OF_MISSING_TOKENS)
     private var doNotNotifyOfMissingTokens: Bool = false
-    @State private var storedPlatformsWithMissingTokens: [StoredPlatformsEntity] = []
+    @State private var storedPlatformsWithMissingTokens:
+        [StoredPlatformsEntity] = []
     @State private var showMissingTokensSheet: Bool = false
     @State private var showMissingTokensAlert: Bool = false
-    @FetchRequest(sortDescriptors: [NSSortDescriptor(
-        keyPath: \PlatformsEntity.name,
-        ascending: true)]
+    @FetchRequest(sortDescriptors: [
+        NSSortDescriptor(
+            keyPath: \PlatformsEntity.name,
+            ascending: true)
+    ]
     ) var platforms: FetchedResults<PlatformsEntity>
 
-    @FetchRequest(sortDescriptors: [NSSortDescriptor(
-        keyPath: \StoredPlatformsEntity.name,
-        ascending: true)]
+    @FetchRequest(sortDescriptors: [
+        NSSortDescriptor(
+            keyPath: \StoredPlatformsEntity.name,
+            ascending: true)
+    ]
     ) var storedPlatforms: FetchedResults<StoredPlatformsEntity>
-
-    
 
     @State var composeNewMessageRequested: Bool = false
     @State var composeTextRequested: Bool = false
@@ -64,7 +66,8 @@ struct HomepageView: View {
                     NavigationLink(
                         destination: EmailPlatformView(
                             message: requestedMessage!,
-                            composeNewMessageRequested: $composeNewMessageRequested,
+                            composeNewMessageRequested:
+                                $composeNewMessageRequested,
                             emailComposeRequested: $composeEmailRequested,
                             requestedPlatformName: $requestedPlatformName
                         ),
@@ -94,15 +97,17 @@ struct HomepageView: View {
                         EmptyView()
                     }
                 }
-                
-                if requestedPlatformName.isEmpty == false || composeNewMessageRequested {
+
+                if requestedPlatformName.isEmpty == false
+                    || composeNewMessageRequested
+                {
                     NavigationLink(
-                    destination: EmailComposeView(
-                        platformName: $requestedPlatformName,
-                        isBridge: true,
-                        message: $requestedMessage
-                    ),
-                    isActive: $composeNewMessageRequested
+                        destination: EmailComposeView(
+                            platformName: $requestedPlatformName,
+                            isBridge: true,
+                            message: $requestedMessage
+                        ),
+                        isActive: $composeNewMessageRequested
                     ) {
                         EmptyView()
                     }
@@ -135,9 +140,9 @@ struct HomepageView: View {
                     ) {
                         EmptyView()
                     }
-                }
-                
-                else if createAccountSheetRequested || loginSheetRequested || passwordRecoveryRequired {
+                } else if createAccountSheetRequested || loginSheetRequested
+                    || passwordRecoveryRequired
+                {
                     NavigationLink(
                         destination: SignupSheetView(
                             loginRequested: $loginSheetRequested,
@@ -151,33 +156,36 @@ struct HomepageView: View {
                     NavigationLink(
                         destination: LoginSheetView(
                             isLoggedIn: $isLoggedIn,
-                            createAccountRequested: $createAccountSheetRequested,
+                            createAccountRequested:
+                                $createAccountSheetRequested,
                             passwordRecoveryRequired: $passwordRecoveryRequired
                         ),
                         isActive: $loginSheetRequested
                     ) {
                         EmptyView()
                     }
-                    
+
                     NavigationLink(
                         destination:
-                        RecoverySheetView(isRecovered: $isLoggedIn),
+                            RecoverySheetView(isRecovered: $isLoggedIn),
                         isActive: $passwordRecoveryRequired
                     ) {
                         EmptyView()
                     }
                 }
-                
-                TabView(selection: Binding(
-                    get: { selectedTab },
-                    set: {
-                        if $0 == .platforms && selectedTab != .platforms {
-                            platformRequestType = .available
+
+                TabView(
+                    selection: Binding(
+                        get: { selectedTab },
+                        set: {
+                            if $0 == .platforms && selectedTab != .platforms {
+                                platformRequestType = .available
+                            }
+                            selectedTab = $0
                         }
-                        selectedTab = $0
-                    }
-                )) {
-                    if (isLoggedIn) {
+                    )
+                ) {
+                    if isLoggedIn {
                         RecentsLoggedInView(
                             selectedTab: $selectedTab,
                             platformRequestType: $platformRequestType,
@@ -185,13 +193,14 @@ struct HomepageView: View {
                             emailIsRequested: $emailIsRequested,
                             textIsRequested: $textIsRequested,
                             messageIsRequested: $messageIsRequested,
-                            composeNewMessageRequested: $composeNewMessageRequested,
+                            composeNewMessageRequested:
+                                $composeNewMessageRequested,
                             composeTextRequested: $composeTextRequested,
                             composeMessageRequested: $composeMessageRequested,
                             composeEmailRequested: $composeEmailRequested,
                             requestedPlatformName: $requestedPlatformName
                         )
-                        .tabItem() {
+                        .tabItem {
                             Image(systemName: "house.circle.fill")
                             Text("Recents")
                         }
@@ -204,12 +213,13 @@ struct HomepageView: View {
                         PlatformsView(
                             requestType: $platformRequestType,
                             requestedPlatformName: $requestedPlatformName,
-                            composeNewMessageRequested: $composeNewMessageRequested,
+                            composeNewMessageRequested:
+                                $composeNewMessageRequested,
                             composeTextRequested: $composeTextRequested,
                             composeMessageRequested: $composeMessageRequested,
                             composeEmailRequested: $composeEmailRequested
                         )
-                        .tabItem() {
+                        .tabItem {
                             Image(systemName: "apps.iphone")
                             Text("Platforms")
                         }
@@ -218,13 +228,15 @@ struct HomepageView: View {
                     } else {
                         RecentsNotLoggedInView(
                             isLoggedIn: $isLoggedIn,
-                            composeNewMessageRequested: $composeNewMessageRequested,
-                            createAccountSheetRequested: $createAccountSheetRequested,
+                            composeNewMessageRequested:
+                                $composeNewMessageRequested,
+                            createAccountSheetRequested:
+                                $createAccountSheetRequested,
                             loginSheetRequested: $loginSheetRequested,
                             requestedMessage: $requestedMessage,
                             emailIsRequested: $emailIsRequested
                         )
-                        .tabItem() {
+                        .tabItem {
                             Image(systemName: "house.circle.fill")
                             Text("Get started")
                         }
@@ -239,29 +251,30 @@ struct HomepageView: View {
                         requestedMessage: $requestedMessage,
                         emailIsRequested: $emailIsRequested
                     )
-                    .tabItem() {
+                    .tabItem {
                         Image(systemName: "tray")
                         Text("Inbox")
                     }
                     .tag(HomepageTabs.inbox)
 
                     GatewayClientsView()
-                    .tabItem() {
-                        Image(systemName: "antenna.radiowaves.left.and.right.circle.fill")
-                        Text("Countries")
-                    }
-                    .tag(HomepageTabs.gatewayClients)
-
+                        .tabItem {
+                            Image(
+                                systemName:
+                                    "antenna.radiowaves.left.and.right.circle.fill"
+                            )
+                            Text("Countries")
+                        }
+                        .tag(HomepageTabs.gatewayClients)
 
                     SettingsView(isLoggedIn: $isLoggedIn)
-                    .tabItem() {
-                        Image(systemName: "gear.circle.fill")
-                        Text("Settings")
-                    }
-                    .tag(HomepageTabs.settings)
+                        .tabItem {
+                            Image(systemName: "gear.circle.fill")
+                            Text("Settings")
+                        }
+                        .tag(HomepageTabs.settings)
                 }
-                    
-                
+
             }
             .task {
                 searchForPlatformsWithMissingTokens()
@@ -269,72 +282,83 @@ struct HomepageView: View {
             .alert(isPresented: $showMissingTokensAlert) {
                 Alert(
                     title: Text("Missing Tokens"),
-                    message: Text("Some for the following platforms could not be found, please revoke these accounts and add them again"),
+                    message: Text(
+                        "Some for the following platforms could not be found, please revoke these accounts and add them again"
+                    ),
                     primaryButton: .default(
                         Text("OK"),
                         action: {
                             showMissingTokensSheet = true
                         }),
                     secondaryButton: .default(
-                            Text("Don't show this again"),
-                            action: {
-                                doNotNotifyOfMissingTokens = true
-                            }
-                      )
+                        Text("Don't show this again"),
+                        action: {
+                            doNotNotifyOfMissingTokens = true
+                        }
+                    )
                 )
-            }.sheet(isPresented: $showMissingTokensSheet, onDismiss: {
-                storedPlatformsWithMissingTokens.removeAll()
-            }) {
+            }.sheet(
+                isPresented: $showMissingTokensSheet,
+                onDismiss: {
+                    storedPlatformsWithMissingTokens.removeAll()
+                }
+            ) {
                 VStack(alignment: .leading) {
                     Text("Platforms with missing tokens")
                         .font(RelayTypography.titleMedium)
                         .padding(16)
                         .padding(.top, 16)
-                    List(storedPlatformsWithMissingTokens.removeDuplicates, id: \.self) { platform in
-                        AccountListItem(platform: platform, context: context)
+                    List(
+                        storedPlatformsWithMissingTokens.removeDuplicates,
+                        id: \.self
+                    ) { platform in
+                        AccountListItem(
+                            platform: platform,
+                            context: context)
                     }.listStyle(.plain)
                 }
                 .applyPresentationDetentsIfAvailable()
             }
 
         }
-//        .onChange(of: isLoggedIn) { state in
-//            if state {
-//                Publisher.refreshPlatforms(context: context)
-//            }
-//        }
+        //        .onChange(of: isLoggedIn) { state in
+        //            if state {
+        //                Publisher.refreshPlatforms(context: context)
+        //            }
+        //        }
         .onAppear {
             do {
                 isLoggedIn = try !Vault.getLongLivedToken().isEmpty
-//                Task {
-//                    if (ProcessInfo.processInfo.environment["XCODE_RUNNING_FOR_PREVIEWS"] != "1") {
-//                        print("Is searching for default....")
-//                        do {
-//                            try await GatewayClients.refresh(context: context)
-//                        } catch {
-//                            print("Error refreshing gateways: \(error)")
-//                        }
-//                    }
-//                }
+                //                Task {
+                //                    if (ProcessInfo.processInfo.environment["XCODE_RUNNING_FOR_PREVIEWS"] != "1") {
+                //                        print("Is searching for default....")
+                //                        do {
+                //                            try await GatewayClients.refresh(context: context)
+                //                        } catch {
+                //                            print("Error refreshing gateways: \(error)")
+                //                        }
+                //                    }
+                //                }
             } catch {
                 print(error)
             }
         }
     }
-    
-    
+
     func searchForPlatformsWithMissingTokens() {
         print("Searching for platforms with missing tokens...")
-         storedPlatformsWithMissingTokens = []
+        storedPlatformsWithMissingTokens = []
         for account in storedPlatforms {
             if account.isStoredOnDevice {
-                let tokenForAccountExists: Bool = StoredTokensEntityManager(context: context).storedTokenExists(forPlarform: account.id!)
-                if !tokenForAccountExists{
+                let tokenForAccountExists: Bool = StoredTokensEntityManager(
+                    context: context
+                ).storedTokenExists(forPlarform: account.id!)
+                if !tokenForAccountExists {
                     storedPlatformsWithMissingTokens.append(account)
                 }
             }
         }
-        
+
         if !storedPlatformsWithMissingTokens.isEmpty {
             print("Platforms with missing tokens found.")
             if !doNotNotifyOfMissingTokens {
@@ -345,8 +369,6 @@ struct HomepageView: View {
         }
     }
 }
-
-
 
 // //// PREVIEWS //// //
 struct HomepageView_Previews: PreviewProvider {

@@ -197,7 +197,8 @@ struct EmailComposeView: View {
                 SelectAccountSheetView(
                     filter: platformName,
                     fromAccount: $fromAccount,
-                    dismissParent: $dismissRequested
+                    dismissParent: $dismissRequested,
+                    isSendingMessage: true
                 ) {
                     requestToChooseAccount.toggle()
                     if self.message != nil {

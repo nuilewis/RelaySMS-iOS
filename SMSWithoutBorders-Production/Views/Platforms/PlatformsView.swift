@@ -112,7 +112,6 @@ struct PlatformsView: View {
                 .id(id)
                 .onChange(of: refreshRequested) { refresh in
                     if refresh {
-                        Publisher.refreshPlatforms(context: context)
                         print("refreshing....")
                         id = UUID()
                     }
@@ -133,6 +132,11 @@ struct PlatformsView: View {
             }
             .navigationTitle(getRequestTypeText(type: requestType))
             .padding(16)
+        }.onAppear {
+            if platforms.count == 0 {
+                print("[PlatformsView - onAppear]: No platforms found, refreshing....")
+                Publisher.refreshPlatforms(context: context)
+            }
         }
         .task {
             print("Number of platforms: \(platforms.count)")

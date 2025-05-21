@@ -243,7 +243,8 @@ struct MessagingView: View {
                 SelectAccountSheetView(
                     filter: platformName,
                     fromAccount: $fromAccount,
-                    dismissParent: $dissmissRequested
+                    dismissParent: $dissmissRequested,
+                    isSendingMessage: true
                 ) {
                     requestToChooseAccount.toggle()
                 }
