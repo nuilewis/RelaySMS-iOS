@@ -529,6 +529,7 @@ struct Vault {
                 storedPlatformEntity.name = platform.platform
                 storedPlatformEntity.account = platform.accountIdentifier
                 storedPlatformEntity.access_token = platform.accountTokens["access_token"] ?? ""
+                storedPlatformEntity.refresh_token = platform.accountTokens["refresh_token"] ?? ""
             }
 
             DispatchQueue.main.async {

@@ -109,37 +109,37 @@ struct EmailComposeView: View {
     @Environment(\.managedObjectContext) var context
     @FetchRequest var storedPlatforms: FetchedResults<StoredPlatformsEntity>
     @FetchRequest var platforms: FetchedResults<PlatformsEntity>
-
-    #if DEBUG
-        private var defaultGatewayClientMsisdn: String =
-            ProcessInfo.processInfo.environment["XCODE_RUNNING_FOR_PREVIEWS"]
-                == "1"
-            ? ""
-            : UserDefaults.standard.object(
-                forKey: GatewayClients.DEFAULT_GATEWAY_CLIENT_MSISDN) as? String
-                ?? ""
-    #else
-        @AppStorage(GatewayClients.DEFAULT_GATEWAY_CLIENT_MSISDN)
-        private var defaultGatewayClientMsisdn: String = ""
-    #endif
-
+    
+#if DEBUG
+    private var defaultGatewayClientMsisdn: String =
+    ProcessInfo.processInfo.environment["XCODE_RUNNING_FOR_PREVIEWS"]
+    == "1"
+    ? ""
+    : UserDefaults.standard.object(
+        forKey: GatewayClients.DEFAULT_GATEWAY_CLIENT_MSISDN) as? String
+    ?? ""
+#else
+    @AppStorage(GatewayClients.DEFAULT_GATEWAY_CLIENT_MSISDN)
+    private var defaultGatewayClientMsisdn: String = ""
+#endif
+    
     @AppStorage(SettingsKeys.SETTINGS_MESSAGE_WITH_PHONENUMBER)
     private var messageWithPhoneNumber = false
-
+    
     @State private var encryptedFormattedContent: String = ""
     @State var isShowingMessages: Bool = false
     @State var isSendingRequest: Bool = false
     @State var requestToChooseAccount: Bool = false
     @State var composeFrom: String = ""
     @State var fromAccount: String = ""
-
+    
     @State var dismissRequested = false
-
+    
     private var isBridge: Bool = false
-
+    
     @Binding var message: Messages?
     @Binding var platformName: String
-
+    
     @State var composeTo: String = ""
     @State var composeCC: String = ""
     @State var composeBCC: String = ""
@@ -150,7 +150,7 @@ struct EmailComposeView: View {
     @State private var alertTitle: String = ""
     @State private var alertMessage: String = ""
     @State private var isLoading = false
-
+    
     init(
         platformName: Binding<String>,
         isBridge: Bool = false,
@@ -166,11 +166,11 @@ struct EmailComposeView: View {
         _platforms = FetchRequest<PlatformsEntity>(
             sortDescriptors: [],
             predicate: NSPredicate(format: "name == %@", platformName.wrappedValue))
-
+        
         _platformName = platformName
         self.isBridge = isBridge
     }
-
+    
     var body: some View {
         NavigationView {
             VStack {
@@ -184,13 +184,6 @@ struct EmailComposeView: View {
                     fromAccount: $fromAccount,
                     isBridge: isBridge
                 )
-                #if DEBUG
-                    Button("Present missing token error alert") {
-                        showAlert = true
-                        alertTitle = "Missing Tokens"
-                        alertMessage = "Your tokens have not been found on this device. Please revoke access to your account and log back in to continue."
-                    }
-                #endif
             }
             .padding()
             .sheet(isPresented: $requestToChooseAccount) {
@@ -246,8 +239,8 @@ struct EmailComposeView: View {
                         DispatchQueue.background(background: {
                             do {
                                 encryptedFormattedContent =
-                                    try getEncryptedContent(
-                                        isBridge: self.isBridge)
+                                try getEncryptedContent(
+                                    isBridge: self.isBridge)
                             } catch {
                                 print(
                                     "Some error occured while sending: \(error)"
@@ -269,57 +262,18 @@ struct EmailComposeView: View {
                 }
             }
         })
-        .alert(isPresented: $showAlert) {
-            Alert(
-                title: Text(alertTitle),
-                message: Text(alertMessage),
-                primaryButton: .destructive(
-                    Text("Revoke Account"),
-                    action: {
-                        revokeAccount()
-                    }),
-                secondaryButton: .default(Text("Cancel")) {
-                    showAlert.toggle()
-                })
-        }.overlay {
-              if isLoading {
-                  ZStack {
-                      Color.black
-                          .opacity(0.2)
-                          .edgesIgnoringSafeArea(.all)
-                      ProgressView("Revoking...")//.foregroundStyle(Color.white)
-                          .padding()
-                  }
-              }
-          }
     }
-
+    
     func getEncryptedContent(isBridge: Bool = false) throws -> String {
         if !isBridge {
             let messageComposer = try Publisher.publish(context: context)
             let shortcode: UInt8 = "g".data(using: .utf8)!.first!
-
-            let tokenManager = StoredTokensEntityManager(context: context)
+            
             // Get the stored platform and use the tokens if the platform tokens exist
             let storedPlatformEntity = storedPlatforms.first {
                 $0.account == fromAccount
             }  // Gets the speciic account that matches the currently selected fromAccount
-            var tokensExists: Bool = false
-            var storedTokenForPlatform: StoredToken?
-
-            if let entity = storedPlatformEntity {
-                tokensExists = tokenManager.storedTokenExists(
-                    forPlarform: entity.id!)
-
-                // Get tokens if they exist
-                if tokensExists {
-                    storedTokenForPlatform = tokenManager.getStoredToken(
-                        forPlatform: entity.id!)
-                }
-            } else {
-                print("Platform is not stored on device")
-            }
-
+            
             return try messageComposer.emailComposerV1(
                 platform_letter: shortcode,
                 from: fromAccount,
@@ -328,10 +282,8 @@ struct EmailComposeView: View {
                 bcc: composeBCC,
                 subject: composeSubject,
                 body: composeBody,
-                accessToken: tokensExists
-                    ? storedTokenForPlatform?.accessToken : nil,
-                refreshToken: tokensExists
-                    ? storedTokenForPlatform?.refreshToken : nil
+                accessToken: storedPlatformEntity?.access_token ?? nil,
+                refreshToken: storedPlatformEntity?.refresh_token ?? nil
             )
         } else {
             let (cipherText, clientPublicKey) = try Bridges.compose(
@@ -354,20 +306,20 @@ struct EmailComposeView: View {
             }
         }
     }
-
+    
     func handleCompletion(_ result: MessageComposeResult) {
         switch result {
         case .cancelled:
             print("Yep cancelled")
-            #if DEBUG
-                saveMessageEntity()
-            #endif
+#if DEBUG
+            saveMessageEntity()
+#endif
             break
         case .failed:
             print("Yep failed")
-            #if DEBUG
-                saveMessageEntity()
-            #endif
+#if DEBUG
+            saveMessageEntity()
+#endif
             break
         case .sent:
             saveMessageEntity()
@@ -378,7 +330,7 @@ struct EmailComposeView: View {
             break
         }
     }
-
+    
     private func saveMessageEntity() {
         DispatchQueue.background(background: {
             var messageEntities = MessageEntity(context: context)
@@ -391,11 +343,11 @@ struct EmailComposeView: View {
             messageEntities.subject = composeSubject
             messageEntities.body = composeBody
             messageEntities.date = Int32(Date().timeIntervalSince1970)
-
+            
             if isBridge {
                 messageEntities.type = Bridges.SERVICE_NAME
             }
-
+            
             DispatchQueue.main.async {
                 do {
                     try context.save()
@@ -406,88 +358,23 @@ struct EmailComposeView: View {
             }
         })
     }
-
+    
     func formatEmailForViewing(decryptedData: String) -> (
         platformLetter: String, to: String, cc: String, bcc: String,
         subject: String, body: String
     ) {
         let splitString = decryptedData.components(separatedBy: ":")
-
+        
         let platformLetter: String = splitString[0]
         let to: String = splitString[1]
         let cc: String = splitString[2]
         let bcc: String = splitString[3]
         let subject: String = splitString[4]
         let body: String = splitString[5]
-
+        
         return (platformLetter, to, cc, bcc, subject, body)
     }
     
-    func revokeAccount(){
-        isLoading.toggle()
-        print("Atrempting to revoke account")
-        let backgroundQueue = DispatchQueue( label: "revokeAccountQueue", qos: .background)
-        backgroundQueue.async {
-            do {
-                let vault: Vault = Vault()
-                let llt: String = try Vault.getLongLivedToken()
-                let publisher = Publisher()
-
-                let platformEntity = platforms.first {
-                    $0.name == platformName
-                }
-
-                if let unwrappedPlatform = platformEntity {
-                    print("platform is: \(unwrappedPlatform)")
-                    print("Triggered revoking method")
-                    let storedPlatformEntityToDelete = storedPlatforms.first {
-                        $0.account == fromAccount
-                    }
-                    if let entityToDelete = storedPlatformEntityToDelete {
-                        StoredTokensEntityManager(context: context).deleteStoredTokenById(forPlatform: entityToDelete.id!)
-                        context.delete(entityToDelete)
-                    }
-                   
-
-                    let result: Bool =
-                        try publisher.revokePlatform(
-                            llt: llt,
-                            platform: unwrappedPlatform.name!,
-                            account: fromAccount,
-                            protocolType:unwrappedPlatform.protocol_type!
-                        )
-
-                    if result {
-                        DispatchQueue.main.async {
-                            do {
-                                let llt = try Vault.getLongLivedToken()
-                                var _ = try vault.refreshStoredTokens(
-                                    llt: llt,
-                                    context: context,
-                                    storedTokenEntities: storedPlatforms
-                                )
-                     
-                                try context.save()
-                                print("Successfully revoked platform")
-                                dismiss()
-                    
-                            } catch {
-                                print(error)
-                            }
-                        }
-                    }
-                } else {
-                    print(
-                        "Platform is null, so cant revoke"
-                    )
-                }
-            } catch {
-                print(
-                    "Unable to revoke platform: \(error)"
-                )
-            }
-        }
-    }
 }
 
 struct EmailView_Preview: PreviewProvider {

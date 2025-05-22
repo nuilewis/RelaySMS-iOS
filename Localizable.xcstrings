@@ -5404,9 +5404,6 @@
         }
       }
     },
-    "Revoke Account" : {
-
-    },
     "Revoking account for %@..." : {
       "localizations" : {
         "ar" : {
@@ -5499,9 +5496,6 @@
           }
         }
       }
-    },
-    "Revoking..." : {
-
     },
     "Running Unit Tests. Main UI suppressed." : {
 
