@@ -18,7 +18,9 @@ struct AvailablePlatformView: View {
     @Binding var accountSheetRequested: Bool
     @Binding var composeViewRequested: Bool
     @Binding var loading: Bool
-    @Binding var codeVerifier: String
+    
+    @AppStorage(Publisher.PLATFORM_CODE_VERIFIER)
+    private var codeVerifier: String = ""
 
     var platform: PlatformsEntity?
     var callback: (() -> Void)?
@@ -105,7 +107,8 @@ struct AvailablePlatformView: View {
                     let response = try publisher.getOAuthURL(
                         platform: platform.name!,
                         supportsUrlSchemes: platform.support_url_scheme)
-                    codeVerifier = response.codeVerifier
+                    codeVerifier = response.codeVerifier // Saves to app storage
+                    print("Saved code verifier to app storage temporarily")
                     openURL(URL(string: response.authorizationURL)!)
                 }
                 catch {
@@ -145,11 +148,9 @@ struct AvailablePlatformView: View {
         accountSheetRequested: $accountSheetRequested,
         composeViewRequested: $composeViewRequested,
         loading: $loading,
-        codeVerifier: $codeVerifier,
         platform: platform,
         callback: callback,
         description: description,
         composeDescription: composeDescription
-
     )
 }

@@ -19,6 +19,8 @@ class Publisher {
     public static var PUBLISHER_PUBLIC_KEY_KEYSTOREALIAS = "COM.AFKANERD.PUBLISHER_PUBLIC_KEY_KEYSTOREALIAS"
     public static var CLIENT_PUBLIC_KEY_KEYSTOREALIAS = "COM.AFKANERD.PUBLISHER_PUBLIC_KEY_KEYSTOREALIAS"
     
+    public static var PLATFORM_CODE_VERIFIER = "PLATFORM_CODE_VERIFIER"
+    
     public enum ServiceTypeDescriptions: String.LocalizationValue {
         case EMAIL = "Adding emails to your RelaySMS account enables you use them to send emails using SMS messaging.\n\nGmail are currently supported."
         case MESSAGE = "Adding numbers to your RelaySMS account enables you use them to send messages using SMS messaging.\n\nTelegram messaging is currently supported."

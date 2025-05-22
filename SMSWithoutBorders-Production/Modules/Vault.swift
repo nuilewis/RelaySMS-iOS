@@ -224,16 +224,23 @@ struct Vault {
     func listStoredEntityToken(
         longLiveToken: String, migrateToDevice: Bool = false
     ) throws -> Vault_V1_ListEntityStoredTokensResponse {
+        
+        print("[Vault] Listing entity stored tokens...")
+        
         let listEntityRequest: Vault_V1_ListEntityStoredTokensRequest = .with {
             $0.longLivedToken = longLiveToken
             $0.migrateToDevice = migrateToDevice
         }
 
+        print("[Vault] List Entity StoredToken Request: \(listEntityRequest)")
+        
         let call = vaultEntityStub!.listEntityStoredTokens(listEntityRequest)
         let response: Vault_V1_ListEntityStoredTokensResponse
         do {
             response = try call.response.wait()
             let status = try call.status.wait()
+            
+            print("[Vault] List Entity StoredToken Response: \(response)")
 
             print("[Vault] status code - raw value: \(status.code.rawValue)")
             print("[Vault] status code - description: \(status.code.description)")
