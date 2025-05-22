@@ -112,7 +112,15 @@ struct PlatformDetailsBottomsheet: View {
                                 print("Searching for token for the platform for: \(platform!.name?.localizedCapitalized ?? "unkown" ) beign revoked to delete")
                                 for storedEntity in storedPlatforms {
                                     if storedEntity.name  == platform!.name! {
-                                        StoredTokensEntityManager(context: context).deleteStoredTokenById(forPlatform: storedEntity.id!)
+//                                        StoredTokensEntityManager(context: context).deleteStoredTokenById(forPlatform: storedEntity.id!)
+                                        
+                                        do {
+                                            context.delete(storedEntity)
+                                            try context.save()
+                                        } catch {
+                                            print(error)
+                                            context.rollback()
+                                        }
                                     }
                                 }
                               

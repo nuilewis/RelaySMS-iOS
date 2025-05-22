@@ -495,8 +495,8 @@ struct Vault {
                     accountIdentifier: platform.accountIdentifier
                 )
 
-                let accessToken = platform.accountTokens["access_token"]!
-                let refreshToken = platform.accountTokens["refresh_token"]!
+                let accessToken = platform.accountTokens["access_token"] ?? ""
+                let refreshToken = platform.accountTokens["refresh_token"] ?? ""
                 
                 let isStoredOnDevice = platform.isStoredOnDevice
                 if isStoredOnDevice &&
@@ -528,7 +528,7 @@ struct Vault {
                 storedPlatformEntity.id = platformId
                 storedPlatformEntity.name = platform.platform
                 storedPlatformEntity.account = platform.accountIdentifier
-                storedPlatformEntity.access_token = platform.accountTokens["access_token"]!
+                storedPlatformEntity.access_token = platform.accountTokens["access_token"] ?? ""
             }
 
             DispatchQueue.main.async {
