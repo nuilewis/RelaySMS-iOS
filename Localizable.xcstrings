@@ -6332,7 +6332,7 @@
     "Some for the following platforms could not be found, please revoke these accounts and add them again" : {
 
     },
-    "Store platform tokens on this device?" : {
+    "Store Tokens On-device" : {
 
     },
     "Subject " : {
@@ -6521,9 +6521,6 @@
           }
         }
       }
-    },
-    "This will store your platform tokens on this specific device, and migrate any existing platforms to this device. \nThis means you won't be able to access your platfoms if you lose this device" : {
-
     },
     "To " : {
       "localizations" : {
@@ -7029,6 +7026,9 @@
           }
         }
       }
+    },
+    "When adding accounts for platforms that utilize OAuth2.0 (e.g Gmail, X), enabling this makes sure your access tokens are rather stored on your current device" : {
+
     },
     "With an account you can save your online platforms to use them without an internet connection." : {
       "localizations" : {
