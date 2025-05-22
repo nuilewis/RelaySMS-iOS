@@ -316,13 +316,6 @@ struct EmailComposeView: View {
                     storedTokenForPlatform = tokenManager.getStoredToken(
                         forPlatform: entity.id!)
                 }
-
-                // Trigger a refresh if tokens are lost
-                if !tokensExists && entity.isStoredOnDevice {
-                    showAlert = true
-                    alertTitle = "Missing Tokens"
-                    alertMessage = "Your tokens have not been found on this device. Please revoke access to your account and add the platform again to continue"
-                }
             } else {
                 print("Platform is not stored on device")
             }
@@ -468,7 +461,11 @@ struct EmailComposeView: View {
                         DispatchQueue.main.async {
                             do {
                                 let llt = try Vault.getLongLivedToken()
-                                var _ = try vault.refreshStoredTokens(llt: llt, context: context)
+                                var _ = try vault.refreshStoredTokens(
+                                    llt: llt,
+                                    context: context,
+                                    storedTokenEntities: storedPlatforms
+                                )
                      
                                 try context.save()
                                 print("Successfully revoked platform")

@@ -111,13 +111,15 @@ struct SMSWithoutBorders_ProductionApp: App {
                 )
                 if !result {
                     alreadyLoggedIn = true
-                } else {
-                    let vault = Vault()
-                    try vault.refreshStoredTokens(
-                        llt: llt,
-                        context: dataController.container.viewContext
-                    )
                 }
+//                else {
+//                    let vault = Vault()
+//                    try vault.refreshStoredTokens(
+//                        llt: llt,
+//                        context: dataController.container.viewContext,
+//                        storedTokenEntities: <#FetchedResults<StoredPlatformsEntity>#>
+//                    )
+//                }
             } catch {
                 print(error)
             }

@@ -24,7 +24,7 @@ struct HomepageView: View {
     @AppStorage(SettingsKeys.SETTINGS_DO_NOT_NOTIFY_OF_MISSING_TOKENS)
     private var doNotNotifyOfMissingTokens: Bool = false
     @State private var storedPlatformsWithMissingTokens:
-        [StoredPlatformsEntity] = []
+        [Vault_V1_Token] = []
     @State private var showMissingTokensSheet: Bool = false
     @State private var showMissingTokensAlert: Bool = false
     @FetchRequest(sortDescriptors: [
@@ -277,7 +277,11 @@ struct HomepageView: View {
 
             }
             .task {
-                searchForPlatformsWithMissingTokens()
+                DispatchQueue.background(background: {
+                    searchForPlatformsWithMissingTokens()
+                }, completion: {
+                    
+                })
             }
             .alert(isPresented: $showMissingTokensAlert) {
                 Alert(
@@ -313,32 +317,20 @@ struct HomepageView: View {
                         id: \.self
                     ) { platform in
                         AccountListItem(
-                            platform: platform,
-                            context: context)
+                            platform: nil,
+                            context: context,
+                            platformsVault: platform,
+                            missing: true
+                        )
                     }.listStyle(.plain)
                 }
                 .applyPresentationDetentsIfAvailable()
             }
 
         }
-        //        .onChange(of: isLoggedIn) { state in
-        //            if state {
-        //                Publisher.refreshPlatforms(context: context)
-        //            }
-        //        }
         .onAppear {
             do {
                 isLoggedIn = try !Vault.getLongLivedToken().isEmpty
-                //                Task {
-                //                    if (ProcessInfo.processInfo.environment["XCODE_RUNNING_FOR_PREVIEWS"] != "1") {
-                //                        print("Is searching for default....")
-                //                        do {
-                //                            try await GatewayClients.refresh(context: context)
-                //                        } catch {
-                //                            print("Error refreshing gateways: \(error)")
-                //                        }
-                //                    }
-                //                }
             } catch {
                 print(error)
             }
@@ -347,25 +339,24 @@ struct HomepageView: View {
 
     func searchForPlatformsWithMissingTokens() {
         print("Searching for platforms with missing tokens...")
-        storedPlatformsWithMissingTokens = []
-        for account in storedPlatforms {
-            if account.isStoredOnDevice {
-                let tokenForAccountExists: Bool = StoredTokensEntityManager(
-                    context: context
-                ).storedTokenExists(forPlarform: account.id!)
-                if !tokenForAccountExists {
-                    storedPlatformsWithMissingTokens.append(account)
+        let vault = Vault()
+        do {
+            let llt = try Vault.getLongLivedToken()
+            storedPlatformsWithMissingTokens = try vault.refreshStoredTokens(
+                llt: llt,
+                context: context,
+                storedTokenEntities: storedPlatforms
+            )
+            if !storedPlatformsWithMissingTokens.isEmpty {
+                print("Platforms with missing tokens found.")
+                if !doNotNotifyOfMissingTokens {
+                    showMissingTokensAlert = true
                 }
+            } else {
+                print("All stored platforms have tokens.")
             }
-        }
-
-        if !storedPlatformsWithMissingTokens.isEmpty {
-            print("Platforms with missing tokens found.")
-            if !doNotNotifyOfMissingTokens {
-                showMissingTokensAlert = true
-            }
-        } else {
-            print("All stored platforms have tokens.")
+        } catch {
+            print(error)
         }
     }
 }

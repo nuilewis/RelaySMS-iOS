@@ -14,11 +14,8 @@ struct LoginSheetView: View {
     @Environment(\.managedObjectContext) var context
 
     #if DEBUG
-//        @State private var phoneNumber: String = "123456"
-//        @State private var phoneNumber = "1123457528"
-//        @State private var password: String = "dMd2Kmo9#"
-        @State private var phoneNumber = "123456789"
-        @State private var password: String = "dummy_password"
+    @State var phoneNumber = "1123457528"
+    @State var password: String = "dMd2Kmo9#"
     #else
         @State private var phoneNumber: String = ""
         @State private var password: String = ""
@@ -71,7 +68,8 @@ struct LoginSheetView: View {
                             let llt = try Vault.getLongLivedToken()
                             try vault.refreshStoredTokens(
                                 llt: llt,
-                                context: context
+                                context: context,
+                                storedTokenEntities: nil
                             )
                         } catch {
                             print("Error refreshing tokens: \(error)")

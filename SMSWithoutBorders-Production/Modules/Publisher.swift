@@ -475,7 +475,12 @@ class Publisher {
     }
     
     
-    public static func processIncomingUrls(context: NSManagedObjectContext, url: URL, codeVerifier: String, storeOnDevice: Bool) throws {
+    public static func processIncomingUrls(
+        context: NSManagedObjectContext,
+        url: URL, codeVerifier: String,
+        storeOnDevice: Bool,
+        storedTokenEntities: FetchedResults<StoredPlatformsEntity>
+    ) throws {
         let stateB64Values = url.valueOf("state")
         // Decode the Base64 string to Data
         guard let decodedData = Data(base64Encoded: stateB64Values!) else {
@@ -514,7 +519,11 @@ class Publisher {
             print("[Publisher] Saved new account successfully....")
             
             if(response.success) {
-                try Vault().refreshStoredTokens(llt: llt, context: context)
+                try Vault().refreshStoredTokens(
+                    llt: llt,
+                    context: context,
+                    storedTokenEntities: storedTokenEntities
+                )
             }
         } catch {
             throw error

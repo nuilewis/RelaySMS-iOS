@@ -11,7 +11,8 @@ import CountryPicker
 struct PhoneNumberCodeEntryView: View {
     @Environment(\.dismiss) var dismiss
     @Environment(\.managedObjectContext) var context
-    
+    @FetchRequest(sortDescriptors: []) var storedPlatforms: FetchedResults<StoredPlatformsEntity>
+
     var platformName: String
     @Binding var phoneNumber: String
     @Binding var completed: Bool
@@ -112,7 +113,8 @@ struct PhoneNumberCodeEntryView: View {
                             do {
                                 try Vault().refreshStoredTokens(
                                     llt: llt,
-                                    context: context
+                                    context: context,
+                                    storedTokenEntities: storedPlatforms
                                 )
                                 self.completed = true
                                 self.dismiss()

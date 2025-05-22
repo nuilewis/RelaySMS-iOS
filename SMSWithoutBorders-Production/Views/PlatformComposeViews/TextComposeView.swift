@@ -150,22 +150,12 @@ struct TextComposeView: View {
                             var tokensExists: Bool = false
                             var storedTokenForPlatform: StoredToken?
 
-                            if let entity = storedPlatformEntity, entity.isStoredOnDevice {
-//                                print(
-//                                    "Platform is stored on device.. Will use saved tokens for publishing if tokens are available"
-//                                )
+                            if let entity = storedPlatformEntity, !entity.access_token!.isEmpty {
                                 tokensExists = tokenManager.storedTokenExists(forPlarform: entity.id ?? "")
 
                                 // Get tokens if they exist
                                 if tokensExists {
                                     storedTokenForPlatform = tokenManager.getStoredToken(forPlatform: entity.id!)
-                                }
-
-                                // Trigger a refresh if tokens are lost
-                                if !tokensExists && entity.isStoredOnDevice {
-                                    showAlert = true
-                                    alertTitle = "Missing Tokens"
-                                    alertMessage = "Your tokens have not been found on this device. Please revoke access to your account and add the platform again to continue"
                                 }
                             } else {
                                 print("Platform is not stored on device")
@@ -300,7 +290,11 @@ struct TextComposeView: View {
                         DispatchQueue.main.async {
                             do {
                                 let llt = try Vault.getLongLivedToken()
-                                var _ = try vault.refreshStoredTokens(llt: llt, context: context)
+                                try vault.refreshStoredTokens(
+                                    llt: llt,
+                                    context: context,
+                                    storedTokenEntities: storedPlatforms
+                                )
                      
                                 try context.save()
                                 print("Successfully revoked platform")

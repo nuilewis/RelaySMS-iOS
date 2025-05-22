@@ -78,7 +78,7 @@ struct PlatformDetailsBottomsheet: View {
         VStack {
             if (isRevoking || loading) && platform != nil {
                 SaveRevokePlatform(
-                    name: platform!.name!,
+                    name: platform!.name ?? "",
                     isSaving: $savingNewPlatform,
                     isRevoking: $isRevoking
                 )
@@ -122,7 +122,8 @@ struct PlatformDetailsBottomsheet: View {
                                         let llt = try Vault.getLongLivedToken()
                                         try vault.refreshStoredTokens(
                                             llt: llt,
-                                            context: context
+                                            context: context,
+                                            storedTokenEntities: storedPlatforms
                                         )
                                     } catch {
                                         print(error)
@@ -170,7 +171,8 @@ struct PlatformDetailsBottomsheet: View {
                             context: context,
                             url: url,
                             codeVerifier: codeVerifier,
-                            storeOnDevice: storePlatformOnDevice
+                            storeOnDevice: storePlatformOnDevice,
+                            storedTokenEntities: storedPlatforms
                         )
                         parentIsEnabled = true
                

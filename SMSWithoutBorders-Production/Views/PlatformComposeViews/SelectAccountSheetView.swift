@@ -9,22 +9,31 @@ import CoreData
 import SwiftUI
 
 struct AccountListItem: View {
-    var platform: StoredPlatformsEntity
+    var platform: StoredPlatformsEntity? = nil
     private var platformIsTwitter: Bool
     private var accountName: String
     private var platformName: String
     var context: NSManagedObjectContext
-    private var tokenExist: Bool = false
+    private var missing: Bool = false
 
 
-    init(platform: StoredPlatformsEntity, context: NSManagedObjectContext) {
-        self.platform = platform
-        self.accountName = platform.account ?? "Unknown account"
-        self.platformName = platform.name ?? "Unknown platform"
+    init(platform: StoredPlatformsEntity?,
+         context: NSManagedObjectContext,
+         platformsVault: Vault_V1_Token? = nil,
+         missing: Bool = false,
+    ) {
+        if platformsVault != nil {
+            self.accountName = platformsVault?.accountIdentifier ?? "Unknown account"
+            self.platformName = platformsVault?.platform ?? ""
+        }
+        else {
+            self.platform = platform
+            self.accountName = platform?.account ?? "Unknown account"
+            self.platformName = platform?.name ?? "Unknown platform"
+        }
         self.platformIsTwitter = platformName == "twitter"
         self.context = context
-        self.tokenExist = StoredTokensEntityManager(context: context)
-            .storedTokenExists(forPlarform: platform.id!)
+        self.missing = missing
     }
     var body: some View {
         VStack {
@@ -44,14 +53,13 @@ struct AccountListItem: View {
                         .foregroundStyle(.gray)
                 }
                 .padding()
-                if platform.isStoredOnDevice {
-                    if tokenExist {
-                        Image(systemName: "checkmark.circle").foregroundStyle(
-                            Color.green)
-                    } else {
-                        Image(systemName: "x.circle").foregroundStyle(Color.red)
-                    }
+                if !missing {
+                    Image(systemName: "checkmark.circle").foregroundStyle(
+                        Color.green)
+                } else {
+                    Image(systemName: "x.circle").foregroundStyle(Color.red)
                 }
+
             }
         }
     }
@@ -104,17 +112,7 @@ struct SelectAccountSheetView: View {
         print("Searching for platforms which can publish")
         var publishableAccounts: [StoredPlatformsEntity] = []
         for account in storedPlatforms {
-            if account.isStoredOnDevice {
-                // Pass the context to the manager if it needs it
-                let tokenForAccountExists: Bool = StoredTokensEntityManager(
-                    context: context
-                ).storedTokenExists(forPlarform: account.id!)
-                if tokenForAccountExists {
-                    publishableAccounts.append(account)
-                }
-            } else {
-                publishableAccounts.append(account)
-            }
+            publishableAccounts.append(account)
         }
         return publishableAccounts
     }
@@ -122,7 +120,7 @@ struct SelectAccountSheetView: View {
     var body: some View {
         NavigationView {
             VStack(alignment: .leading) {
-                List(isSendingMessage ? publishablePlatforms : allStoredPlatforms, id: \.self) { platform in
+                List(storedPlatforms, id: \.self) { platform in
                     Button(action: {
                         if fromAccount != nil {
                             fromAccount = platform.account!
@@ -146,15 +144,15 @@ struct SelectAccountSheetView: View {
                     }
                 }
             }
-            .onAppear {
-                publishablePlatforms = getPublishablePlatorms(
-                        storedPlatforms: storedPlatforms, context: context)
-                
-                allStoredPlatforms = []
-                for platform in storedPlatforms {
-                    allStoredPlatforms.append(platform)
-                }
-            }
+//            .onAppear {
+//                publishablePlatforms = getPublishablePlatorms(
+//                        storedPlatforms: storedPlatforms, context: context)
+//                
+//                allStoredPlatforms = []
+//                for platform in storedPlatforms {
+//                    allStoredPlatforms.append(platform)
+//                }
+//            }
         }
     }
 }

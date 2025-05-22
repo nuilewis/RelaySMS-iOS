@@ -66,7 +66,8 @@ struct RecoverySheetView: View {
                         let llt = try Vault.getLongLivedToken()
                         try vault.refreshStoredTokens(
                             llt: llt,
-                            context: context
+                            context: context,
+                            storedTokenEntities: nil
                         )
                     } catch {
                         print("Error refreshing tokens: \(error)")

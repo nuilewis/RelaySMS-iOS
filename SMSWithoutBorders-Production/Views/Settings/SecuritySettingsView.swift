@@ -35,7 +35,6 @@ struct SecuritySettingsView: View {
     @State var showAlert: Bool = false
     @State var activeAlertType: SecurityAlertType? = nil
     @State var migrationSuccessful: Bool = false
-    @State var platformsAlreadyMigrated: Bool = false
     @State var revokingSuccessful: Bool = false
     
     @State private var isLoading = false
@@ -52,12 +51,39 @@ struct SecuritySettingsView: View {
         FetchedResults<StoredPlatformsEntity>
     @FetchRequest(sortDescriptors: []) var platforms:
         FetchedResults<PlatformsEntity>
+    
+    func migratePlatforms() {
+        // Trigger a refresh
+        let vault = Vault()
+        do {
+            isLoading = true
+            loadingMessage = "Migrating platforms..."
+//            let migrationAttemptedPreviously = storedPlatforms.contains { $0.isStoredOnDevice}
+            
+            let llt: String = try Vault.getLongLivedToken()
+            try vault.refreshStoredTokens(
+                llt: llt,
+                context: viewContext,
+                storedTokenEntities: storedPlatforms
+            )
+            
+            viewContext.refreshAllObjects()
+            
+            activeAlertType = .migrationStatus
+            showAlert = true
+            migrationSuccessful = true
+        } catch {
+            activeAlertType = .migrationStatus
+            showAlert = true
+            migrationSuccessful = false
+            print("Migration error: \(error)")
+        }
+    }
 
     var body: some View {
         VStack(alignment: .leading) {
             List {
-                
-                Section(header: Text("Security")) {
+                Section(header: Text("OAuth Tokens")) {
                     Toggle("Store Tokens On-device", isOn: $storeTokensOnDevice)
                         .disabled(!isLoggedIn)
                         .onChange(of: storeTokensOnDevice) { newValue in
@@ -69,36 +95,14 @@ struct SecuritySettingsView: View {
                         }
                         
                         if newValue {
-                            // Trigger a refresh
-                            let vault = Vault()
-                            do {
-                                isLoading = true
-                                loadingMessage = "Migrating platforms..."
-                                let migrationAttemptedPreviously = storedPlatforms.contains { $0.isStoredOnDevice}
-                                
-                                if migrationAttemptedPreviously {
-                                    print("Platforms already stored on device")
-                                    platformsAlreadyMigrated = true
-                                }
-                                let llt: String = try Vault.getLongLivedToken()
-                                try vault.migratePlatformsToDevice(
-                                    llt: llt, context: viewContext)
-                                
-                                viewContext.refreshAllObjects()
-                                
-                                activeAlertType = .migrationStatus
-                                showAlert = true
-                                migrationSuccessful = true
-                            } catch {
-                                activeAlertType = .migrationStatus
-                                showAlert = true
-                                migrationSuccessful = false
-                                print("Migration error: \(error)")
-                            }
+                            migratePlatforms()
                         } else {
-                            // If user turns off token storage accounts
-                            activeAlertType = .disableLocalTokenStorageConfirmation
-                            showAlert = true
+                            let migrationAttemptedPreviously = storedPlatforms.contains {
+                                !$0.access_token!.isEmpty}
+                            if migrationAttemptedPreviously {
+                                activeAlertType = .disableLocalTokenStorageConfirmation
+                                showAlert = true
+                            }
                         }
                     }.alert(isPresented: $showAlert) {
                         switch activeAlertType {
@@ -106,9 +110,9 @@ struct SecuritySettingsView: View {
                             return Alert(
                                 title: Text(migrationSuccessful ? "Success" : "Error"),
                                 message: Text(
-                                    migrationSuccessful
-                                    ? ( platformsAlreadyMigrated ? "Your platforms are already migrated to this device." : "Your platforms have been migrated to this device successfully!")
-                                        : "An error occurred while trying to migrate your platforms. Please try again later."
+                                    migrationSuccessful ?
+                                    "Your platforms have been downloaded to this device successfully!" :
+                                        "An error occured while downloading your tokens to this device "
                                 ),
                                 dismissButton: .default(
                                     Text("OK"),
@@ -216,7 +220,7 @@ struct SecuritySettingsView: View {
     func logout() {
         logoutAccount(context: viewContext)
         // Delete all stored tokens when logging out
-        StoredTokensEntityManager(context: viewContext).deleteAllStoredTokens()
+//        StoredTokensEntityManager(context: viewContext).deleteAllStoredTokens()
         do {
             isLoggedIn = try !Vault.getLongLivedToken().isEmpty
         } catch {
@@ -237,7 +241,7 @@ struct SecuritySettingsView: View {
                         storedTokenEntities: storedPlatforms,
                         platforms: platforms)
                     // Delete all stored tokens when logging out
-                    StoredTokensEntityManager(context: viewContext).deleteAllStoredTokens()
+//                    StoredTokensEntityManager(context: viewContext).deleteAllStoredTokens()
                 } catch {
                     print("Error deleting: \(error)")
                 }
