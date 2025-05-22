@@ -38,23 +38,23 @@ struct SentMessagesList: View {
                 VStack {
                     List(messages, id: \.id) { message in
                         MessageCard(
-                            logo: getImageForPlatform(name: message.platformName ?? "unkown"),
-                            subject: message.subject!,
-                            toAccount: message.toAccount!,
-                            messageBody: message.body!,
+                            logo: getImageForPlatform(name: message.platformName ?? "unknown"),
+                            subject: message.subject ?? "unknown",
+                            toAccount: message.toAccount ?? "unknown",
+                            messageBody: message.body ?? "unknown",
                             date: Int(message.date)
                         )
                             .onTapGesture {
                                 requestedMessage = Messages(
                                     id: message.id!,
-                                    subject: message.subject!,
-                                    data: message.body!,
-                                    fromAccount: message.fromAccount!,
-                                    toAccount: message.toAccount!,
-                                    platformName: message.platformName!,
+                                    subject: message.subject ?? "unknown",
+                                    data: message.body ?? "unknown",
+                                    fromAccount: message.fromAccount ?? "unknown",
+                                    toAccount: message.toAccount ?? "unknown",
+                                    platformName: message.platformName ?? "unknown",
                                     date: Int(message.date)
                                 )
-                                switch getServiceTypeForPlatform(name: message.platformName!) {
+                                switch getServiceTypeForPlatform(name: message.platformName ?? "unknown") {
                                 case Publisher.ServiceTypes.EMAIL.rawValue:
                                     emailIsRequested = true
                                     break

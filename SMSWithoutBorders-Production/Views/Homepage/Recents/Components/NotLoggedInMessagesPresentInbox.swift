@@ -51,7 +51,7 @@ struct NotLoggedInMessagesPresentInbox: View {
                         logo: getImageForPlatform(name: message.platformName!),
                         subject: message.subject!,
                         toAccount: message.toAccount!,
-                        messageBody: message.body!,
+                        messageBody: message.body ?? "unkown message",
                         date: Int(message.date)
                     )
                         .onTapGesture {

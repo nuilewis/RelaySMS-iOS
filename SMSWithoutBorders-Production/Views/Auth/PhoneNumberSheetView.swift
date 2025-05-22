@@ -85,8 +85,11 @@ struct PhoneNumberCodeEntryView: View {
     }
     
     func phoneNumberAuthExchange() {
+        
+        self.loading = true
+        self.failed = false
+        self.errorMessage = ""
         DispatchQueue.background(background: {
-            loading = true
             do {
                 let publisher = Publisher()
                 let llt = try Vault.getLongLivedToken()
@@ -99,31 +102,43 @@ struct PhoneNumberCodeEntryView: View {
                     platform: platformName,
                     password: password
                 )
-
-                if response.success {
-                    if response.twoStepVerificationEnabled {
-                        havePassword = true
-                    } else {
-                        print("Successfully stored: \(platformName)")
-                        try Vault().refreshStoredTokens(
-                            llt: llt,
-                            context: context
-                        )
-                        completed = true
-                        dismiss()
+                
+                DispatchQueue.main.async {
+                    if response.success {
+                        if response.twoStepVerificationEnabled {
+                            havePassword = true
+                        } else {
+                            print("Successfully stored: \(platformName)")
+                            do {
+                                try Vault().refreshStoredTokens(
+                                    llt: llt,
+                                    context: context
+                                )
+                                self.completed = true
+                                self.dismiss()
+                            } catch {
+                                print("Failed to refresh tokens: \(error)")
+                                self.failed = true
+                                self.errorMessage = "Failed to store platform: \(error.localizedDescription)"
+                            }
+              
+                        }
+                    }
+                    else {
+                         print("Failed to store platform: \(platformName)")
                     }
                 }
-                else {
-                     print("Failed to store platform: \(platformName)")
-                }
+
             } catch {
-                print("Failed to submit code: \(error)")
-                failed = true
-                errorMessage = error.localizedDescription
+                DispatchQueue.main.async {
+                       print("Failed to submit code: \(error)")
+                       self.failed = true
+                       self.errorMessage = error.localizedDescription
+                   }
             }
         }, completion: {
 //            submittingCode = false
-            loading = false
+            self.loading = false
         })
     }
 }
@@ -198,6 +213,10 @@ struct PhoneNumberEntryView: View {
     }
     
     func phoneNumberAuthRequest() {
+        self.isLoading = true
+        self.failed = false
+        self.errorMessage = ""
+        
         DispatchQueue.background(background: {
             isLoading = true
             do {
@@ -207,19 +226,28 @@ struct PhoneNumberEntryView: View {
                     platform: platformName
                 )
                 
-                phoneNumber = getPhoneNumber()
+        
                 
-                if response.success {
-                    codeRequested = true
+                DispatchQueue.main.async {
+                    self.phoneNumber = getPhoneNumber()
+                    
+                    if response.success {
+                        codeRequested = true
+                    }else {
+                        self.failed = true
+                        self.errorMessage = response.message
+                    }
                 }
             }
             catch {
-                print("Some error occured: \(error)")
-                failed = true
-                errorMessage = error.localizedDescription
+                DispatchQueue.main.async {
+                    print("Some error occured: \(error)")
+                    self.failed = true
+                    self.errorMessage = error.localizedDescription
+                }
             }
         }, completion: {
-            isLoading = false
+            self.isLoading = false
         })
     }
     

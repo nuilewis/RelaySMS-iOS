@@ -19,6 +19,8 @@ class Publisher {
     public static var PUBLISHER_PUBLIC_KEY_KEYSTOREALIAS = "COM.AFKANERD.PUBLISHER_PUBLIC_KEY_KEYSTOREALIAS"
     public static var CLIENT_PUBLIC_KEY_KEYSTOREALIAS = "COM.AFKANERD.PUBLISHER_PUBLIC_KEY_KEYSTOREALIAS"
     
+    public static var PLATFORM_CODE_VERIFIER = "PLATFORM_CODE_VERIFIER"
+    
     public enum ServiceTypeDescriptions: String.LocalizationValue {
         case EMAIL = "Adding emails to your RelaySMS account enables you use them to send emails using SMS messaging.\n\nGmail are currently supported."
         case MESSAGE = "Adding numbers to your RelaySMS account enables you use them to send messages using SMS messaging.\n\nTelegram messaging is currently supported."
@@ -78,6 +80,8 @@ class Publisher {
                      autogenerateCodeVerifier: Bool = true,
                      supportsUrlSchemes: Bool = true) throws -> Publisher_V1_GetOAuth2AuthorizationUrlResponse {
         
+        print("[Publisher] Getting OAuth URL....")
+
         
         let publishingUrlRequest: Publisher_V1_GetOAuth2AuthorizationUrlRequest = .with {
             $0.platform = platform
@@ -86,6 +90,8 @@ class Publisher {
             $0.autogenerateCodeVerifier = autogenerateCodeVerifier
         }
         
+        print("[Publisher] GetOAuthURLRequest: \(publishingUrlRequest)")
+        
         let call = publisherStub!.getOAuth2AuthorizationUrl(publishingUrlRequest)
         let response: Publisher_V1_GetOAuth2AuthorizationUrlResponse
         
@@ -93,15 +99,17 @@ class Publisher {
             response = try call.response.wait()
             let status = try call.status.wait()
             
-            print("status code - raw value: \(status.code.rawValue)")
-            print("status code - description: \(status.code.description)")
-            print("status code - isOk: \(status.isOk)")
+            print("[Publisher] GetOAuthURLResponse: \(response)")
+            
+            print("[Publisher] status code - raw value: \(status.code.rawValue)")
+            print("[Publisher] status code - description: \(status.code.description)")
+            print("[Publisher] status code - isOk: \(status.isOk)")
             
             if(!status.isOk) {
                 throw Exceptions.requestNotOK(status: status)
             }
         } catch {
-            print("Some error came back: \(error)")
+            print("[Publisher] Some error came back: \(error)")
             throw error
         }
         
@@ -111,19 +119,24 @@ class Publisher {
     func sendOAuthAuthorizationCode(llt: String,
                                     platform: String,
                                     code: String,
-                                    codeVerifier: String? = nil,
+                                    codeVerifier: String,
                                     storeOnDevice: Bool,
                                     supportsUrlSchemes: Bool = false) throws -> Publisher_V1_ExchangeOAuth2CodeAndStoreResponse {
+        
+        
+        
+        print("[Publisher] Sending OAuth Authorization Code Request with paramaters...")
+        print("[Publisher] llt: \(llt) \nplatform: \(platform) \ncode: \(code) \ncodeVerifier: \(String(describing: codeVerifier)) \nstoreOnDevice: \(storeOnDevice), \nsupportsUrlSchemes: \(supportsUrlSchemes)")
         let authorizationRequest: Publisher_V1_ExchangeOAuth2CodeAndStoreRequest = .with {
             $0.platform = platform
             $0.authorizationCode = code
             $0.longLivedToken = llt
             $0.storeOnDevice = storeOnDevice
-            if(codeVerifier != nil || !codeVerifier!.isEmpty) {
-                $0.codeVerifier = codeVerifier!
-            }
+            $0.codeVerifier = codeVerifier
             $0.redirectURL = supportsUrlSchemes ? Publisher.REDIRECT_URL_SCHEME : getRedirectUrl(platformName: platform)
         }
+        
+        print("[Publisher] Authorization Request: \(authorizationRequest)")
         
         let call = publisherStub!.exchangeOAuth2CodeAndStore(authorizationRequest)
         let response: Publisher_V1_ExchangeOAuth2CodeAndStoreResponse
@@ -132,15 +145,17 @@ class Publisher {
             response = try call.response.wait()
             let status = try call.status.wait()
             
-            print("status code - raw value: \(status.code.rawValue)")
-            print("status code - description: \(status.code.description)")
-            print("status code - isOk: \(status.isOk)")
+            print("[Publisher] Authorization Response: \(response)")
+            
+            print("[Publisher] status code - raw value: \(status.code.rawValue)")
+            print("[Publisher] status code - description: \(status.code.description)")
+            print("[Publisher] status code - isOk: \(status.isOk)")
             
             if(!status.isOk) {
                 throw Exceptions.requestNotOK(status: status)
             }
         } catch {
-            print("Some error came back: \(error)")
+            print("[Publisher] Some error came back: \(error)")
             throw error
         }
         
@@ -148,11 +163,15 @@ class Publisher {
     }
     
     private func revokeOAuthPlatform(llt: String, platform: String, account: String) throws -> Publisher_V1_RevokeAndDeleteOAuth2TokenResponse{
+        print("[Publisher] Revoking OAuth Platform")
+        
         let revokeRequest: Publisher_V1_RevokeAndDeleteOAuth2TokenRequest = .with {
             $0.platform = platform
             $0.longLivedToken = llt
             $0.accountIdentifier = account
         }
+        
+        print("[Publisher] Revoking OAuth Platform Request: \(revokeRequest)")
         
         let call = publisherStub!.revokeAndDeleteOAuth2Token(revokeRequest)
         let response: Publisher_V1_RevokeAndDeleteOAuth2TokenResponse
@@ -161,15 +180,17 @@ class Publisher {
             response = try call.response.wait()
             let status = try call.status.wait()
             
-            print("status code - raw value: \(status.code.rawValue)")
-            print("status code - description: \(status.code.description)")
-            print("status code - isOk: \(status.isOk)")
+            
+            print("[Publisher] Revoking OAuth Platform Response: \(response)")
+            print("[Publisher] status code - raw value: \(status.code.rawValue)")
+            print("[Publisher] status code - description: \(status.code.description)")
+            print("[Publisher] status code - isOk: \(status.isOk)")
             
             if(!status.isOk) {
                 throw Exceptions.requestNotOK(status: status)
             }
         } catch {
-            print("Some error came back: \(error)")
+            print("[Publisher] Some error came back: \(error)")
             throw error
         }
         
@@ -183,6 +204,9 @@ class Publisher {
             $0.accountIdentifier = account
         }
             
+        print("[Publisher] Requesting to revoke PNBA Platform...")
+        print("[Publisher] Revoke PNBA Platform Request: \(pnbaRevokeRequest)")
+        
         let call = publisherStub!.revokeAndDeletePNBAToken(pnbaRevokeRequest)
         let response: Publisher_V1_RevokeAndDeletePNBATokenResponse
         
@@ -190,15 +214,17 @@ class Publisher {
             response = try call.response.wait()
             let status = try call.status.wait()
             
-            print("status code - raw value: \(status.code.rawValue)")
-            print("status code - description: \(status.code.description)")
-            print("status code - isOk: \(status.isOk)")
+            print("[Publisher] Revoking PNBA Platform Response: \(response)")
+            
+            print("[Publisher] status code - raw value: \(status.code.rawValue)")
+            print("[Publisher] status code - description: \(status.code.description)")
+            print("[Publisher] status code - isOk: \(status.isOk)")
             
             if(!status.isOk) {
                 throw Exceptions.requestNotOK(status: status)
             }
         } catch {
-            print("Some error came back: \(error)")
+            print("[Publisher] Some error came back: \(error)")
             throw error
         }
         
@@ -207,7 +233,7 @@ class Publisher {
     }
 
     func revokePlatform(llt: String, platform: String, account: String, protocolType: String) throws -> Bool {
-        print("[+] Revoking: \(platform) with protocol type: \(protocolType)")
+        print("[Publisher][+] Revoking: \(platform) with protocol type: \(protocolType)")
         if protocolType ==  ProtocolTypes.OAUTH2.rawValue {
             return try revokeOAuthPlatform(llt: llt, platform: platform, account: account).success
         }
@@ -228,11 +254,11 @@ class Publisher {
     }
     
     public static func refreshPlatforms(context: NSManagedObjectContext ) {
-        print("Publisher refreshing platforms...")
+        print("[Publisher] Publisher refreshing platforms...")
         Publisher.getPlatforms() { result in
             switch result {
             case .success(let data):
-                print("Success: \(data)")
+                print("[Publisher]Success: \(data)")
                 
 //                do {
 //                    try Publisher.clear(context: context, shouldSave: true)
@@ -253,7 +279,7 @@ class Publisher {
 //                }
                                    
             case .failure(let error):
-                print("Failed to load JSON data: \(error)")
+                print("[Publisher] Failed to load JSON data: \(error)")
             }
         }
     }
@@ -263,7 +289,7 @@ class Publisher {
         platform: Publisher.PlatformsData,
         context: NSManagedObjectContext
     ) {
-        print("Storing Platform Icon: \(platform.name)")
+        print("[Publisher] Storing Platform Icon: \(platform.name)")
 
         let task = URLSession.shared.dataTask(with: url) { data, response, error in
             guard let data = data, error == nil else { return }
@@ -278,7 +304,7 @@ class Publisher {
 
                 if let existingPlatform = existingPlatforms.first {
                     // 2. Update existing entity
-                    print("Updating existing Platform Icon: \(platform.name)")
+                    print("[Publisher] Updating existing Platform Icon: \(platform.name)")
                     existingPlatform.image = data
                     existingPlatform.protocol_type = platform.protocol_type
                     existingPlatform.service_type = platform.service_type
@@ -286,7 +312,7 @@ class Publisher {
                     existingPlatform.support_url_scheme = platform.support_url_scheme
                 } else {
                     // 3. Create new entity
-                    print("Creating new Platform Icon: \(platform.name)")
+                    print("[Publisher] Creating new Platform Icon: \(platform.name)")
                     let platformsEntity = PlatformsEntity(context: context)
                     platformsEntity.image = data
                     platformsEntity.name = platform.name
@@ -301,19 +327,19 @@ class Publisher {
                     do {
                         try context.save()
                     } catch {
-                        print("Failed save download image: \(error) \(error.localizedDescription)")
+                        print("[Publisher] Failed save download image: \(error) \(error.localizedDescription)")
                     }
                 }
 
             } catch {
-                print("Error fetching Platform: \(error) \(error.localizedDescription)")
+                print("[Publisher] Error fetching Platform: \(error) \(error.localizedDescription)")
             }
         }
         task.resume()
     }
 
     static func clear(context: NSManagedObjectContext, shouldSave: Bool = true) throws {
-        print("Clearing platforms...")
+        print("[Publisher] Clearing platforms...")
         let fetchRequest = NSFetchRequest<NSFetchRequestResult>(entityName: "PlatformsEntity")
         let deleteRequest = NSBatchDeleteRequest(fetchRequest: fetchRequest) // Use batch delete for efficiency
 
@@ -325,7 +351,7 @@ class Publisher {
                 try context.save()
             }
         } catch {
-            print("Error clearing PlatformsEntity: \(error)")
+            print("[Publisher] Error clearing PlatformsEntity: \(error)")
             context.rollback()
             throw error // Re-throw the error after rollback
         }
@@ -333,7 +359,7 @@ class Publisher {
 
 
     private static func getPlatforms(completion: @escaping (Result<[PlatformsData], Error>) -> Void) {
-        print("Getting platforms...")
+        print("[Publisher] Getting platforms...")
         let platformsUrl = "https://raw.githubusercontent.com/smswithoutborders/SMSWithoutBorders-Publisher/staging/resources/platforms.json"
         
         Task {
@@ -360,15 +386,15 @@ class Publisher {
             response = try call.response.wait()
             let status = try call.status.wait()
             
-            print("status code - raw value: \(status.code.rawValue)")
-            print("status code - description: \(status.code.description)")
-            print("status code - isOk: \(status.isOk)")
+            print("[Publisher] status code - raw value: \(status.code.rawValue)")
+            print("[Publisher] status code - description: \(status.code.description)")
+            print("[Publisher] status code - isOk: \(status.isOk)")
             
             if(!status.isOk) {
                 throw Exceptions.requestNotOK(status: status)
             }
         } catch {
-            print("Some error came back: \(error)")
+            print("[Publisher] Some error came back: \(error)")
             throw error
         }
         
@@ -396,15 +422,15 @@ class Publisher {
             response = try call.response.wait()
             let status = try call.status.wait()
             
-            print("status code - raw value: \(status.code.rawValue)")
-            print("status code - description: \(status.code.description)")
-            print("status code - isOk: \(status.isOk)")
+            print("[Publisher] status code - raw value: \(status.code.rawValue)")
+            print("[Publisher] status code - description: \(status.code.description)")
+            print("[Publisher] status code - isOk: \(status.isOk)")
             
             if(!status.isOk) {
                 throw Exceptions.requestNotOK(status: status)
             }
         } catch {
-            print("Some error came back: \(error)")
+            print("[Publisher] Some error came back: \(error)")
             throw error
         }
         
@@ -431,7 +457,7 @@ class Publisher {
             let pubSharedKey = try CSecurity.findInKeyChain(keystoreAlias: Publisher.PUBLISHER_SHARED_KEY)
             let usePhonenumber = checkPhoneNumberSettings ? UserDefaults
                 .standard.bool(forKey: SettingsKeys.SETTINGS_MESSAGE_WITH_PHONENUMBER) : true
-            print("use deviceID for publishing: \(!usePhonenumber)")
+            print("[Publisher] use deviceID for publishing: \(!usePhonenumber)")
             
             let messageComposer = try MessageComposer(
                 SK: pubSharedKey.bytes,
@@ -461,7 +487,7 @@ class Publisher {
             fatalError("Failed to convert Data to String")
         }
         
-        print("decoded string: \(decodedString)")
+        print("[Publisher] decoded string: \(decodedString)")
         let values = decodedString.split(separator: ",")
         let state = values[0]
         let supportsUrlScheme = values[1] == "true"
@@ -470,7 +496,7 @@ class Publisher {
         if(code == nil) {
             return
         }
-        print("state: \(state)\ncode: \(code)\ncodeVerifier: \(codeVerifier)\nstoreOnDevice: \(storeOnDevice)")
+        print("[Publisher] state: \(state)\ncode: \(code)\ncodeVerifier: \(codeVerifier)\nstoreOnDevice: \(storeOnDevice)")
         
         do {
             let llt = try Vault.getLongLivedToken()
@@ -485,7 +511,7 @@ class Publisher {
                 supportsUrlSchemes: supportsUrlScheme
             )
             
-            print("Saved new account successfully....")
+            print("[Publisher] Saved new account successfully....")
             
             if(response.success) {
                 try Vault().refreshStoredTokens(llt: llt, context: context)

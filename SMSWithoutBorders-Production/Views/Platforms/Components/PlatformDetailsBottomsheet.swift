@@ -33,7 +33,9 @@ struct PlatformDetailsBottomsheet: View {
     ) private var storedPlatforms: FetchedResults<StoredPlatformsEntity>
     
     
-    @State private var codeVerifier: String = ""
+    @AppStorage(Publisher.PLATFORM_CODE_VERIFIER)
+    var codeVerifier: String = ""
+    
     @State private var fromAccount: String = ""
 
     @Binding var parentIsEnabled: Bool
@@ -150,7 +152,6 @@ struct PlatformDetailsBottomsheet: View {
                     accountSheetRequested: $accountSheetRequested,
                     composeViewRequested: $composeViewRequested,
                     loading: $loading,
-                    codeVerifier: $codeVerifier,
                     platform: platform,
                     callback: callback,
                     description: description,
@@ -163,13 +164,24 @@ struct PlatformDetailsBottomsheet: View {
             DispatchQueue.background(background: {
                 savingNewPlatform = true
                 do {
-                    try Publisher.processIncomingUrls(
-                        context: context,
-                        url: url,
-                        codeVerifier: codeVerifier,
-                        storeOnDevice: storePlatformOnDevice
-                    )
-                    parentIsEnabled = true
+                    if !codeVerifier.isEmpty {
+                        print("Platofmr code verifier is available")
+                        try Publisher.processIncomingUrls(
+                            context: context,
+                            url: url,
+                            codeVerifier: codeVerifier,
+                            storeOnDevice: storePlatformOnDevice
+                        )
+                        parentIsEnabled = true
+               
+                        codeVerifier = "" // Important!! - Set the code verifier back to empty so we do not keep stale code verifiers
+                        print("Removed stale code verifier")
+                    }
+                    else {
+                        failed = true
+                        errorMessage = "An error occured please try again later: Missing code verifier"
+                    }
+             
                     dismiss()
                 } catch {
                     print(error)

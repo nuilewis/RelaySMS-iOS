@@ -14,55 +14,75 @@ import CoreData
 struct SMSWithoutBorders_ProductionApp: App {
     @Environment(\.dismiss) var dismiss
     @Environment(\.scenePhase) var scenePhase
-    @StateObject private var dataController = DataController()
+    @StateObject private var dataController: DataController
 
     @AppStorage(OnboardingView.ONBOARDING_COMPLETED)
     private var onboardingCompleted: Bool = false
 
     @State private var alreadyLoggedIn: Bool = false
     @State private var isLoggedIn: Bool = false
+    
+    init() {
+        if ProcessInfo.processInfo.environment["XCTestConfigurationFilePath"] != nil {
+            // RUNNING TESTS
+            self._dataController = StateObject(wrappedValue: DataController(forTesting: true))
+            print("Test initialization: Test launch. Initializing standard DataController." )
+        } else {
+            self._dataController = StateObject(wrappedValue: DataController())
+            print("App initialization: Normal launch. Initializing standard DataController." )
+        }
+        
+    }
 
     var body: some Scene {
         WindowGroup {
-            Group {
-                if(!onboardingCompleted) {
-                    OnboardingView()
+            if ProcessInfo.processInfo.environment["XCTestConfigurationFilePath"] != nil {
+                Text("Running Unit Tests. Main UI suppressed.")
+                                   .onAppear {
+                                        print("Test UI WindowGroup appeared.")
+                                   }
+            } else {
+                Group {
+                    if(!onboardingCompleted) {
+                        OnboardingView()
+                            .environment(\.managedObjectContext, dataController.container.viewContext)
+                    }
+                    else {
+                        HomepageView(isLoggedIn: $isLoggedIn)
                         .environment(\.managedObjectContext, dataController.container.viewContext)
-                }
-                else {
-                    HomepageView(isLoggedIn: $isLoggedIn)
-                    .environment(\.managedObjectContext, dataController.container.viewContext)
-                    .alert("You are being logged out!", isPresented: $alreadyLoggedIn) {
-                        Button("Get me out!") {
-                            getMeOut()
+                        .alert("You are being logged out!", isPresented: $alreadyLoggedIn) {
+                            Button("Get me out!") {
+                                getMeOut()
+                            }
+                        } message: {
+                            Text(String(localized:"It seems you logged into another device. You can use RelaySMS on only one device at a time.", comment: "Explains that you cannot be logged in on multiple devices at a time"))
                         }
-                    } message: {
-                        Text(String(localized:"It seems you logged into another device. You can use RelaySMS on only one device at a time.", comment: "Explains that you cannot be logged in on multiple devices at a time"))
-                    }
-                    .onAppear() {
-                        validateLLT()
-                    }
-                    .onChange(of: scenePhase) { newPhase in
-                        if newPhase == .active {
+                        .onAppear() {
                             validateLLT()
                         }
+                        .onChange(of: scenePhase) { newPhase in
+                            if newPhase == .active {
+                                validateLLT()
+                            }
+                        }
                     }
                 }
-            }
-            .onAppear {
-                Publisher.refreshPlatforms(context: dataController.container.viewContext)
+                .onAppear {
+                    Publisher.refreshPlatforms(context: dataController.container.viewContext)
 
-                Task {
-                    if(ProcessInfo.processInfo.environment["XCODE_RUNNING_FOR_PREVIEWS"] != "1") {
-                        print("Is searching for default....")
-                        do {
-                            try await GatewayClients.refresh(context: dataController.container.viewContext)
-                        } catch {
-                            print("Error refreshing gateways: \(error)")
+                    Task {
+                        if(ProcessInfo.processInfo.environment["XCODE_RUNNING_FOR_PREVIEWS"] != "1") {
+                            print("Is searching for default....")
+                            do {
+                                try await GatewayClients.refresh(context: dataController.container.viewContext)
+                            } catch {
+                                print("Error refreshing gateways: \(error)")
+                            }
                         }
                     }
                 }
             }
+   
         }
     }
 

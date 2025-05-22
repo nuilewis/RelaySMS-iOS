@@ -327,7 +327,7 @@ struct EmailComposeView: View {
                 print("Platform is not stored on device")
             }
 
-            return try messageComposer.emailComposer(
+            return try messageComposer.emailComposerV1(
                 platform_letter: shortcode,
                 from: fromAccount,
                 to: composeTo,
