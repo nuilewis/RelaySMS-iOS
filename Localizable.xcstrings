@@ -649,7 +649,50 @@
       }
     },
     "An error occured while downloading your tokens to this device " : {
-
+      "localizations" : {
+        "ar" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "حدث خطأ أثناء تنزيل الرموز المميزة الخاصة بك إلى هذا الجهاز"
+          }
+        },
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ein Fehler ist beim Herunterladen Ihrer Token auf dieses Gerät aufgetreten"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ocurrió un error al descargar tus tokens a este dispositivo"
+          }
+        },
+        "fa" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "خطایی در هنگام دانلود توکن‌های شما به این دستگاه رخ داد"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Une erreur s'est produite lors du téléchargement de vos jetons sur cet appareil"
+          }
+        },
+        "sw" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Kosa lilitokea wakati wa kupakua vitambulisho vyako kwenye kifaa hiki"
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Tokenleriniz bu cihaza indirilirken bir hata oluştu"
+          }
+        }
+      }
     },
     "An example message...\n\nRelaySMS Reply Please paste this entire message in your RelaySMS app\n3AAAAGUoAAAAAAAAAAAAAADN2pJG+1g5bNt1ziT84plbYcgwbbp+PbQHBf7ekxkOO..." : {
       "comment" : "Shows an explain message which can be pasted into the inbox view and decrypted",
@@ -2244,10 +2287,96 @@
       }
     },
     "Don't show this again" : {
-
+      "localizations" : {
+        "ar" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "لا تظهر هذا مرة أخرى"
+          }
+        },
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Dies nicht mehr anzeigen"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "No mostrar esto de nuevo"
+          }
+        },
+        "fa" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : " دوباره نشان نده"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ne plus afficher ceci"
+          }
+        },
+        "sw" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Usionyeshe hii tena"
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Bunu bir daha gösterme"
+          }
+        }
+      }
     },
     "Dummy Alert" : {
-
+      "localizations" : {
+        "ar" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "تنبيه وهمي"
+          }
+        },
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Test-Warnung"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Alerta de prueba"
+          }
+        },
+        "fa" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "هشدار آزمایشی"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Alerte factice"
+          }
+        },
+        "sw" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Tahadhari ya Jaribio"
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Deneme Uyarısı"
+          }
+        }
+      }
     },
     "Edit" : {
       "localizations" : {
@@ -4003,7 +4132,50 @@
       }
     },
     "Missing Tokens" : {
-
+      "localizations" : {
+        "ar" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "الرموز المميزة مفقودة"
+          }
+        },
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Fehlende Token"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Tokens faltantes"
+          }
+        },
+        "fa" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "توکن‌های گمشده"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Jetons manquants"
+          }
+        },
+        "sw" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Vitambulisho Vinavyokosekana"
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Eksik Tokenler"
+          }
+        }
+      }
     },
     "No default client selected." : {
       "localizations" : {
@@ -4190,7 +4362,50 @@
       }
     },
     "No platforms" : {
-
+      "localizations" : {
+        "ar" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "لا توجد منصات"
+          }
+        },
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Keine Plattformen"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Sin plataformas"
+          }
+        },
+        "fa" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "هیچ پلتفرمی"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Aucune plateforme"
+          }
+        },
+        "sw" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Hakuna majukwaa"
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Platform yok"
+          }
+        }
+      }
     },
     "Not my fault!" : {
       "localizations" : {
@@ -4239,7 +4454,50 @@
       }
     },
     "OAuth Tokens" : {
-
+      "localizations" : {
+        "ar" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "رموز OAuth المميزة"
+          }
+        },
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "OAuth-Token"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Tokens OAuth"
+          }
+        },
+        "fa" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "توکن‌های OAuth"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Jetons OAuth"
+          }
+        },
+        "sw" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Vitambulisho vya OAuth"
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "OAuth Tokenleri"
+          }
+        }
+      }
     },
     "OK" : {
       "localizations" : {
@@ -4755,7 +5013,50 @@
       }
     },
     "Platforms with missing tokens" : {
-
+      "localizations" : {
+        "ar" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "المنصات التي تفتقد للرموز المميزة"
+          }
+        },
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Plattformen mit fehlenden Token"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Plataformas con tokens faltantes"
+          }
+        },
+        "fa" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "پلتفرم‌هایی با توکن‌های گمشده"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Plateformes avec jetons manquants"
+          }
+        },
+        "sw" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Majukwaa yenye vitambulisho vinavyokosekana"
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Eksik tokenleri olan platformlar"
+          }
+        }
+      }
     },
     "Please create one to save your platforms" : {
       "localizations" : {
@@ -4850,7 +5151,50 @@
       }
     },
     "Please note" : {
-
+      "localizations" : {
+        "ar" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : " يرجى الملاحظة"
+          }
+        },
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Bitte beachten"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Por favor nota"
+          }
+        },
+        "fa" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "لطفاً توجه کنید"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Veuillez noter"
+          }
+        },
+        "sw" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Tafadhali kumbuka"
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Lütfen dikkat edin"
+          }
+        }
+      }
     },
     "Post" : {
       "comment" : "Verb",
@@ -4900,7 +5244,50 @@
       }
     },
     "Present missing token error alert" : {
-
+      "localizations" : {
+        "ar" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "عرض تنبيه خطأ الرمز المميز المفقود"
+          }
+        },
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Fehlende Token-Fehlerwarnung anzeigen"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Presentar alerta de error de token faltante"
+          }
+        },
+        "fa" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "نمایش هشدار خطای توکن گمشده"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Présenter l'alerte d'erreur de jeton manquant"
+          }
+        },
+        "sw" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Onyesha tahadhari ya kosa la kitambulisho kinachokosekana"
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Eksik token hata uyarısını göster"
+          }
+        }
+      }
     },
     "Previous" : {
       "localizations" : {
@@ -5498,7 +5885,50 @@
       }
     },
     "Running Unit Tests. Main UI suppressed." : {
-
+      "localizations" : {
+        "ar" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "تشغيل اختبارات الوحدة. تم إخفاء الواجهة الرئيسية."
+          }
+        },
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Unit-Tests werden ausgeführt. Haupt-UI unterdrückt."
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ejecutando pruebas unitarias. Interfaz principal suprimida."
+          }
+        },
+        "fa" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "در حال اجرای تست‌های واحد. رابط کاربری اصلی مخفی شده."
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Exécution des tests unitaires. Interface principale supprimée."
+          }
+        },
+        "sw" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Kuendesha Vipimo vya Vipande. Kiolesura Kikuu kimezuiliwa."
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Birim Testleri çalışıyor. Ana UI bastırıldı."
+          }
+        }
+      }
     },
     "Save more platforms..." : {
       "localizations" : {
@@ -6330,10 +6760,96 @@
       }
     },
     "Some for the following platforms could not be found, please revoke these accounts and add them again" : {
-
+      "localizations" : {
+        "ar" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "لا يمكن العثور على بعض المنصات التالية، يرجى إلغاء هذه الحسابات وإضافتها مرة أخرى"
+          }
+        },
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Einige der folgenden Plattformen konnten nicht gefunden werden, bitte widerrufen Sie diese Konten und fügen Sie sie erneut hinzu"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Algunas de las siguientes plataformas no se pudieron encontrar, por favor revoca estas cuentas y agrégalas nuevamente"
+          }
+        },
+        "fa" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "برخی از پلتفرم‌های زیر پیدا نشدند، لطفاً این حساب‌ها را لغو کرده و دوباره اضافه کنید"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Certaines des plateformes suivantes n'ont pas pu être trouvées, veuillez révoquer ces comptes et les ajouter à nouveau"
+          }
+        },
+        "sw" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Baadhi ya majukwaa yafuatayo hayakuweza kupatikana, tafadhali batilisha akaunti hizi na uziongeze tena"
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Aşağıdaki platformlardan bazıları bulunamadı, lütfen bu hesapları iptal edin ve tekrar ekleyin"
+          }
+        }
+      }
     },
     "Store Tokens On-device" : {
-
+      "localizations" : {
+        "ar" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "تخزين الرموز المميزة على الجهاز"
+          }
+        },
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Token auf dem Gerät speichern"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Almacenar tokens en el dispositivo"
+          }
+        },
+        "fa" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "ذخیره توکن‌ها روی دستگاه"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Stocker les jetons sur l'appareil"
+          }
+        },
+        "sw" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Hifadhi Vitambulisho Kwenye-kifaa"
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Tokenleri Cihazda Sakla"
+          }
+        }
+      }
     },
     "Subject " : {
       "localizations" : {
@@ -6428,7 +6944,50 @@
       }
     },
     "Success" : {
-
+      "localizations" : {
+        "ar" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "نجح"
+          }
+        },
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Erfolg"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Éxito"
+          }
+        },
+        "fa" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : " موفقیت"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Succès"
+          }
+        },
+        "sw" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Mafanikio"
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Başarılı"
+          }
+        }
+      }
     },
     "terms and conditions" : {
       "localizations" : {
@@ -6616,7 +7175,50 @@
       }
     },
     "Turning this off will take effect when next you add a platform, your current platforms will continue to use the tokens available on this device." : {
-
+      "localizations" : {
+        "ar" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "سيأخذ إيقاف هذا الخيار مفعوله عند إضافة منصة جديدة، ستستمر منصاتك الحالية في استخدام الرموز المتاحة على هذا الجهاز."
+          }
+        },
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Das Ausschalten wird wirksam, wenn Sie das nächste Mal eine Plattform hinzufügen. Ihre aktuellen Plattformen verwenden weiterhin die auf diesem Gerät verfügbaren Token."
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Desactivar esto tendrá efecto cuando agregues una plataforma la próxima vez, tus plataformas actuales continuarán usando los tokens disponibles en este dispositivo."
+          }
+        },
+        "fa" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "خاموش کردن این گزینه زمانی اعمال می‌شود که پلتفرم جدیدی اضافه کنید، پلتفرم‌های فعلی شما همچنان از توکن‌های موجود روی این دستگاه استفاده خواهند کرد."
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "La désactivation de cette option prendra effet lors de votre prochain ajout de plateforme, vos plateformes actuelles continueront d'utiliser les jetons disponibles sur cet appareil."
+          }
+        },
+        "sw" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Kuzima hii kutashika athari utakapongeza jukwaa, majukwaa yako ya sasa yataendelea kutumia vitambulisho vinavyopatikana kwenye kifaa hiki."
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Bunu kapatmak, bir sonraki platform eklediğinizde etkili olacak, mevcut platformlarınız bu cihazda bulunan tokenleri kullanmaya devam edecek."
+          }
+        }
+      }
     },
     "Update Gateway Client" : {
       "localizations" : {
@@ -7028,7 +7630,50 @@
       }
     },
     "When adding accounts for platforms that utilize OAuth2.0 (e.g Gmail, X), enabling this makes sure your access tokens are rather stored on your current device" : {
-
+      "localizations" : {
+        "ar" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "عند إضافة حسابات للمنصات التي تستخدم OAuth2.0 (مثل Gmail، X)، فإن تمكين هذا الخيار يضمن تخزين رموز الوصول الخاصة بك على جهازك الحالي"
+          }
+        },
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Beim Hinzufügen von Konten für Plattformen, die OAuth2.0 verwenden (z.B. Gmail, X), stellt die Aktivierung sicher, dass Ihre Zugriffstoken auf Ihrem aktuellen Gerät gespeichert werden"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Al agregar cuentas para plataformas que utilizan OAuth2.0 (por ejemplo Gmail, X), habilitar esto asegura que tus tokens de acceso se almacenen en tu dispositivo actual"
+          }
+        },
+        "fa" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "هنگام اضافه کردن حساب‌هایی برای پلتفرم‌هایی که از OAuth2.0 استفاده می‌کنند (مثل Gmail، X)، فعال کردن این گزینه اطمینان می‌دهد که توکن‌های دسترسی شما روی دستگاه فعلی ذخیره می‌شوند"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Lors de l'ajout de comptes pour des plateformes utilisant OAuth2.0 (par exemple Gmail, X), l'activation de cette option garantit que vos jetons d'accès sont plutôt stockés sur votre appareil actuel"
+          }
+        },
+        "sw" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Wakati wa kuongeza akaunti za majukwaa yanayotumia OAuth2.0 (kwa mfano Gmail, X), kuwezesha hii kunahakikisha kwamba vitambulisho vyako vya ufikiaji vinahifadhiwa kwenye kifaa chako cha sasa\n"
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "OAuth2.0 kullanan platformlar için hesap eklerken (örneğin Gmail, X), bunu etkinleştirmek erişim tokenlerinizin mevcut cihazınızda saklanmasını sağlar"
+          }
+        }
+      }
     },
     "With an account you can save your online platforms to use them without an internet connection." : {
       "localizations" : {
@@ -7448,7 +8093,50 @@
       }
     },
     "Your platforms have been downloaded to this device successfully!" : {
-
+      "localizations" : {
+        "ar" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "تم تنزيل منصاتك إلى هذا الجهاز بنجاح!"
+          }
+        },
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ihre Plattformen wurden erfolgreich auf dieses Gerät heruntergeladen!"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "¡Tus plataformas se han descargado exitosamente a este dispositivo!"
+          }
+        },
+        "fa" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "پلتفرم‌های شما با موفقیت روی این دستگاه دانلود شدند!"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Vos plateformes ont été téléchargées avec succès sur cet appareil !"
+          }
+        },
+        "sw" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Majukwaa yako yamepakuwa kwenye kifaa hiki kwa mafanikio!"
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Platformlarınız bu cihaza başarıyla indirildi!"
+          }
+        }
+      }
     },
     "Your RelaySMS account is an alias of your phone number with the domain @relaysms.me.\n\nYou can receive replies by SMS whenever a message is sent to your alias." : {
       "localizations" : {
