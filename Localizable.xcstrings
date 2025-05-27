@@ -36,6 +36,12 @@
             "value" : "%@ comptes"
           }
         },
+        "sn" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Maaccount e%@"
+          }
+        },
         "sw" : {
           "stringUnit" : {
             "state" : "translated",
@@ -80,6 +86,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Numéro de téléphone %@"
+          }
+        },
+        "sn" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Nhamba yefoni ye%@"
           }
         },
         "sw" : {
@@ -128,6 +140,12 @@
             "value" : "Accédez à votre compte pour enregistrer ou utiliser vos plateformes en ligne sans connexion internet."
           }
         },
+        "sn" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Svika paaccount yako kuti uchengetedze kana kushandisa mapuratifomu ako online pasina internet connection."
+          }
+        },
         "sw" : {
           "stringUnit" : {
             "state" : "translated",
@@ -172,6 +190,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Compte"
+          }
+        },
+        "sn" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Account"
           }
         },
         "sw" : {
@@ -220,6 +244,12 @@
             "value" : "Ajouter un compte"
           }
         },
+        "sn" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Wedzera Account"
+          }
+        },
         "sw" : {
           "stringUnit" : {
             "state" : "translated",
@@ -264,6 +294,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Ajouter Gateway Client"
+          }
+        },
+        "sn" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Wedzera Gateway Client"
           }
         },
         "sw" : {
@@ -312,6 +348,12 @@
             "value" : "L'ajout de comptes à votre compte RelaySMS vous permet de les utiliser pour publier des messages via SMS.\n\nLa publication est actuellement prise en charge."
           }
         },
+        "sn" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Kuwedzera maaccount kune RelaySMS account yako kunokubvumidza kushandisa iwo kuita post uchishandisa SMS messaging.\n\nKupost kuri kutsigirwa parizvino."
+          }
+        },
         "sw" : {
           "stringUnit" : {
             "state" : "translated",
@@ -356,6 +398,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "L'ajout d'emails à votre compte RelaySMS vous permet de les utiliser pour envoyer des emails via SMS.\n\nGmail est actuellement pris en charge.\n"
+          }
+        },
+        "sn" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Kuwedzera email kune RelaySMS account yako kunokubvumidza kushandisa iwo kutumira email uchishandisa SMS messaging.\n\nGmail iri kutsigirwa parizvino."
           }
         },
         "sw" : {
@@ -404,6 +452,12 @@
             "value" : "L'ajout de numéros à votre compte RelaySMS vous permet de les utiliser pour envoyer des messages via SMS.\n\nLa messagerie Telegram est actuellement prise en charge."
           }
         },
+        "sn" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Kuwedzera nhamba kune RelaySMS account yako kunokubvumidza kushandisa iwo kutumira meseji uchishandisa SMS messaging.\n\nKutumirana kwa Telegram kuri kutsigirwa parizvino."
+          }
+        },
         "sw" : {
           "stringUnit" : {
             "state" : "translated",
@@ -448,6 +502,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Alias"
+          }
+        },
+        "sn" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Rimwe zita"
           }
         },
         "sw" : {
@@ -496,6 +556,12 @@
             "value" : "Tous les Gateway Clients"
           }
         },
+        "sn" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ese Gateway Clients"
+          }
+        },
         "sw" : {
           "stringUnit" : {
             "state" : "translated",
@@ -540,6 +606,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Code déjà reçu"
+          }
+        },
+        "sn" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ndatova necode"
           }
         },
         "sw" : {
@@ -588,6 +660,12 @@
             "value" : "Déjà reçu le code SMS"
           }
         },
+        "sn" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ndatova neSMS code"
+          }
+        },
         "sw" : {
           "stringUnit" : {
             "state" : "translated",
@@ -634,6 +712,12 @@
             "value" : "Vous avez déjà un compte ?"
           }
         },
+        "sn" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Utova neaccount here?"
+          }
+        },
         "sw" : {
           "stringUnit" : {
             "state" : "translated",
@@ -678,6 +762,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Une erreur s'est produite lors du téléchargement de vos jetons sur cet appareil"
+          }
+        },
+        "sn" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Chikanganiso chakaitika pakudhawunirodha matokeni ako kune ichi chishandiso"
           }
         },
         "sw" : {
@@ -727,6 +817,12 @@
             "value" : "Un exemple de message... \n\nRéponse RelaySMS Veuillez coller ce message entier dans votre application RelaySMS 3AAAAGUoAAAAAAAAAAAAAADN2pJG+1g5bNt1ziT84plbYcgwbbp+PbQHBf7ekxkOO..."
           }
         },
+        "sn" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Muenzaniso wemeseji...\n\nRelaySMS Mhinduro Tapota namira meseji iyi yose muRelaySMS app yako\n3AAAAGUoAAAAAAAAAAAAAADN2pJG+1g5bNt1ziT84plbYcgwbbp+PbQHBf7ekxkOO..."
+          }
+        },
         "sw" : {
           "stringUnit" : {
             "state" : "translated",
@@ -771,6 +867,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Un SMS sera envoyé à votre numéro de téléphone pour vérifier que vous en êtes le propriétaire."
+          }
+        },
+        "sn" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "SMS ichatumirwa kunhamba yako yefoni kuti isimbise kuti iwe muridzi wenhamba."
           }
         },
         "sw" : {
@@ -819,6 +921,12 @@
             "value" : "Êtes-vous sûr de vouloir supprimer le client passerelle %@ ? Cette action est irréversible."
           }
         },
+        "sn" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Uri chokwadi kuti unoda kudzima gateway client %@? Izvi hazvidzoreke."
+          }
+        },
         "sw" : {
           "stringUnit" : {
             "state" : "translated",
@@ -863,6 +971,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Plateformes disponibles"
+          }
+        },
+        "sn" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Mapuratifomu Aripo"
           }
         },
         "sw" : {
@@ -911,6 +1025,12 @@
             "value" : "Cci"
           }
         },
+        "sn" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Bcc"
+          }
+        },
         "sw" : {
           "stringUnit" : {
             "state" : "translated",
@@ -957,6 +1077,12 @@
             "value" : "Annuler"
           }
         },
+        "sn" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Kanzura"
+          }
+        },
         "sw" : {
           "stringUnit" : {
             "state" : "translated",
@@ -998,6 +1124,12 @@
           }
         },
         "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Cc"
+          }
+        },
+        "sn" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "Cc"
@@ -1049,6 +1181,12 @@
             "value" : "Changer la langue de l'application"
           }
         },
+        "sn" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : " Shandura Mutauro weApp"
+          }
+        },
         "sw" : {
           "stringUnit" : {
             "state" : "translated",
@@ -1095,6 +1233,12 @@
             "value" : "Consultez notre guide étape par étape"
           }
         },
+        "sn" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Tarisa gwara redu renhanho nenhanho"
+          }
+        },
         "sw" : {
           "stringUnit" : {
             "state" : "translated",
@@ -1139,6 +1283,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Choisir un pays pour l'acheminement de vos messages"
+          }
+        },
+        "sn" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Kusarudza nyika yekutumira meseji dzako"
           }
         },
         "sw" : {
@@ -1188,6 +1338,12 @@
             "value" : "Le choix d'un client Gateway situé dans la même zone géographique que vous permet d'améliorer la fiabilité de l'acheminement de vos messages."
           }
         },
+        "sn" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Kusarudza Gateway client iri munzvimbo imwechete newe kunobatsira kunatsiridza kuvimbika kwekusvikiswa kwemeseji dzako"
+          }
+        },
         "sw" : {
           "stringUnit" : {
             "state" : "translated",
@@ -1232,6 +1388,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Cliquez sur le message pour le réutiliser pour l'envoi..."
+          }
+        },
+        "sn" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Dzvanya meseji kuti ushandisezve pakutumira..."
           }
         },
         "sw" : {
@@ -1280,6 +1442,12 @@
             "value" : "Cliquez pour coller..."
           }
         },
+        "sn" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Dzvanya kunamira..."
+          }
+        },
         "sw" : {
           "stringUnit" : {
             "state" : "translated",
@@ -1324,6 +1492,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Composer un e-mail"
+          }
+        },
+        "sn" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Nyora email"
           }
         },
         "sw" : {
@@ -1372,6 +1546,12 @@
             "value" : "Rédiger un Message"
           }
         },
+        "sn" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Nyora Meseji"
+          }
+        },
         "sw" : {
           "stringUnit" : {
             "state" : "translated",
@@ -1416,6 +1596,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Composer un nouveau message"
+          }
+        },
+        "sn" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Nyora meseji itsva"
           }
         },
         "sw" : {
@@ -1465,6 +1651,12 @@
             "value" : "Créer une Publication"
           }
         },
+        "sn" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Nyora Post"
+          }
+        },
         "sw" : {
           "stringUnit" : {
             "state" : "translated",
@@ -1509,6 +1701,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "composerCorps"
+          }
+        },
+        "sn" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "nyoraBody"
           }
         },
         "sw" : {
@@ -1557,6 +1755,12 @@
             "value" : "Continuer"
           }
         },
+        "sn" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Enderera"
+          }
+        },
         "sw" : {
           "stringUnit" : {
             "state" : "translated",
@@ -1601,6 +1805,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Poursuivre la suppression"
+          }
+        },
+        "sn" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Enderera Kudzima"
           }
         },
         "sw" : {
@@ -1650,6 +1860,12 @@
             "value" : "Continuez vers les paramètres iOS et sélectionnez votre langue préférée pour RelaySMS."
           }
         },
+        "sn" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Enderera kuiOS settings uye usarudze mutauro waunoda kune RelaySMS."
+          }
+        },
         "sw" : {
           "stringUnit" : {
             "state" : "translated",
@@ -1694,6 +1910,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Continuez à publier depuis votre compte de messagerie enregistré. Vous pouvez choisir un pays de transfert de message dans l'onglet 'Pays' ci-dessous.\n\nContinuer pour envoyer un message"
+          }
+        },
+        "sn" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Enderera kuita posts kubva kuaccount yako yekutumirana yakachengetedzwa. Unogona kusarudza nyika yekuendesa meseji kubva pa'Countries' tab pazasi.\n\nEnderera kutumira meseji"
           }
         },
         "sw" : {
@@ -1742,6 +1964,12 @@
             "value" : "Continuez à envoyer un email depuis votre compte email enregistré. Vous pouvez choisir un pays de transfert de message dans l'onglet 'Pays' ci-dessous.\n\nContinuer pour envoyer un message"
           }
         },
+        "sn" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Enderera kutumira email kubva kuemail account yako yakachengetedzwa. Unogona kusarudza nyika yekuendesa meseji kubva pa'Countries' tab pazasi.\n\nEnderera kutumira meseji"
+          }
+        },
         "sw" : {
           "stringUnit" : {
             "state" : "translated",
@@ -1786,6 +2014,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Continuez à envoyer des messages depuis votre compte de messagerie enregistré. Vous pouvez choisir un pays de transfert de message dans l'onglet 'Pays' ci-dessous.\n\nContinuer pour envoyer un message"
+          }
+        },
+        "sn" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Enderera kutumira meseji kubva kuaccount yako yekutumirana yakachengetedzwa. Unogona kusarudza nyika yekuendesa meseji kubva pa'Countries' tab pazasi.\n\nEnderera kutumira meseji"
           }
         },
         "sw" : {
@@ -1834,6 +2068,12 @@
             "value" : "Pays"
           }
         },
+        "sn" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Nyika"
+          }
+        },
         "sw" : {
           "stringUnit" : {
             "state" : "translated",
@@ -1878,6 +2118,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Créer un compte"
+          }
+        },
+        "sn" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Gadzira account"
           }
         },
         "sw" : {
@@ -1926,6 +2172,12 @@
             "value" : "Créer un compte"
           }
         },
+        "sn" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Gadzira Account"
+          }
+        },
         "sw" : {
           "stringUnit" : {
             "state" : "translated",
@@ -1972,6 +2224,12 @@
             "value" : "Déchiffrer le message"
           }
         },
+        "sn" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Vhura meseji"
+          }
+        },
         "sw" : {
           "stringUnit" : {
             "state" : "translated",
@@ -2016,6 +2274,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Déchiffrer le message"
+          }
+        },
+        "sn" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Vhura Meseji"
           }
         },
         "sw" : {
@@ -2088,6 +2352,12 @@
             "value" : "Supprimer"
           }
         },
+        "sn" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Dzima"
+          }
+        },
         "sw" : {
           "stringUnit" : {
             "state" : "translated",
@@ -2132,6 +2402,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Supprimer %@"
+          }
+        },
+        "sn" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Dzima %@"
           }
         },
         "sw" : {
@@ -2180,6 +2456,12 @@
             "value" : "Supprimer le compte"
           }
         },
+        "sn" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Dzima Account"
+          }
+        },
         "sw" : {
           "stringUnit" : {
             "state" : "translated",
@@ -2224,6 +2506,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Supprimer le client ?"
+          }
+        },
+        "sn" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Dzima Client?"
           }
         },
         "sw" : {
@@ -2272,6 +2560,12 @@
             "value" : "Vous n'avez pas de compte ?"
           }
         },
+        "sn" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Hauna account here?"
+          }
+        },
         "sw" : {
           "stringUnit" : {
             "state" : "translated",
@@ -2316,6 +2610,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Ne plus afficher ceci"
+          }
+        },
+        "sn" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Usaratidza izvi zvakare"
           }
         },
         "sw" : {
@@ -2364,6 +2664,12 @@
             "value" : "Alerte factice"
           }
         },
+        "sn" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Yekuyedza Alert"
+          }
+        },
         "sw" : {
           "stringUnit" : {
             "state" : "translated",
@@ -2408,6 +2714,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Modifier"
+          }
+        },
+        "sn" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Gadzirisa"
           }
         },
         "sw" : {
@@ -2456,6 +2768,12 @@
             "value" : "Modifier Gateway Client"
           }
         },
+        "sn" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Gadzirisa Gateway Client"
+          }
+        },
         "sw" : {
           "stringUnit" : {
             "state" : "translated",
@@ -2500,6 +2818,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "L'envoi d'emails est le seul protocole actuellement pris en charge, nous travaillons à en inclure davantage prochainement"
+          }
+        },
+        "sn" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Kutumira email ndiyo protocol chete iri kutsigirwa parizvino, tiri kushanda pakuwedzera dzimwe nokukurumidza"
           }
         },
         "sw" : {
@@ -2548,6 +2872,12 @@
             "value" : "Saisir le code"
           }
         },
+        "sn" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Isa code"
+          }
+        },
         "sw" : {
           "stringUnit" : {
             "state" : "translated",
@@ -2592,6 +2922,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Saisir le code envoyé par SMS"
+          }
+        },
+        "sn" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Isa code yakatumirwa neSMS"
           }
         },
         "sw" : {
@@ -2687,6 +3023,12 @@
             "value" : "Saisissez votre numéro de téléphone et vos nouveaux mots de passe"
           }
         },
+        "sn" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Isa nhamba yako yefoni nemapasiwedi matsva"
+          }
+        },
         "sw" : {
           "stringUnit" : {
             "state" : "translated",
@@ -2731,6 +3073,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Erreur"
+          }
+        },
+        "sn" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Chikanganiso"
           }
         },
         "sw" : {
@@ -2779,6 +3127,12 @@
             "value" : "Erreur ! Vous n'avez rien fait de mal..."
           }
         },
+        "sn" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Chikanganiso! Hauna chawakaita chakaipa..."
+          }
+        },
         "sw" : {
           "stringUnit" : {
             "state" : "translated",
@@ -2823,6 +3177,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Mot de passe oublié ?"
+          }
+        },
+        "sn" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Wakanganwa pasiwedi?"
           }
         },
         "sw" : {
@@ -2871,6 +3231,12 @@
             "value" : "De"
           }
         },
+        "sn" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Kubva"
+          }
+        },
         "sw" : {
           "stringUnit" : {
             "state" : "translated",
@@ -2915,6 +3281,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Depuis le compte : %@"
+          }
+        },
+        "sn" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Kubva kuaccount: %@"
           }
         },
         "sw" : {
@@ -2963,6 +3335,12 @@
             "value" : "De : %@"
           }
         },
+        "sn" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Kubva: %@"
+          }
+        },
         "sw" : {
           "stringUnit" : {
             "state" : "translated",
@@ -3007,6 +3385,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Obtenir un code"
+          }
+        },
+        "sn" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Tora code"
           }
         },
         "sw" : {
@@ -3055,6 +3439,12 @@
             "value" : "Sortez-moi de là !"
           }
         },
+        "sn" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ndibudiseiwo!"
+          }
+        },
         "sw" : {
           "stringUnit" : {
             "state" : "translated",
@@ -3099,6 +3489,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Commencer"
+          }
+        },
+        "sn" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Tanga"
           }
         },
         "sw" : {
@@ -3147,6 +3543,12 @@
             "value" : "Commencer"
           }
         },
+        "sn" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Tanga"
+          }
+        },
         "sw" : {
           "stringUnit" : {
             "state" : "translated",
@@ -3191,6 +3593,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Parfait !"
+          }
+        },
+        "sn" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Zvakanaka!"
           }
         },
         "sw" : {
@@ -3239,6 +3647,12 @@
             "value" : "Des difficultés à utiliser l'application ?"
           }
         },
+        "sn" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Une dambudziko rekushandisa app?"
+          }
+        },
         "sw" : {
           "stringUnit" : {
             "state" : "translated",
@@ -3283,6 +3697,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "J'accepte la"
+          }
+        },
+        "sn" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ndinobvuma"
           }
         },
         "sw" : {
@@ -3331,6 +3751,12 @@
             "value" : "Si vous n'avez pas de compte"
           }
         },
+        "sn" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Kana usina account"
+          }
+        },
         "sw" : {
           "stringUnit" : {
             "state" : "translated",
@@ -3375,6 +3801,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Si vous avez oublié votre mot de passe"
+          }
+        },
+        "sn" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Kana wakanganwa pasiwedi yako"
           }
         },
         "sw" : {
@@ -3423,6 +3855,12 @@
             "value" : "en %lld secondes"
           }
         },
+        "sn" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "muma%lld masekondi"
+          }
+        },
         "sw" : {
           "stringUnit" : {
             "state" : "translated",
@@ -3467,6 +3905,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Boîte de réception"
+          }
+        },
+        "sn" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Bhokisi rekugamuchira"
           }
         },
         "sw" : {
@@ -3514,6 +3958,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Il semble que vous vous soyez connecté sur un autre appareil. Vous ne pouvez utiliser RelaySMS que sur un seul appareil à la fois."
+          }
+        },
+        "sn" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Zvinoita senge wakapinda mune chimwe chishandiso. Unogona kushandisa RelaySMS pachishandiso chimwe chete panguva imwe."
           }
         },
         "sw" : {
@@ -3608,6 +4058,12 @@
             "value" : "En savoir plus sur son fonctionnement"
           }
         },
+        "sn" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Dzidza kuti inoshanda sei"
+          }
+        },
         "sw" : {
           "stringUnit" : {
             "state" : "translated",
@@ -3653,6 +4109,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Se connecter"
+          }
+        },
+        "sn" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Pinda"
           }
         },
         "sw" : {
@@ -3702,6 +4164,12 @@
             "value" : "Se déconnecter"
           }
         },
+        "sn" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Buda"
+          }
+        },
         "sw" : {
           "stringUnit" : {
             "state" : "translated",
@@ -3747,6 +4215,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Connexion"
+          }
+        },
+        "sn" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Kupinda"
           }
         },
         "sw" : {
@@ -3795,6 +4269,12 @@
             "value" : "Se connecter avec internet\n"
           }
         },
+        "sn" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Pinda ne internet"
+          }
+        },
         "sw" : {
           "stringUnit" : {
             "state" : "translated",
@@ -3839,6 +4319,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Appui long pour plus d'options"
+          }
+        },
+        "sn" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Dzvanya kwenguva refu kuti uwane mamwe masarudzo"
           }
         },
         "sw" : {
@@ -3887,6 +4373,12 @@
             "value" : "Rendre par défaut"
           }
         },
+        "sn" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ita default"
+          }
+        },
         "sw" : {
           "stringUnit" : {
             "state" : "translated",
@@ -3931,6 +4423,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Assurez-vous que l'indicatif téléphonique (ex : +33) est inclus dans le numéro sélectionné"
+          }
+        },
+        "sn" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Iva nechokwadi kuti code yefoni semuenzaniso +237 iri munhamba yakasarudzwa"
           }
         },
         "sw" : {
@@ -3979,6 +4477,12 @@
             "value" : "Message avec numéro de téléphone"
           }
         },
+        "sn" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Meseji nenhamba yefoni"
+          }
+        },
         "sw" : {
           "stringUnit" : {
             "state" : "translated",
@@ -4023,6 +4527,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Message avec compte RelaySMS"
+          }
+        },
+        "sn" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Meseji neRelaySMS account"
           }
         },
         "sw" : {
@@ -4071,6 +4581,12 @@
             "value" : "Messagerie avec vos comptes personnels"
           }
         },
+        "sn" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Kutumirana nemaaccount ako epersonal"
+          }
+        },
         "sw" : {
           "stringUnit" : {
             "state" : "translated",
@@ -4115,6 +4631,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Messagerie avec votre compte RelaySMS"
+          }
+        },
+        "sn" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Kutumirana neRelaySMS account yako\n"
           }
         },
         "sw" : {
@@ -4163,6 +4685,12 @@
             "value" : "Jetons manquants"
           }
         },
+        "sn" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Matokeni akarasika"
+          }
+        },
         "sw" : {
           "stringUnit" : {
             "state" : "translated",
@@ -4207,6 +4735,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Aucun client par défaut sélectionné."
+          }
+        },
+        "sn" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Hapana default client yakasarudzwa."
           }
         },
         "sw" : {
@@ -4255,6 +4789,12 @@
             "value" : "Aucun message dans la boîte de réception"
           }
         },
+        "sn" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Hapana meseji mubhokisi rekugamuchira"
+          }
+        },
         "sw" : {
           "stringUnit" : {
             "state" : "translated",
@@ -4299,6 +4839,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Aucun message envoyé"
+          }
+        },
+        "sn" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Hapana meseji dzakatumirwa"
           }
         },
         "sw" : {
@@ -4347,6 +4893,12 @@
             "value" : "Aucune plateforme en ligne enregistrée pour le moment..."
           }
         },
+        "sn" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Hapana mapuratifomu online akachengetedzwa pari zvino..."
+          }
+        },
         "sw" : {
           "stringUnit" : {
             "state" : "translated",
@@ -4391,6 +4943,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Aucune plateforme"
+          }
+        },
+        "sn" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Hapana mapuratifomu"
           }
         },
         "sw" : {
@@ -4439,6 +4997,12 @@
             "value" : "Ce n'est pas ma faute !"
           }
         },
+        "sn" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Haasi mhosva yangu!"
+          }
+        },
         "sw" : {
           "stringUnit" : {
             "state" : "translated",
@@ -4483,6 +5047,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Jetons OAuth"
+          }
+        },
+        "sn" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Matokeni eOAuth"
           }
         },
         "sw" : {
@@ -4531,6 +5101,12 @@
             "value" : "OK"
           }
         },
+        "sn" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Zvakanaka"
+          }
+        },
         "sw" : {
           "stringUnit" : {
             "state" : "translated",
@@ -4575,6 +5151,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "D'accord !"
+          }
+        },
+        "sn" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Zvakanaka!"
           }
         },
         "sw" : {
@@ -4623,6 +5205,12 @@
             "value" : "Ouvrir les Paramètres"
           }
         },
+        "sn" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Vhura Settings"
+          }
+        },
         "sw" : {
           "stringUnit" : {
             "state" : "translated",
@@ -4669,6 +5257,12 @@
             "value" : "Alias de l'opérateur"
           }
         },
+        "sn" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Operator Alias"
+          }
+        },
         "sw" : {
           "stringUnit" : {
             "state" : "translated",
@@ -4713,6 +5307,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Code OTP"
+          }
+        },
+        "sn" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "OTP Code"
           }
         },
         "sw" : {
@@ -4814,6 +5414,12 @@
             "value" : "Les mots de passe ne correspondent pas"
           }
         },
+        "sn" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Mapasiwedi haaenderane"
+          }
+        },
         "sw" : {
           "stringUnit" : {
             "state" : "translated",
@@ -4858,6 +5464,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Collez le nouveau message entrant"
+          }
+        },
+        "sn" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Namira zvinyorwa zvakavanzika mubhokisi rino..."
           }
         },
         "sw" : {
@@ -4906,6 +5518,12 @@
             "value" : "Coller un nouveau message entrant"
           }
         },
+        "sn" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Namira meseji itsva inouya"
+          }
+        },
         "sw" : {
           "stringUnit" : {
             "state" : "translated",
@@ -4950,6 +5568,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Numéro de téléphone"
+          }
+        },
+        "sn" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Nhamba Yefoni"
           }
         },
         "sw" : {
@@ -4998,6 +5622,12 @@
             "value" : "Plateformes"
           }
         },
+        "sn" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Mapuratifomu"
+          }
+        },
         "sw" : {
           "stringUnit" : {
             "state" : "translated",
@@ -5042,6 +5672,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Plateformes avec jetons manquants"
+          }
+        },
+        "sn" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Mapuratifomu ane matokeni akarasika"
           }
         },
         "sw" : {
@@ -5090,6 +5726,12 @@
             "value" : "Veuillez en créer un pour sauvegarder vos plateformes\n"
           }
         },
+        "sn" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Tapota gadzira imwe kuti uchengetedze mapuratifomu ako"
+          }
+        },
         "sw" : {
           "stringUnit" : {
             "state" : "translated",
@@ -5136,6 +5778,12 @@
             "value" : "Veuillez saisir votre code Telegram sans le copier depuis le message - la copie pourrait être signalée et Telegram pourrait bloquer votre compte."
           }
         },
+        "sn" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Tapota isa Telegram code yako usina kuicopi kubva mumeseji - kucopia kunogona kubatwa uye Telegram inogona kuvhara account yako."
+          }
+        },
         "sw" : {
           "stringUnit" : {
             "state" : "translated",
@@ -5180,6 +5828,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Veuillez noter"
+          }
+        },
+        "sn" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Tapota cherekedza"
           }
         },
         "sw" : {
@@ -5229,6 +5883,12 @@
             "value" : "Publier"
           }
         },
+        "sn" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Post"
+          }
+        },
         "sw" : {
           "stringUnit" : {
             "state" : "translated",
@@ -5275,6 +5935,12 @@
             "value" : "Présenter l'alerte d'erreur de jeton manquant"
           }
         },
+        "sn" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ratidza alert yechikanganiso chetokeni chakarasika"
+          }
+        },
         "sw" : {
           "stringUnit" : {
             "state" : "translated",
@@ -5319,6 +5985,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Précédent"
+          }
+        },
+        "sn" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Yapfuura"
           }
         },
         "sw" : {
@@ -5454,6 +6126,12 @@
             "value" : "Lire notre politique de confidentialité"
           }
         },
+        "sn" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Verenga gwara redu rekuvanzika"
+          }
+        },
         "sw" : {
           "stringUnit" : {
             "state" : "translated",
@@ -5498,6 +6176,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Récents"
+          }
+        },
+        "sn" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Zvachangopfuura"
           }
         },
         "sw" : {
@@ -5547,6 +6231,12 @@
             "value" : "RelaySMS Vault stocke en toute sécurité vos comptes en ligne, afin que vous puissiez y accéder sans connexion internet"
           }
         },
+        "sn" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "RelaySMS Vaults inochengeta maaccount ako online akachengeteka, kuitira kuti ukwanise kuasvika usina internet connection"
+          }
+        },
         "sw" : {
           "stringUnit" : {
             "state" : "translated",
@@ -5591,6 +6281,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Supprimer une plateforme"
+          }
+        },
+        "sn" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Bvisa puratifomu"
           }
         },
         "sw" : {
@@ -5639,6 +6335,12 @@
             "value" : "Supprimer des comptes"
           }
         },
+        "sn" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Bvisa Maaccount"
+          }
+        },
         "sw" : {
           "stringUnit" : {
             "state" : "translated",
@@ -5683,6 +6385,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Les réponses reviendront par SMS au numéro de téléphone associé à votre compte"
+          }
+        },
+        "sn" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Mhinduro dzichadzoka neSMS kunhamba yefoni yakabatana neaccount yako"
           }
         },
         "sw" : {
@@ -5731,6 +6439,12 @@
             "value" : "Renvoyer le code"
           }
         },
+        "sn" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Tumirazve code"
+          }
+        },
         "sw" : {
           "stringUnit" : {
             "state" : "translated",
@@ -5777,6 +6491,12 @@
             "value" : "Révoquer"
           }
         },
+        "sn" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Dzosera shure"
+          }
+        },
         "sw" : {
           "stringUnit" : {
             "state" : "translated",
@@ -5821,6 +6541,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Révocation du compte pour %@..."
+          }
+        },
+        "sn" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Kudzosera shure account ye%@..."
           }
         },
         "sw" : {
@@ -5870,6 +6596,12 @@
             "value" : "La révocation supprime la capacité d'envoyer des messages depuis ce compte. Vous pouvez stocker à nouveau le compte à tout moment."
           }
         },
+        "sn" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Kudzosera shure kunobvisa simba rekutumira meseji kubva kuaccount iyi. Unogona kuchengetedza account zvakare chero nguva."
+          }
+        },
         "sw" : {
           "stringUnit" : {
             "state" : "translated",
@@ -5914,6 +6646,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Exécution des tests unitaires. Interface principale supprimée."
+          }
+        },
+        "sn" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Kumhanya Unit Tests. Main UI yakamiswa."
           }
         },
         "sw" : {
@@ -5962,6 +6700,12 @@
             "value" : "Enregistrer plus de plateformes..."
           }
         },
+        "sn" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Chengetedza mamwe mapuratifomu..."
+          }
+        },
         "sw" : {
           "stringUnit" : {
             "state" : "translated",
@@ -6006,6 +6750,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Sauvegarder les plateformes"
+          }
+        },
+        "sn" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Chengetedza mapuratifomu"
           }
         },
         "sw" : {
@@ -6054,6 +6804,12 @@
             "value" : "Enregistrement du nouveau compte pour %@..."
           }
         },
+        "sn" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Kuchengetedza account itsva ye%@..."
+          }
+        },
         "sw" : {
           "stringUnit" : {
             "state" : "translated",
@@ -6100,6 +6856,12 @@
             "value" : "Sécurité"
           }
         },
+        "sn" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Chengetedzo"
+          }
+        },
         "sw" : {
           "stringUnit" : {
             "state" : "translated",
@@ -6144,6 +6906,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Sélectionnez un contact pour envoyer un message"
+          }
+        },
+        "sn" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Sarudza contact kutumira meseji"
           }
         },
         "sw" : {
@@ -6193,6 +6961,12 @@
             "value" : "Sélectionner une plateforme pour l'enregistrer en vue d'une utilisation hors ligne"
           }
         },
+        "sn" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Sarudza puratifomu kuti uichengetedze kuti ishandiswe offline"
+          }
+        },
         "sw" : {
           "stringUnit" : {
             "state" : "translated",
@@ -6237,6 +7011,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Gateway Client sélectionné"
+          }
+        },
+        "sn" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Gateway client yakasarudzwa"
           }
         },
         "sw" : {
@@ -6285,6 +7065,12 @@
             "value" : "Send"
           }
         },
+        "sn" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Tumira"
+          }
+        },
         "sw" : {
           "stringUnit" : {
             "state" : "translated",
@@ -6329,6 +7115,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Envoyer un message"
+          }
+        },
+        "sn" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Tumira meseji"
           }
         },
         "sw" : {
@@ -6377,6 +7169,12 @@
             "value" : "Envoyer un nouveau message"
           }
         },
+        "sn" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Tumira meseji itsva"
+          }
+        },
         "sw" : {
           "stringUnit" : {
             "state" : "translated",
@@ -6421,6 +7219,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Envoyer un nouveau message..."
+          }
+        },
+        "sn" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Tumira meseji itsva…"
           }
         },
         "sw" : {
@@ -6469,6 +7273,12 @@
             "value" : "Envoyez votre premier message..."
           }
         },
+        "sn" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Tumira meseji yako yekutanga..."
+          }
+        },
         "sw" : {
           "stringUnit" : {
             "state" : "translated",
@@ -6513,6 +7323,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Définir par défaut"
+          }
+        },
+        "sn" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Isa se Default"
           }
         },
         "sw" : {
@@ -6561,6 +7377,12 @@
             "value" : "Définir comme Client Gateway par défaut"
           }
         },
+        "sn" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Isa se default gateway client?"
+          }
+        },
         "sw" : {
           "stringUnit" : {
             "state" : "translated",
@@ -6605,6 +7427,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Paramètres"
+          }
+        },
+        "sn" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Settings"
           }
         },
         "sw" : {
@@ -6653,6 +7481,12 @@
             "value" : "S'identifier pour continuer avec le compte existant"
           }
         },
+        "sn" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Saini kuti ufambire mberi neaccount iripo"
+          }
+        },
         "sw" : {
           "stringUnit" : {
             "state" : "translated",
@@ -6697,6 +7531,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "S'inscrire"
+          }
+        },
+        "sn" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Saini up"
           }
         },
         "sw" : {
@@ -6745,6 +7585,12 @@
             "value" : "Ignorer"
           }
         },
+        "sn" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Siya"
+          }
+        },
         "sw" : {
           "stringUnit" : {
             "state" : "translated",
@@ -6789,6 +7635,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Certaines des plateformes suivantes n'ont pas pu être trouvées, veuillez révoquer ces comptes et les ajouter à nouveau"
+          }
+        },
+        "sn" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Mamwe emapuratifomu anotevera haana kuwanikwa, tapota dzosera shure iyi maaccount uye uawedzere zvakare"
           }
         },
         "sw" : {
@@ -6837,6 +7689,12 @@
             "value" : "Stocker les jetons sur l'appareil"
           }
         },
+        "sn" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Chengetedza Matokeni Pachishandiso"
+          }
+        },
         "sw" : {
           "stringUnit" : {
             "state" : "translated",
@@ -6881,6 +7739,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Sujet"
+          }
+        },
+        "sn" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Musoro"
           }
         },
         "sw" : {
@@ -6929,6 +7793,12 @@
             "value" : "Soumettre"
           }
         },
+        "sn" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Endesa"
+          }
+        },
         "sw" : {
           "stringUnit" : {
             "state" : "translated",
@@ -6973,6 +7843,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Succès"
+          }
+        },
+        "sn" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Budiriro"
           }
         },
         "sw" : {
@@ -7021,6 +7897,12 @@
             "value" : "conditions générales"
           }
         },
+        "sn" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "mamiriro nemitemo"
+          }
+        },
         "sw" : {
           "stringUnit" : {
             "state" : "translated",
@@ -7067,6 +7949,12 @@
             "value" : "Ces fonctionnalités nécessitent une connexion internet"
           }
         },
+        "sn" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Izvi zvinoda kuve neinternet connection"
+          }
+        },
         "sw" : {
           "stringUnit" : {
             "state" : "translated",
@@ -7111,6 +7999,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Pour"
+          }
+        },
+        "sn" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Kuna"
           }
         },
         "sw" : {
@@ -7160,6 +8054,12 @@
             "value" : "Activez cette option pour publier le message en utilisant votre numéro de téléphone et non votre DeviceID.\n\nCela permet de réduire la taille du message SMS."
           }
         },
+        "sn" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Batidza izvi kuti uburitsa meseji uchishandisa nhamba yako yefoni kwete DeviceID yako.\n\nIzvi zvinogona kubatsira kuderedza saizi yeSMS meseji"
+          }
+        },
         "sw" : {
           "stringUnit" : {
             "state" : "translated",
@@ -7206,6 +8106,12 @@
             "value" : "La désactivation de cette option prendra effet lors de votre prochain ajout de plateforme, vos plateformes actuelles continueront d'utiliser les jetons disponibles sur cet appareil."
           }
         },
+        "sn" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Kudzima izvi kuchashanda paunowedzera puratifomu, mapuratifomu ako aripo acharamba achishandisa matokeni aripo pachishandiso ichi."
+          }
+        },
         "sw" : {
           "stringUnit" : {
             "state" : "translated",
@@ -7250,6 +8156,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Mettre à jour Gateway Client"
+          }
+        },
+        "sn" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Update Gateway Client"
           }
         },
         "sw" : {
@@ -7299,6 +8211,12 @@
             "value" : "Utiliser les SMS pour envoyer des courriers, des courriels et des messages sans connexion à Internet."
           }
         },
+        "sn" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Shandisa SMS kuita post, kutumira email nemeseji usina internet connection"
+          }
+        },
         "sw" : {
           "stringUnit" : {
             "state" : "translated",
@@ -7345,6 +8263,12 @@
             "value" : "Utilisez vos comptes en ligne"
           }
         },
+        "sn" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Shandisa maaccount ako online"
+          }
+        },
         "sw" : {
           "stringUnit" : {
             "state" : "translated",
@@ -7389,6 +8313,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Utilisez votre compte RelaySMS"
+          }
+        },
+        "sn" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Shandisa RelaySMS account yako"
           }
         },
         "sw" : {
@@ -7477,6 +8407,12 @@
             "value" : "Vérifier"
           }
         },
+        "sn" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Simbisa"
+          }
+        },
         "sw" : {
           "stringUnit" : {
             "state" : "translated",
@@ -7521,6 +8457,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Vérifiez votre numéro de téléphone"
+          }
+        },
+        "sn" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Simbisa nhamba yako yefoni"
           }
         },
         "sw" : {
@@ -7569,6 +8511,12 @@
             "value" : "Bienvenue à nouveau"
           }
         },
+        "sn" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Takakugamuchira zvakare"
+          }
+        },
         "sw" : {
           "stringUnit" : {
             "state" : "translated",
@@ -7613,6 +8561,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Bienvenue sur RelaySMS !"
+          }
+        },
+        "sn" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Takakugamuchira kuRelaySMS!"
           }
         },
         "sw" : {
@@ -7661,6 +8615,12 @@
             "value" : "Lors de l'ajout de comptes pour des plateformes utilisant OAuth2.0 (par exemple Gmail, X), l'activation de cette option garantit que vos jetons d'accès sont plutôt stockés sur votre appareil actuel"
           }
         },
+        "sn" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Pakuwedzera maaccount emapuratifomu anoshandisa OAuth2.0 (semuenzaniso Gmail, X), kubvumidza izvi kunoita kuti matokeni ako ekupinda achengetwe pachishandiso chako chazvino"
+          }
+        },
         "sw" : {
           "stringUnit" : {
             "state" : "translated",
@@ -7705,6 +8665,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Avec un compte, vous pouvez enregistrer vos plateformes en ligne pour les utiliser sans connexion internet."
+          }
+        },
+        "sn" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Neaccount unogona kuchengetedza mapuratifomu ako online kuti uashandise usina internet connection."
           }
         },
         "sw" : {
@@ -7753,6 +8719,12 @@
             "value" : "Vous êtes en train d'être déconnecté !"
           }
         },
+        "sn" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Uri kubviswa!"
+          }
+        },
         "sw" : {
           "stringUnit" : {
             "state" : "translated",
@@ -7797,6 +8769,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Vous êtes prêt à commencer à envoyer des messages depuis RelaySMS !"
+          }
+        },
+        "sn" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Wakazvigadzirira kutanga kutumira meseji kubva kuRelaySMS!"
           }
         },
         "sw" : {
@@ -7846,6 +8824,12 @@
             "value" : "Vous pouvez ajouter des comptes en ligne à votre Vault"
           }
         },
+        "sn" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Unogona kuwedzera maaccount online kuVault yako"
+          }
+        },
         "sw" : {
           "stringUnit" : {
             "state" : "translated",
@@ -7891,6 +8875,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Vous pouvez créer un autre compte à tout moment. Tous vos jetons stockés seront révoqués de la chambre forte et toutes les données seront supprimées."
+          }
+        },
+        "sn" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Unogona kugadzira imwe account chero nguva. Matokeni ako ese akachengetedzwa achabviswa kuVault uye data yese ichadzimwa"
           }
         },
         "sw" : {
@@ -7940,6 +8930,12 @@
             "value" : "Vous pouvez vous reconnecter à tout moment. Tous les messages envoyés seront supprimés."
           }
         },
+        "sn" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Unogona kupindzazve chero nguva. Meseji dzese dzakatumirwa dzichidzimwa."
+          }
+        },
         "sw" : {
           "stringUnit" : {
             "state" : "translated",
@@ -7984,6 +8980,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Vous pouvez envoyer des messages depuis RelaySMS à tout moment. Les détails de votre compte seront votre numéro de téléphone attaché à notre domaine officiel.\n\nExemple +123456789@relaysms.me"
+          }
+        },
+        "sn" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Unogona kutumira meseji kubva kuRelaySMS chero nguva. Account details yako ichava nhamba yako yefoni yakabatanidzwa nedomain yedu yepamutemo.\n\nMuenzaniso +123456789@relaysms.me"
           }
         },
         "sw" : {
@@ -8032,6 +9034,12 @@
             "value" : "Vos messages entrants apparaîtront ici une fois que vous les aurez collés pour les déchiffrer."
           }
         },
+        "sn" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Meseji dzako dzinouya dzicharatidzwa pano kana wadzinamira kuti dzivhurwe."
+          }
+        },
         "sw" : {
           "stringUnit" : {
             "state" : "translated",
@@ -8076,6 +9084,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Votre numéro de téléphone est votre compte principal !"
+          }
+        },
+        "sn" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Nhamba yako yefoni ndivo account yako yekutanga!"
           }
         },
         "sw" : {
@@ -8124,6 +9138,12 @@
             "value" : "Vos plateformes ont été téléchargées avec succès sur cet appareil !"
           }
         },
+        "sn" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Mapuratifomu ako akadhawunirodha kuchishandiso ichi zvakanaka!"
+          }
+        },
         "sw" : {
           "stringUnit" : {
             "state" : "translated",
@@ -8168,6 +9188,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Votre compte RelaySMS est un alias de votre numéro de téléphone avec le domaine @relaysms.me.\n\nVous pouvez recevoir des réponses par SMS chaque fois qu'un message est envoyé à votre alias."
+          }
+        },
+        "sn" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "RelaySMS account yako irimwe zita renhamba yako yefoni nedomain @relaysms.me.\n\nUnogona kugamuchira mhinduro neSMS pese panenge patumirwa meseji kurimwe zita rako."
           }
         },
         "sw" : {
@@ -8216,6 +9242,12 @@
             "value" : "Votre compte RelaySMS est un alias de votre numéro de téléphone avec le domaine @relaysms.me.\n\nVous pouvez recevoir des réponses par SMS chaque fois qu'un message est envoyé à votre alias.\n\nVous pouvez choisir un pays de transfert de message dans l'onglet 'Pays' ci-dessous.\nContinuer pour envoyer un message"
           }
         },
+        "sn" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "RelaySMS account yako irimwe zita renhamba yako yefoni nedomain @relaysms.me.\n\nUnogona kugamuchira mhinduro neSMS pese panenge patumirwa meseji kurimwe zita rako.\n\nUnogona kusarudza nyika yekuendesa meseji kubva pa'Countries' tab pazasi.\n\nEnderera kutumira meseji"
+          }
+        },
         "sw" : {
           "stringUnit" : {
             "state" : "translated",
@@ -8260,6 +9292,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "votre_numero@relaysms.me"
+          }
+        },
+        "sn" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "nhamba_yako_yefoni@relaysms.me"
           }
         },
         "sw" : {
