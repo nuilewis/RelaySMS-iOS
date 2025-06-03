@@ -5,11 +5,11 @@
 //  Created by sh3rlock on 04/07/2024.
 //
 
+import CoreData
+import CryptoKit
 import Foundation
 import GRPC
 import Logging
-import CoreData
-import CryptoKit
 import SwiftUI
 
 class Publisher {
@@ -20,7 +20,7 @@ class Publisher {
     public static var CLIENT_PUBLIC_KEY_KEYSTOREALIAS = "COM.AFKANERD.PUBLISHER_PUBLIC_KEY_KEYSTOREALIAS"
     
     public static var PLATFORM_CODE_VERIFIER = "PLATFORM_CODE_VERIFIER"
-    
+
     public enum ServiceTypeDescriptions: String.LocalizationValue {
         case EMAIL = "Adding emails to your RelaySMS account enables you use them to send emails using SMS messaging.\n\nGmail are currently supported."
         case MESSAGE = "Adding numbers to your RelaySMS account enables you use them to send messages using SMS messaging.\n\nTelegram messaging is currently supported."
@@ -31,7 +31,7 @@ class Publisher {
             return String(localized: self.rawValue)
         }
     }
-    
+
     public enum ServiceComposeTypeDescriptions: String.LocalizationValue {
         case EMAIL = "Continue to send an email from your saved email account. You can choose a message forwarding country from the 'Countries' tab below.\n\nContinue to send message"
         case MESSAGE = "Continue to send messages from your saved messaging account. You can choose a message forwarding country from the 'Countries' tab below.\n\nContinue to send message"
@@ -47,7 +47,7 @@ class Publisher {
         case PNBA = "pnba"
         case BRIDGE = "bridge"
     }
-    
+
     public enum ServiceTypes: String {
         case EMAIL = "email"
         case MESSAGE = "message"
@@ -58,14 +58,15 @@ class Publisher {
     public enum Exceptions: Error {
         case requestNotOK(status: GRPCStatus)
     }
-    
+
     var channel: ClientConnection?
     var callOptions: CallOptions?
     var publisherStub: Publisher_V1_PublisherNIOClient?
-    
+
     init() {
         channel = GRPCHandler.getChannelPublisher()
-        let logger = Logger(label: "gRPC", factory: StreamLogHandler.standardOutput(label:))
+        let logger = Logger(
+            label: "gRPC", factory: StreamLogHandler.standardOutput(label:))
         callOptions = CallOptions.init(logger: logger)
         publisherStub = Publisher_V1_PublisherNIOClient.init(channel: channel!,
                                                              defaultCallOptions: callOptions!)
@@ -91,28 +92,29 @@ class Publisher {
         }
         
         print("[Publisher] GetOAuthURLRequest: \(publishingUrlRequest)")
-        
-        let call = publisherStub!.getOAuth2AuthorizationUrl(publishingUrlRequest)
+
+        let call = publisherStub!.getOAuth2AuthorizationUrl(
+            publishingUrlRequest)
         let response: Publisher_V1_GetOAuth2AuthorizationUrlResponse
-        
+
         do {
             response = try call.response.wait()
             let status = try call.status.wait()
-            
+
             print("[Publisher] GetOAuthURLResponse: \(response)")
             
             print("[Publisher] status code - raw value: \(status.code.rawValue)")
             print("[Publisher] status code - description: \(status.code.description)")
             print("[Publisher] status code - isOk: \(status.isOk)")
-            
-            if(!status.isOk) {
+
+            if !status.isOk {
                 throw Exceptions.requestNotOK(status: status)
             }
         } catch {
             print("[Publisher] Some error came back: \(error)")
             throw error
         }
-        
+
         return response
     }
     
@@ -140,7 +142,7 @@ class Publisher {
         
         let call = publisherStub!.exchangeOAuth2CodeAndStore(authorizationRequest)
         let response: Publisher_V1_ExchangeOAuth2CodeAndStoreResponse
-        
+
         do {
             response = try call.response.wait()
             let status = try call.status.wait()
@@ -242,7 +244,7 @@ class Publisher {
         }
         return false
     }
-    
+
     public struct PlatformsData: Codable {
         let name: String
         let shortcode: String
@@ -255,7 +257,7 @@ class Publisher {
     
     public static func refreshPlatforms(context: NSManagedObjectContext ) {
         print("[Publisher] Publisher refreshing platforms...")
-        Publisher.getPlatforms() { result in
+        Publisher.getPlatforms { result in
             switch result {
             case .success(let data):
                 print("[Publisher]Success: \(data)")
@@ -292,69 +294,109 @@ class Publisher {
         print("[Publisher] Storing Platform Icon: \(platform.name)")
 
         let task = URLSession.shared.dataTask(with: url) { data, response, error in
-            guard let data = data, error == nil else { return }
-
-            // 1. Fetch existing entity
-            let fetchRequest = PlatformsEntity.fetchRequest()
-            fetchRequest.predicate = NSPredicate(format: "name == %@", platform.name)
-
-            do {
-                let existingPlatforms = try context.fetch(fetchRequest)
-                print(existingPlatforms.count)
-
-                if let existingPlatform = existingPlatforms.first {
-                    // 2. Update existing entity
-                    print("[Publisher] Updating existing Platform Icon: \(platform.name)")
-                    existingPlatform.image = data
-                    existingPlatform.protocol_type = platform.protocol_type
-                    existingPlatform.service_type = platform.service_type
-                    existingPlatform.shortcode = platform.shortcode
-                    existingPlatform.support_url_scheme = platform.support_url_scheme
-                } else {
-                    // 3. Create new entity
-                    print("[Publisher] Creating new Platform Icon: \(platform.name)")
-                    let platformsEntity = PlatformsEntity(context: context)
-                    platformsEntity.image = data
-                    platformsEntity.name = platform.name
-                    platformsEntity.protocol_type = platform.protocol_type
-                    platformsEntity.service_type = platform.service_type
-                    platformsEntity.shortcode = platform.shortcode
-                    platformsEntity.support_url_scheme = platform.support_url_scheme
-                }
-
-                // 4. Save changes (outside the if/else)
-                if context.hasChanges {
-                    do {
-                        try context.save()
-                    } catch {
-                        print("[Publisher] Failed save download image: \(error) \(error.localizedDescription)")
-                    }
-                }
-
-            } catch {
-                print("[Publisher] Error fetching Platform: \(error) \(error.localizedDescription)")
+            guard let data = data, error == nil else {
+                print("[Publisher] Error downloading image for \(platform.name): \(error?.localizedDescription ?? "Unknown error")")
+                return
             }
+            
+            DispatchQueue.main.async {
+                let platformStore = PlatformStore(context: context)
+
+                let platformModel: Platform = Platform(
+                    name: platform.name,
+                    protocolType: Publisher.ProtocolTypes(rawValue: platform.protocol_type) ?? Publisher.ProtocolTypes.OAUTH2,
+                    serviceType: Publisher.ServiceTypes(rawValue: platform.service_type) ?? Publisher.ServiceTypes.TEXT,
+                    shortcode: platform.shortcode,
+                    supportUrlScheme: platform.support_url_scheme,
+                    imageData: data)
+                print("[Publisher] Platform to be saved: \(platformModel)")
+                platformStore.putPlatform(platformModel)
+                
+                platformStore.getPlatforms()
+                
+            }
+            
+ 
+
+//            // 1. Fetch existing entity
+//            let fetchRequest = PlatformsEntity.fetchRequest()
+//            fetchRequest.predicate = NSPredicate(
+//                format: "name == %@", platform.name)
+//
+//            do {
+//                let existingPlatforms = try context.fetch(fetchRequest)
+//                print(existingPlatforms.count)
+//
+//                if let existingPlatform = existingPlatforms.first {
+//                    // 2. Update existing entity
+//                    print(
+//                        "[Publisher] Updating existing Platform Icon: \(platform.name)"
+//                    )
+//                    existingPlatform.image = data
+//                    existingPlatform.protocol_type = platform.protocol_type
+//                    existingPlatform.service_type = platform.service_type
+//                    existingPlatform.shortcode = platform.shortcode
+//                    existingPlatform.support_url_scheme =
+//                        platform.support_url_scheme
+//                } else {
+//                    // 3. Create new entity
+//                    print(
+//                        "[Publisher] Creating new Platform Icon: \(platform.name)"
+//                    )
+//                    let platformsEntity = PlatformsEntity(context: context)
+//                    platformsEntity.image = data
+//                    platformsEntity.name = platform.name
+//                    platformsEntity.protocol_type = platform.protocol_type
+//                    platformsEntity.service_type = platform.service_type
+//                    platformsEntity.shortcode = platform.shortcode
+//                    platformsEntity.support_url_scheme =
+//                        platform.support_url_scheme
+//                }
+//
+//                // 4. Save changes (outside the if/else)
+//                if context.hasChanges {
+//                    do {
+//                        try context.save()
+//                    } catch {
+//                        print(
+//                            "[Publisher] Failed save download image: \(error) \(error.localizedDescription)"
+//                        )
+//                    }
+//                }
+//
+//            } catch {
+//                print(
+//                    "[Publisher] Error fetching Platform: \(error) \(error.localizedDescription)"
+//                )
+//            }
         }
         task.resume()
     }
 
     static func clear(context: NSManagedObjectContext, shouldSave: Bool = true) throws {
         print("[Publisher] Clearing platforms...")
-        let fetchRequest = NSFetchRequest<NSFetchRequestResult>(entityName: "PlatformsEntity")
-        let deleteRequest = NSBatchDeleteRequest(fetchRequest: fetchRequest) // Use batch delete for efficiency
+        
+        let platformStore = PlatformStore(context: context)
 
-        deleteRequest.resultType = .resultTypeCount // Or .resultTypeObjectIDs if you need object IDs
+        platformStore.deleteAllPlatforms()
 
-        do {
-            try context.execute(deleteRequest)
-            if shouldSave {
-                try context.save()
-            }
-        } catch {
-            print("[Publisher] Error clearing PlatformsEntity: \(error)")
-            context.rollback()
-            throw error // Re-throw the error after rollback
-        }
+            
+//        let fetchRequest = NSFetchRequest<NSFetchRequestResult>(
+//            entityName: "PlatformsEntity")
+//        let deleteRequest = NSBatchDeleteRequest(fetchRequest: fetchRequest)  // Use batch delete for efficiency
+//
+//        deleteRequest.resultType = .resultTypeCount  // Or .resultTypeObjectIDs if you need object IDs
+//
+//        do {
+//            try context.execute(deleteRequest)
+//            if shouldSave {
+//                try context.save()
+//            }
+//        } catch {
+//            print("[Publisher] Error clearing PlatformsEntity: \(error)")
+//            context.rollback()
+//            throw error  // Re-throw the error after rollback
+//        }
     }
 
 
