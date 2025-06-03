@@ -26,7 +26,8 @@ struct PlatformDetailsBottomsheet: View {
 
     @State var errorMessage: String = ""
 
-    var platform: PlatformsEntity?
+    //var platform: PlatformsEntity?
+    var platform: Platform?
     @FetchRequest(sortDescriptors: [NSSortDescriptor(
         keyPath: \StoredPlatformsEntity.name,
         ascending: true)]
@@ -50,7 +51,8 @@ struct PlatformDetailsBottomsheet: View {
     init(
         description: String,
         composeDescription: String,
-        platform: PlatformsEntity?,
+       // platform: PlatformsEntity?,
+        platform: Platform?,
         isEnabled: Binding<Bool>,
         composeNewMessageRequested: Binding<Bool>,
         platformRequestedType: Binding<PlatformsRequestedType>,
@@ -85,7 +87,7 @@ struct PlatformDetailsBottomsheet: View {
             }
             else if accountSheetRequested && platform != nil {
                 SelectAccountSheetView(
-                    filter: platform!.name!,
+                    filter: platform!.name,
                     fromAccount: $fromAccount,
                     dismissParent: $parentIsEnabled
                 ) {
@@ -103,15 +105,14 @@ struct PlatformDetailsBottomsheet: View {
                                 let publisher = Publisher()
                                 let response = try publisher.revokePlatform(
                                     llt: llt,
-                                    platform: platform!.name!,
+                                    platform: platform!.name,
                                     account: fromAccount,
-                                    protocolType: platform!.protocol_type!
-                                )
+                                    protocolType: platform!.protocolType.rawValue                                )
                                 
                                 // Delete token for the account beign revoked
-                                print("Searching for token for the platform for: \(platform!.name?.localizedCapitalized ?? "unkown" ) beign revoked to delete")
+                                print("Searching for token for the platform for: \(platform!.name.localizedCapitalized) beign revoked to delete")
                                 for storedEntity in storedPlatforms {
-                                    if storedEntity.name  == platform!.name! {
+                                    if storedEntity.name  == platform!.name {
 //                                        StoredTokensEntityManager(context: context).deleteStoredTokenById(forPlatform: storedEntity.id!)
                                         
                                         do {

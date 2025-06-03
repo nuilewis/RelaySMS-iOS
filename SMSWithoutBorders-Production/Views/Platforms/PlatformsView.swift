@@ -5,6 +5,7 @@
 //  Created by MAC on 20/01/2025.
 //
 
+import CoreData
 import SwiftUI
 
 enum PlatformsRequestedType: CaseIterable {
@@ -16,18 +17,25 @@ enum PlatformsRequestedType: CaseIterable {
 struct PlatformsView: View {
     @Environment(\.managedObjectContext) var context
 
-    @FetchRequest(sortDescriptors: [NSSortDescriptor(
-        keyPath: \PlatformsEntity.name,
-        ascending: true)]
-    ) var platforms: FetchedResults<PlatformsEntity>
+    //    @FetchRequest(sortDescriptors: [NSSortDescriptor(
+    //        keyPath: \PlatformsEntity.name,
+    //        ascending: true)]
+    //    ) var platforms: FetchedResults<PlatformsEntity>
 
-    @FetchRequest(sortDescriptors: [NSSortDescriptor(
-        keyPath: \StoredPlatformsEntity.name,
-        ascending: true)]
+    // @StateObject private var platformStore: PlatformStore
+
+    @StateObject private var platformStore: PlatformStore
+
+    @FetchRequest(sortDescriptors: [
+        NSSortDescriptor(
+            keyPath: \StoredPlatformsEntity.name,
+            ascending: true)
+    ]
     ) var storedPlatforms: FetchedResults<StoredPlatformsEntity>
 
     @State private var id = UUID()
     @State private var refreshRequested = false
+    @State private var hasAppeared = false
 
     @Binding var requestType: PlatformsRequestedType
     @Binding var requestedPlatformName: String
@@ -43,6 +51,28 @@ struct PlatformsView: View {
         GridItem(.flexible(minimum: 40), spacing: 10),
     ]
 
+    init(
+        requestType: Binding<PlatformsRequestedType>,
+        requestedPlatformName: Binding<String>,
+        composeNewMessageRequested: Binding<Bool>,
+        composeTextRequested: Binding<Bool>,
+        composeMessageRequested: Binding<Bool>,
+        composeEmailRequested: Binding<Bool>,
+        managedObjectContext: NSManagedObjectContext,
+        callback: (() -> Void)? = nil
+    ) {
+        self._requestType = requestType
+        self._requestedPlatformName = requestedPlatformName
+        self._composeNewMessageRequested = composeNewMessageRequested
+        self._composeTextRequested = composeTextRequested
+        self._composeMessageRequested = composeMessageRequested
+        self._composeEmailRequested = composeEmailRequested
+        self.callback = callback
+
+        self._platformStore = StateObject(
+            wrappedValue: PlatformStore(context: managedObjectContext))
+    }
+
     var body: some View {
         NavigationView {
             ScrollView {
@@ -56,7 +86,8 @@ struct PlatformsView: View {
                         isEnabled: true,
                         composeNewMessageRequested: $composeNewMessageRequested,
                         platformRequestType: $requestType,
-                        composeViewRequested: getBindingComposeVariable(type: "email"),
+                        composeViewRequested: getBindingComposeVariable(
+                            type: "email"),
                         parentRefreshRequested: $refreshRequested,
                         requestedPlatformName: $requestedPlatformName,
                         platform: nil,
@@ -71,38 +102,44 @@ struct PlatformsView: View {
                             .padding(.bottom, 10)
                     }
 
-                    if platforms.isEmpty {
+//                    #if DEBUG
+//                        Button("Refresh") {
+//                            platformStore.refresh()
+//                        }
+//                        .font(.caption)
+//                        .foregroundColor(.blue)
+//                    #endif
+
+                    if platformStore.isLoading {
+                        ProgressView("Loading Platforms...")
+                            .frame(maxWidth: .infinity, alignment: .center)
+                            .padding()
+                    } else if let errorMessage = platformStore.errorMessage {
+                        Text("Error: \(errorMessage)")
+                            .foregroundColor(.red)
+                            .padding()
+                    } else if platformStore.platforms.isEmpty {
                         Text("No online platforms saved yet...")
+                        Button("Load Platforms") {
+                            Publisher.refreshPlatforms(context: context)
+                        }
+                        .padding()
+                        .background(Color.blue)
+                        .foregroundColor(.white)
+                        .cornerRadius(8)
                     } else {
-                        LazyVGrid(columns: columns, alignment: .leading, spacing: 20) {
+                        LazyVGrid(
+                            columns: columns, alignment: .leading, spacing: 20
+                        ) {
                             if requestType == .compose {
-                                ForEach(filterForStoredPlatforms(), id: \.name) { item in
-                                    PlatformCard(
-                                        composeNewMessageRequested: $composeNewMessageRequested,
-                                        platformRequestType: $requestType,
-                                        composeViewRequested: getBindingComposeVariable(
-                                            type: item.service_type ?? "Unknown"),
-                                        parentRefreshRequested: $refreshRequested,
-                                        requestedPlatformName: $requestedPlatformName,
-                                        platform: item,
-                                        serviceType: getServiceType(type: item.service_type ?? "Unknown"),
-                                        callback: callback
-                                    )
+                                ForEach(filterForStoredPlatforms(), id: \.name)
+                                { item in
+                                    createPlatformCard(for: item)
                                 }
-                            }
-                            else {
-                                ForEach(platforms, id: \.name) { item in
-                                    PlatformCard(
-                                        composeNewMessageRequested: $composeNewMessageRequested,
-                                        platformRequestType: $requestType,
-                                        composeViewRequested: getBindingComposeVariable(
-                                            type: item.service_type ?? "Unkown"),
-                                        parentRefreshRequested: $refreshRequested,
-                                        requestedPlatformName: $requestedPlatformName,
-                                        platform: item,
-                                        serviceType: getServiceType(type: item.service_type ?? "Unkown"),
-                                        callback: callback
-                                    )
+                            } else {
+                                ForEach(platformStore.platforms, id: \.name) {
+                                    item in
+                                    createPlatformCard(for: item)
                                 }
                             }
                         }
@@ -114,12 +151,14 @@ struct PlatformsView: View {
                     if refresh {
                         print("refreshing....")
                         id = UUID()
+                        platformStore.refresh()
                     }
                 }
 
                 VStack(alignment: .center) {
                     Button {
-                        requestType = requestType == .compose ? .available : .compose
+                        requestType =
+                            requestType == .compose ? .available : .compose
                     } label: {
                         if requestType == .compose {
                             Text("Save more platforms...")
@@ -133,30 +172,51 @@ struct PlatformsView: View {
             .navigationTitle(getRequestTypeText(type: requestType))
             .padding(16)
         }.onAppear {
-            if platforms.count == 0 {
-                print("[PlatformsView - onAppear]: No platforms found, refreshing....")
-                Publisher.refreshPlatforms(context: context)
-            }
+            if !hasAppeared {
+                hasAppeared = true
+                        print("[PlatformsView - onAppear]: View appeared for the first time")
+                        if platformStore.platforms.count == 0 {
+                            print("[PlatformsView - onAppear]: No platforms found, refreshing....")
+                            Publisher.refreshPlatforms(context: context)
+                        }
+                    }
         }
         .task {
-            print("Number of platforms: \(platforms.count)")
+            print("[Platforms View]: Number of platforms: \(platformStore.platforms.count)")
         }
     }
 
-    func filterForStoredPlatforms() -> [PlatformsEntity] {
-        var _storedPlatforms: Set<PlatformsEntity> = []
+    private func createPlatformCard(for item: Platform) -> some View {
+        let serviceType = item.serviceType.rawValue
+        let composeBinding = getBindingComposeVariable(type: serviceType)
+        let platformServiceType = getServiceType(type: serviceType)
 
-        for platform in platforms {
+        return PlatformCard(
+            composeNewMessageRequested: $composeNewMessageRequested,
+            platformRequestType: $requestType,
+            composeViewRequested: composeBinding,
+            parentRefreshRequested: $refreshRequested,
+            requestedPlatformName: $requestedPlatformName,
+            platform: item,
+            serviceType: platformServiceType,
+            callback: callback
+        )
+    }
+
+    func filterForStoredPlatforms() -> [Platform] {
+        var _storedPlatforms: [Platform] = []
+
+        for platform in platformStore.platforms {
             if storedPlatforms.contains(where: { $0.name == platform.name }) {
-                _storedPlatforms.insert(platform)
+                _storedPlatforms.append(platform)
             }
         }
-        return Array(_storedPlatforms)
+        return _storedPlatforms
     }
 
     func getBindingComposeVariable(type: String) -> Binding<Bool> {
-        @State var defaultNil : Bool? = false
-        switch(type) {
+        @State var defaultNil: Bool? = false
+        switch type {
         case Publisher.ServiceTypes.EMAIL.rawValue:
             return $composeEmailRequested
         case Publisher.ServiceTypes.MESSAGE.rawValue:
@@ -169,21 +229,18 @@ struct PlatformsView: View {
     }
 
     func getRequestTypeText(type: PlatformsRequestedType) -> String {
-        switch(type) {
+        switch type {
         case .compose:
-            return String(localized:"Send a message")
+            return String(localized: "Send a message")
         case .revoke:
-            return String(localized:"Remove a platform")
+            return String(localized: "Remove a platform")
         default:
-            return String(localized:"Available Platforms")
+            return String(localized: "Available Platforms")
         }
     }
-    
-
-
 
     func getServiceType(type: String) -> Publisher.ServiceTypes {
-        switch(type) {
+        switch type {
         case Publisher.ServiceTypes.EMAIL.rawValue:
             return Publisher.ServiceTypes.EMAIL
         case Publisher.ServiceTypes.MESSAGE.rawValue:
@@ -196,13 +253,11 @@ struct PlatformsView: View {
         }
     }
 
-
 }
-
 
 struct Platforms_Preview: PreviewProvider {
     static var previews: some View {
-        
+
         let container = createInMemoryPersistentContainer()
         populateMockData(container: container)
 
@@ -220,9 +275,10 @@ struct Platforms_Preview: PreviewProvider {
             composeNewMessageRequested: $composeNewMessage,
             composeTextRequested: $composeTextRequested,
             composeMessageRequested: $composeMessageRequested,
-            composeEmailRequested: $composeEmailRequested
+            composeEmailRequested: $composeEmailRequested,
+            managedObjectContext: container.viewContext
         )
-            .environment(\.managedObjectContext, container.viewContext)
+        .environment(\.managedObjectContext, container.viewContext)
     }
 }
 
@@ -250,6 +306,3 @@ struct Platforms_Preview: PreviewProvider {
 //            .environment(\.managedObjectContext, container.viewContext)
 //    }
 //}
-
-
-

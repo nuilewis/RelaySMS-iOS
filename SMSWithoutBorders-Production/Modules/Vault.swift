@@ -518,7 +518,7 @@ struct Vault {
             }
 //            context.reset()
             
-            print("[+] platforms to save: ", platformsToSave)
+            print("[Vault] [+] platforms to save: ", platformsToSave)
             for platform in platformsToSave {
                 let platformId = Vault.deriveUniqueKey(
                     platformName: platform.platform,

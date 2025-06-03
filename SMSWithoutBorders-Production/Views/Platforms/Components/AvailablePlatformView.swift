@@ -22,7 +22,8 @@ struct AvailablePlatformView: View {
     @AppStorage(Publisher.PLATFORM_CODE_VERIFIER)
     private var codeVerifier: String = ""
 
-    var platform: PlatformsEntity?
+    //var platform: PlatformsEntity?
+    var platform: Platform?
     var callback: (() -> Void)?
     var description: String
     var composeDescription: String
@@ -31,8 +32,8 @@ struct AvailablePlatformView: View {
         VStack(alignment:.center) {
             Spacer()
 
-            (platform != nil && platform!.image != nil ?
-             Image(uiImage: UIImage(data: platform!.image!)!) : Image("Logo")
+            (platform != nil && platform!.imageData != nil ?
+             Image(uiImage: UIImage(data: platform!.imageData!)!) : Image("Logo")
             )
                 .resizable()
                 .scaledToFit()
@@ -55,7 +56,7 @@ struct AvailablePlatformView: View {
             if phoneNumberAuthenticationRequested {
                 PhoneNumberSheetView(
                     completed: $parentIsEnabled,
-                    platformName: platform!.name!
+                    platformName: platform!.name
                 )
             }
             else {
@@ -95,18 +96,18 @@ struct AvailablePlatformView: View {
         }
     }
 
-    private func triggerPlatformRequest(platform: PlatformsEntity) {
+    private func triggerPlatformRequest(platform: Platform) {
         let backgroundQueueu = DispatchQueue(label: "addingNewPlatformQueue", qos: .background)
 
-        switch platform.protocol_type {
-        case Publisher.ProtocolTypes.OAUTH2.rawValue:
+        switch platform.protocolType {
+        case Publisher.ProtocolTypes.OAUTH2:
             loading = true
             backgroundQueueu.async {
                 do {
                     let publisher = Publisher()
                     let response = try publisher.getOAuthURL(
-                        platform: platform.name!,
-                        supportsUrlSchemes: platform.support_url_scheme)
+                        platform: platform.name,
+                        supportsUrlSchemes: platform.supportUrlScheme)
                     codeVerifier = response.codeVerifier // Saves to app storage
                     print("Saved code verifier to app storage temporarily")
                     openURL(URL(string: response.authorizationURL)!)
@@ -115,18 +116,45 @@ struct AvailablePlatformView: View {
                     print("Some error occured: \(error)")
                 }
             }
-        case Publisher.ProtocolTypes.PNBA.rawValue:
+        case Publisher.ProtocolTypes.PNBA:
             phoneNumberAuthenticationRequested = true
-        case .none:
-            Task {}
-        case .some(_):
+        case .BRIDGE:
             Task {}
         }
     }
+//    private func triggerPlatformRequest(platform: PlatformsEntity) {
+//        let backgroundQueueu = DispatchQueue(label: "addingNewPlatformQueue", qos: .background)
+//
+//        switch platform.protocol_type {
+//        case Publisher.ProtocolTypes.OAUTH2.rawValue:
+//            loading = true
+//            backgroundQueueu.async {
+//                do {
+//                    let publisher = Publisher()
+//                    let response = try publisher.getOAuthURL(
+//                        platform: platform.name!,
+//                        supportsUrlSchemes: platform.support_url_scheme)
+//                    codeVerifier = response.codeVerifier // Saves to app storage
+//                    print("Saved code verifier to app storage temporarily")
+//                    openURL(URL(string: response.authorizationURL)!)
+//                }
+//                catch {
+//                    print("Some error occured: \(error)")
+//                }
+//            }
+//        case Publisher.ProtocolTypes.PNBA.rawValue:
+//            phoneNumberAuthenticationRequested = true
+//        case .none:
+//            Task {}
+//        case .some(_):
+//            Task {}
+//        }
+//    }
 }
 
 #Preview {
-    var platform: PlatformsEntity? = nil
+    //var platform: PlatformsEntity? = nil
+    var platform: Platform? = nil
     @State var platformRequestedType: PlatformsRequestedType = .available
     var description: String = ""
     var composeDescription: String = ""

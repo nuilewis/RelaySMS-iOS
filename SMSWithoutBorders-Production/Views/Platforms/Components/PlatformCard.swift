@@ -24,7 +24,8 @@ struct PlatformCard: View {
     @Binding var parentRefreshRequested: Bool
     @Binding var requestedPlatformName: String
 
-    let platform: PlatformsEntity?
+   // let platform: PlatformsEntity?
+    let platform: Platform?
     let serviceType: Publisher.ServiceTypes
 
     var callback: (() -> Void)?
@@ -35,22 +36,31 @@ struct PlatformCard: View {
                 VStack {
                     Button(action: {
                         if platform != nil {
-                            requestedPlatformName = platform!.name!
+                            requestedPlatformName = platform!.name
                         }
                         sheetIsPresented.toggle()
                     }) {
                         VStack {
-                            (platform != nil && platform!.image != nil ?
-                             Image(uiImage: UIImage(data: platform!.image!)!) : Image("Logo")
-                            )
-                                .resizable()
-                                .renderingMode(isEnabled ? .none : .template)
-                                .foregroundColor(isEnabled ? .clear : .gray)
-                                .scaledToFit()
-                                .frame(width: 75, height: 75)
-                                .padding()
+                            if let imageData = platform?.imageData {
+                                Image(uiImage: UIImage(data: imageData)!)
+                                   .resizable()
+                                   .renderingMode(isEnabled ? .none : .template)
+                                   .foregroundColor(isEnabled ? .clear : .gray)
+                                   .scaledToFit()
+                                   .frame(width: 75, height: 75)
+                                   .padding()
+                            } else {
+                                Image("Logo")
+                                   .resizable()
+                                   .renderingMode(isEnabled ? .none : .template)
+                                   .foregroundColor(isEnabled ? .clear : .gray)
+                                   .scaledToFit()
+                                   .frame(width: 75, height: 75)
+                                   .padding()
+                            }
+                             
 
-                            Text(platform != nil ? (platform!.name ?? "") : "")
+                            Text(platform != nil ? (platform!.name) : "")
                                 .font(.caption2)
                                 .foregroundColor(isEnabled ? .primary : .gray)
                         }
@@ -74,7 +84,7 @@ struct PlatformCard: View {
                             callback: callback
                         )
                         .applyPresentationDetentsIfAvailable(
-                            canLarge: platform?.protocol_type == Publisher.ProtocolTypes.PNBA.rawValue)
+                            canLarge: platform?.protocolType == Publisher.ProtocolTypes.PNBA)
                     }
                 }
                 if(isEnabled) {
@@ -86,7 +96,7 @@ struct PlatformCard: View {
             }
         }
         .onAppear {
-            isEnabled = platform != nil ? isStored(platformEntity: platform!) : true
+            isEnabled = platform != nil ? isStored(platform: platform!) : true
         }
     }
 
@@ -116,8 +126,8 @@ struct PlatformCard: View {
         }
     }
 
-    func isStored(platformEntity: PlatformsEntity) -> Bool {
-        return storedPlatforms.contains(where: { $0.name == platformEntity.name })
+    func isStored(platform: Platform) -> Bool {
+        return storedPlatforms.contains(where: { $0.name == platform.name })
     }
 
 

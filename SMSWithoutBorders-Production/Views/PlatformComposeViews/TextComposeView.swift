@@ -146,7 +146,6 @@ struct TextComposeView: View {
                             let storedPlatformEntity = storedPlatforms.first {
                                 $0.account == fromAccount
                             }  // Gets the speciic account that matches the currently selected `fromAccount`
-                            var tokensExists: Bool = false
                             
                             encryptedFormattedContent =
                             try messageComposer.textComposerV1(

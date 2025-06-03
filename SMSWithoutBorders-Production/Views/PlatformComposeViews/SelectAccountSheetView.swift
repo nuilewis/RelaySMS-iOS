@@ -20,7 +20,7 @@ struct AccountListItem: View {
     init(platform: StoredPlatformsEntity?,
          context: NSManagedObjectContext,
          platformsVault: Vault_V1_Token? = nil,
-         missing: Bool = false,
+         missing: Bool = false
     ) {
         if platformsVault != nil {
             self.accountName = platformsVault?.accountIdentifier ?? "Unknown account"

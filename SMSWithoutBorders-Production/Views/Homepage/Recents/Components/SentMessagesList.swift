@@ -8,6 +8,7 @@
 import SwiftUI
 
 struct SentMessagesList: View {
+    @Environment(\.managedObjectContext) var context
     @FetchRequest(sortDescriptors: [NSSortDescriptor(
         keyPath: \MessageEntity.date,
         ascending: false)]
@@ -91,7 +92,8 @@ struct SentMessagesList: View {
                             composeNewMessageRequested: $composeNewMessageRequested,
                             composeTextRequested: $composeTextRequested,
                             composeMessageRequested: $composeMessageRequested,
-                            composeEmailRequested: $composeEmailRequested
+                            composeEmailRequested: $composeEmailRequested,
+                            managedObjectContext: context
                         ) {
                             platformIsRequested.toggle()
                         }

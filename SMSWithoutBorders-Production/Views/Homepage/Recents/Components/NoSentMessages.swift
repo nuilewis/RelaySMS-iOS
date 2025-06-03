@@ -8,6 +8,7 @@
 import SwiftUI
 
 struct NoSentMessages: View {
+    @Environment(\.managedObjectContext) var context
     @Binding var selectedTab: HomepageTabs
     @Binding var platformRequestType: PlatformsRequestedType
 
@@ -54,7 +55,8 @@ struct NoSentMessages: View {
                         composeNewMessageRequested: $composeNewMessageRequested,
                         composeTextRequested: $composeTextRequested,
                         composeMessageRequested: $composeMessageRequested,
-                        composeEmailRequested: $composeEmailRequested
+                        composeEmailRequested: $composeEmailRequested,
+                        managedObjectContext: context
                     ) {
                         platformIsRequested.toggle()
                     }

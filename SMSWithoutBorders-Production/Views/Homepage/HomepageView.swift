@@ -217,7 +217,8 @@ struct HomepageView: View {
                                 $composeNewMessageRequested,
                             composeTextRequested: $composeTextRequested,
                             composeMessageRequested: $composeMessageRequested,
-                            composeEmailRequested: $composeEmailRequested
+                            composeEmailRequested: $composeEmailRequested,
+                            managedObjectContext: context
                         )
                         .tabItem {
                             Image(systemName: "apps.iphone")
