@@ -237,8 +237,7 @@ class PlatformStore: ObservableObject {
         ) { [weak self] _ in
             self?.getPlatforms()
         }
-
-        //getPlatforms()
+        getPlatforms()
     }
     
     deinit {
@@ -247,59 +246,69 @@ class PlatformStore: ObservableObject {
 
     func getPlatforms() {
         print("[PlatformStore]: Getting platforms...")
-        self.isLoading = true
-        self.errorMessage = nil
-        
-        if context.concurrencyType == .mainQueueConcurrencyType {
-            loadPlatforms()
-        } else {
-            context.perform {
-                DispatchQueue.main.async {
-                    self.loadPlatforms()
-                }
-            }
+        DispatchQueue.main.async {
+            self.isLoading = true
+            self.errorMessage = nil
         }
-
-    }
-
-    private func loadPlatforms() {
-        do {
-                    let fetchedPlatforms = try self.handler.getAllPlatforms()
-                    
+        
+        context.performAndWait {
+            do {
+                let fetchedPlatforms = try self.handler.getAllPlatforms()
+                
+                DispatchQueue.main.async {
                     self.platforms = fetchedPlatforms
                     self.isLoading = false
                     print("[PlatformStore]: Loaded \(self.platforms.count) platforms.")
-                } catch {
-                    print("[PlatformStore]: Error loading platforms - \(error.localizedDescription)")
+                }
+            }catch {
+                print("[PlatformStore]: Error loading platforms - \(error.localizedDescription)")
+                
+                DispatchQueue.main.async {
                     self.errorMessage = "Failed to load platforms. \(error.localizedDescription)"
                     self.platforms = []
                     self.isLoading = false
                 }
+
+            }
+        }
+        
     }
+
     func getPlatform(byName name: String) -> Platform? {
         print("[PlatformStore]: Getting platform for name \(name)...")
-        do {
-            return try handler.getPlatform(byName: name)
-        } catch {
-            print("[PlatformStore]: Error getting platform synchronously - \(error.localizedDescription)")
-            return nil
+        var platform: Platform? = nil
+
+        context.performAndWait {
+            do {
+                platform = try handler.getPlatform(byName: name)
+            } catch {
+                print("[PlatformStore]: Error getting platform synchronously - \(error.localizedDescription)")
+            }
+    
         }
+        return platform
+    
     }
 
     func putPlatform(_ platform: Platform) {
         print("[PlatformStore]: Adding platform '\(platform.name)'...")
-        self.isLoading = true
-        self.errorMessage = nil
-
-        if context.concurrencyType == .mainQueueConcurrencyType {
-                   savePlatform(platform)
-               } else {
-                   context.perform {
-                       DispatchQueue.main.async {
-                           self.savePlatform(platform)
-                       }
-                   }
-               }
+        DispatchQueue.main.async {
+            self.isLoading = true
+            self.errorMessage = nil
+        }
+        
+        context.perform {
+            do {
+                try self.handler.putPlatform(platform)
+                print("[PlatformStore]: Platform '\(platform.name)' added successfully.")
+            } catch {
+                DispatchQueue.main.async {
+                    print("[PlatformStore]: Error putting platform \(platform.name) - \(error.localizedDescription)")
+                    self.errorMessage = "Failed to put platform '\(platform.name)'. \(error.localizedDescription)"
+                    self.isLoading = false
+                }
+            }
+        }
     }
     
     private func savePlatform(_ platform: Platform) {
@@ -316,59 +325,48 @@ class PlatformStore: ObservableObject {
 
     func deletePlatform(byName platformName: String) {
         print("[PlatformStore]: Deleting platform \(platformName)...")
-        self.isLoading = true
-        self.errorMessage = nil
-        if context.concurrencyType == .mainQueueConcurrencyType {
-                 performDelete(platformName: platformName)
-             } else {
-                 context.perform {
-                     DispatchQueue.main.async {
-                         self.performDelete(platformName: platformName)
-                     }
-                 }
-             }
+        DispatchQueue.main.async {
+            self.isLoading = true
+            self.errorMessage = nil
+        }
+        
+        context.performAndWait {
+            do {
+                try self.handler.deleteStoredPlatform(byName: platformName)
+                print("[PlatformStore]: platform \(platformName) deleted successfully.")
+            }catch {
+                DispatchQueue.main.async {
+                    print("[PlatformStore]: Error deleting platform '\(platformName)' - \(error.localizedDescription)")
+                    self.errorMessage = "Failed to delete platform '\(platformName)'. \(error.localizedDescription)"
+                    self.isLoading = false
+                }
+            }
+        }
+        
     }
 
     func deleteAllPlatforms() {
         print("[PlatformStore]: Deleting all platforms...")
-        self.isLoading = true
-        self.errorMessage = nil
-
-        if context.concurrencyType == .mainQueueConcurrencyType {
-              performDeleteAll()
-          } else {
-              context.perform {
-                  DispatchQueue.main.async {
-                      self.performDeleteAll()
-                  }
-              }
-          }
-    }
-    
-    
-       private func performDelete(platformName: String) {
-           do {
-               try self.handler.deleteStoredPlatform(byName: platformName)
-               print("[PlatformStore]: platform \(platformName) deleted successfully.")
-               // getPlatforms will be called automatically via the NotificationCenter observer
-           } catch {
-               print("[PlatformStore]: Error deleting platform '\(platformName)' - \(error.localizedDescription)")
-               self.errorMessage = "Failed to delete platform '\(platformName)'. \(error.localizedDescription)"
-               self.isLoading = false
-           }
-       }
-    
-    private func performDeleteAll() {
+        DispatchQueue.main.async {
+            self.isLoading = true
+            self.errorMessage = nil
+        }
+        
+        context.performAndWait {
             do {
                 try self.handler.deleteAllPlatforms()
                 print("[PlatformStore]: All platforms deleted successfully.")
-                // getPlatforms will be called automatically via the NotificationCenter observer
-            } catch {
-                print("[PlatformStore]: Error deleting all platforms - \(error.localizedDescription)")
-                self.errorMessage = "Failed to delete all platforms. \(error.localizedDescription)"
-                self.isLoading = false
+            }catch {
+                DispatchQueue.main.async {
+                    print("[PlatformStore]: Error deleting all platforms - \(error.localizedDescription)")
+                    self.errorMessage = "Failed to delete all platforms. \(error.localizedDescription)"
+                    self.isLoading = false
+                }
             }
         }
+
+    }
+    
     
     // Add a manual refresh method for when you want to force a refresh
       func refresh() {
