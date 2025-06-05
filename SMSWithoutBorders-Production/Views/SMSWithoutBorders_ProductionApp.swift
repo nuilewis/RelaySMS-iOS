@@ -22,15 +22,30 @@ struct SMSWithoutBorders_ProductionApp: App {
     @State private var alreadyLoggedIn: Bool = false
     @State private var isLoggedIn: Bool = false
     
+    // Initialize dependednces
+    @StateObject var storedPlatformStore: StoredPlatformStore
+    @StateObject var platformStore: PlatformStore
+    
     init() {
+        let initialDataController: DataController
         if ProcessInfo.processInfo.environment["XCTestConfigurationFilePath"] != nil {
             // RUNNING TESTS
-            self._dataController = StateObject(wrappedValue: DataController(forTesting: true))
+            initialDataController = DataController(forTesting: true)
+            //self._dataController = StateObject(wrappedValue: DataController(forTesting: true))
             print("Test initialization: Test launch. Initializing standard DataController." )
         } else {
-            self._dataController = StateObject(wrappedValue: DataController())
+            initialDataController = DataController()
+            //self._dataController = StateObject(wrappedValue: DataController())
             print("App initialization: Normal launch. Initializing standard DataController." )
         }
+        
+        self._dataController = StateObject(wrappedValue: initialDataController)
+        let viewContext = initialDataController.container.viewContext
+        
+        self._storedPlatformStore = StateObject(wrappedValue: StoredPlatformStore(context: viewContext))
+        self._platformStore = StateObject(wrappedValue: PlatformStore(context:viewContext))
+        
+        print("All StateObjects dependencies initialized in App init.")
         
     }
 
@@ -46,10 +61,15 @@ struct SMSWithoutBorders_ProductionApp: App {
                     if(!onboardingCompleted) {
                         OnboardingView()
                             .environment(\.managedObjectContext, dataController.container.viewContext)
+                            .environmentObject(platformStore)
+                            .environmentObject(storedPlatformStore)
+                            
                     }
                     else {
                         HomepageView(isLoggedIn: $isLoggedIn)
                         .environment(\.managedObjectContext, dataController.container.viewContext)
+                        .environmentObject(platformStore)
+                        .environmentObject(storedPlatformStore)
                         .alert("You are being logged out!", isPresented: $alreadyLoggedIn) {
                             Button("Get me out!") {
                                 getMeOut()
