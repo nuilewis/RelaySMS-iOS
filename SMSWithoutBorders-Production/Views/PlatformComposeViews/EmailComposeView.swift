@@ -107,8 +107,9 @@ struct EmailComposerView: View {
 struct EmailComposeView: View {
     @Environment(\.dismiss) var dismiss
     @Environment(\.managedObjectContext) var context
-    @FetchRequest var storedPlatforms: FetchedResults<StoredPlatformsEntity>
-    @FetchRequest var platforms: FetchedResults<PlatformsEntity>
+
+    @EnvironmentObject private var storedPlatformStore: StoredPlatformStore
+    @EnvironmentObject private var platformStore: PlatformStore
     
 #if DEBUG
     private var defaultGatewayClientMsisdn: String =
@@ -157,16 +158,7 @@ struct EmailComposeView: View {
         message: Binding<Messages?>
     ) {
         print("Requested platform name: \(platformName.wrappedValue )")
-        _storedPlatforms = FetchRequest<StoredPlatformsEntity>(
-            sortDescriptors: [],
-            predicate: NSPredicate(
-                format: "name == %@", platformName.wrappedValue))
         _message = message
-        
-        _platforms = FetchRequest<PlatformsEntity>(
-            sortDescriptors: [],
-            predicate: NSPredicate(format: "name == %@", platformName.wrappedValue))
-        
         _platformName = platformName
         self.isBridge = isBridge
     }
@@ -191,17 +183,17 @@ struct EmailComposeView: View {
                     filter: platformName,
                     fromAccount: $fromAccount,
                     dismissParent: $dismissRequested,
-                    isSendingMessage: true
-                ) {
-                    requestToChooseAccount.toggle()
-                    if self.message != nil {
-                        composeTo = self.message!.toAccount
-                        composeCC = self.message!.cc
-                        composeBCC = self.message!.bcc
-                        composeSubject = self.message!.subject
-                        composeBody = self.message!.data
-                    }
-                }
+                    isSendingMessage: true,
+                    callback:  {
+                        requestToChooseAccount.toggle()
+                        if self.message != nil {
+                            composeTo = self.message!.toAccount
+                            composeCC = self.message!.cc
+                            composeBCC = self.message!.bcc
+                            composeSubject = self.message!.subject
+                            composeBody = self.message!.data
+                        }
+                    })
                 .applyPresentationDetentsIfAvailable()
                 .interactiveDismissDisabled(true)
             }
@@ -212,7 +204,7 @@ struct EmailComposeView: View {
             }
         }
         .task {
-            if storedPlatforms.count > 0 {
+            if storedPlatformStore.storedPlatforms.count > 0 {
                 DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
                     requestToChooseAccount = true
                 }
@@ -270,9 +262,12 @@ struct EmailComposeView: View {
             let shortcode: UInt8 = "g".data(using: .utf8)!.first!
             
             // Get the stored platform and use the tokens if the platform tokens exist
-            let storedPlatformEntity = storedPlatforms.first {
+            let storedPlatform = storedPlatformStore.storedPlatforms.first {
                 $0.account == fromAccount
-            }  // Gets the speciic account that matches the currently selected fromAccount
+            } // Gets the speciic account that matches the currently selected fromAccount
+//            let storedPlatformEntity = storedPlatforms.first {
+//                $0.account == fromAccount
+//            }
             
             return try messageComposer.emailComposerV1(
                 platform_letter: shortcode,
@@ -282,8 +277,8 @@ struct EmailComposeView: View {
                 bcc: composeBCC,
                 subject: composeSubject,
                 body: composeBody,
-                accessToken: storedPlatformEntity?.access_token ?? nil,
-                refreshToken: storedPlatformEntity?.refresh_token ?? nil
+                accessToken: storedPlatform?.accessToken ?? nil,
+                refreshToken: storedPlatform?.refreshToken ?? nil
             )
         } else {
             let (cipherText, clientPublicKey) = try Bridges.compose(
@@ -379,6 +374,9 @@ struct EmailComposeView: View {
 
 struct EmailView_Preview: PreviewProvider {
     static var previews: some View {
+        let container = createInMemoryPersistentContainer()
+        populateMockData(container: container)
+        
         @State var message: Messages? = Messages(
             id: UUID(),
             subject: "Test subject",

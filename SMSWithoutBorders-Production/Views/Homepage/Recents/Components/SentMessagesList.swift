@@ -92,8 +92,7 @@ struct SentMessagesList: View {
                             composeNewMessageRequested: $composeNewMessageRequested,
                             composeTextRequested: $composeTextRequested,
                             composeMessageRequested: $composeMessageRequested,
-                            composeEmailRequested: $composeEmailRequested,
-                            managedObjectContext: context
+                            composeEmailRequested: $composeEmailRequested
                         ) {
                             platformIsRequested.toggle()
                         }

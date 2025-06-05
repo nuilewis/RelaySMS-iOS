@@ -12,6 +12,7 @@ import CountryPicker
 struct LoginSheetView: View {
     @Environment(\.dismiss) var dismiss
     @Environment(\.managedObjectContext) var context
+    @EnvironmentObject var storedPlatformStore: StoredPlatformStore
 
     #if DEBUG
     @State var phoneNumber = "1123457528"
@@ -69,7 +70,7 @@ struct LoginSheetView: View {
                             try vault.refreshStoredTokens(
                                 llt: llt,
                                 context: context,
-                                storedTokenEntities: nil
+                                storedPlatformStore: storedPlatformStore
                             )
                         } catch {
                             print("Error refreshing tokens: \(error)")

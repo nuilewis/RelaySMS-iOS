@@ -6,6 +6,7 @@
 //
 
 import SwiftUI
+import CoreData
 
 struct PlatformDetailsBottomsheet: View {
     @Environment(\.openURL) var openURL
@@ -28,10 +29,9 @@ struct PlatformDetailsBottomsheet: View {
 
     //var platform: PlatformsEntity?
     var platform: Platform?
-    @FetchRequest(sortDescriptors: [NSSortDescriptor(
-        keyPath: \StoredPlatformsEntity.name,
-        ascending: true)]
-    ) private var storedPlatforms: FetchedResults<StoredPlatformsEntity>
+    
+    @EnvironmentObject private var storedPlatformStore: StoredPlatformStore
+    @EnvironmentObject private var platformStore: PlatformStore
     
     
     @AppStorage(Publisher.PLATFORM_CODE_VERIFIER)
@@ -63,24 +63,22 @@ struct PlatformDetailsBottomsheet: View {
         self.description = description
         self.composeDescription = composeDescription
         self.platform = platform
-
         _parentIsEnabled = isEnabled
         _composeNewMessageRequested = composeNewMessageRequested
         _platformRequestedType = platformRequestedType
         _composeViewRequested = composeViewRequested
         _refreshParent = refreshParent
         self.callback = callback
+
         
-        _storedPlatforms = FetchRequest<StoredPlatformsEntity>(
-            sortDescriptors: [],
-            predicate: NSPredicate(format: "name == %@", platform?.name ?? "unkown"))
+
     }
 
     var body: some View {
         VStack {
             if (isRevoking || loading) && platform != nil {
                 SaveRevokePlatform(
-                    name: platform!.name ?? "",
+                    name: platform!.name,
                     isSaving: $savingNewPlatform,
                     isRevoking: $isRevoking
                 )
@@ -111,17 +109,9 @@ struct PlatformDetailsBottomsheet: View {
                                 
                                 // Delete token for the account beign revoked
                                 print("Searching for token for the platform for: \(platform!.name.localizedCapitalized) beign revoked to delete")
-                                for storedEntity in storedPlatforms {
+                                for storedEntity in storedPlatformStore.storedPlatforms{
                                     if storedEntity.name  == platform!.name {
-//                                        StoredTokensEntityManager(context: context).deleteStoredTokenById(forPlatform: storedEntity.id!)
-                                        
-                                        do {
-                                            context.delete(storedEntity)
-                                            try context.save()
-                                        } catch {
-                                            print(error)
-                                            context.rollback()
-                                        }
+                                        storedPlatformStore.deleteStoredPlatform(byId: storedEntity.id)
                                     }
                                 }
                               
@@ -132,7 +122,7 @@ struct PlatformDetailsBottomsheet: View {
                                         try vault.refreshStoredTokens(
                                             llt: llt,
                                             context: context,
-                                            storedTokenEntities: storedPlatforms
+                                            storedPlatformStore: storedPlatformStore
                                         )
                                     } catch {
                                         print(error)
@@ -181,7 +171,7 @@ struct PlatformDetailsBottomsheet: View {
                             url: url,
                             codeVerifier: codeVerifier,
                             storeOnDevice: storePlatformOnDevice,
-                            storedTokenEntities: storedPlatforms
+                            storedPlatformStore: storedPlatformStore
                         )
                         parentIsEnabled = true
                
@@ -216,25 +206,31 @@ struct PlatformDetailsBottomsheet: View {
 }
 
 
-#Preview {
-    var description: String = String(localized:"Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book", comment: "Explains some history about lorem Impsum")
-    var composeDescription: String = String(localized:"[Compose] Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book", comment: "Explains some history about Lorem Ipsum")
+struct PlatformDetailsBottomsheet_Preview: PreviewProvider {
+    static var previews: some View {
+        
+        let container = createInMemoryPersistentContainer()
+        populateMockData(container: container)
+        
+        var description: String = String(localized:"Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book", comment: "Explains some history about lorem Impsum")
+        var composeDescription: String = String(localized:"[Compose] Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book", comment: "Explains some history about Lorem Ipsum")
+        
+        @State var saveRequested = false
+        @State var codeVerifier: String = ""
+        @State var isEnabled: Bool = false
+        @State var composeNewMessage: Bool = false
+        @State var composeViewRequested: Bool = false
+        @State var platformRequestedType: PlatformsRequestedType = .available
 
-    @State var saveRequested = false
-    @State var codeVerifier: String = ""
-    @State var isEnabled: Bool = false
-    @State var composeNewMessage: Bool = false
-    @State var composeViewRequested: Bool = false
-    @State var platformRequestedType: PlatformsRequestedType = .available
-
-    PlatformDetailsBottomsheet(
-        description: description,
-        composeDescription: composeDescription,
-        platform: nil,
-        isEnabled: $isEnabled,
-        composeNewMessageRequested: $composeNewMessage,
-        platformRequestedType: $platformRequestedType,
-        composeViewRequested: $composeViewRequested,
-        refreshParent: $isEnabled
-    )
+        return PlatformDetailsBottomsheet(
+            description: description,
+            composeDescription: composeDescription,
+            platform: nil,
+            isEnabled: $isEnabled,
+            composeNewMessageRequested: $composeNewMessage,
+            platformRequestedType: $platformRequestedType,
+            composeViewRequested: $composeViewRequested,
+            refreshParent: $isEnabled
+        )
+    }
 }

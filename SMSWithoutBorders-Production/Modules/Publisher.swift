@@ -521,7 +521,7 @@ class Publisher {
         context: NSManagedObjectContext,
         url: URL, codeVerifier: String,
         storeOnDevice: Bool,
-        storedTokenEntities: FetchedResults<StoredPlatformsEntity>
+        storedPlatformStore: StoredPlatformStore
     ) throws {
         let stateB64Values = url.valueOf("state")
         // Decode the Base64 string to Data
@@ -564,7 +564,7 @@ class Publisher {
                 try Vault().refreshStoredTokens(
                     llt: llt,
                     context: context,
-                    storedTokenEntities: storedTokenEntities
+                    storedPlatformStore: storedPlatformStore
                 )
             }
         } catch {
@@ -573,12 +573,13 @@ class Publisher {
     }
     
     public static func getProtocolTypeForPlatform(
-        storedPlatform: StoredPlatformsEntity,
-        platforms: FetchedResults<PlatformsEntity>
+        storedPlatform: StoredPlatform,
+        platforms: [Platform]
     ) -> String {
+        //TODO: Make this return actual protocol type enum
         for platform in platforms {
             if platform.name == storedPlatform.name {
-                return platform.protocol_type!
+                return platform.protocolType.rawValue
             }
         }
         return ""

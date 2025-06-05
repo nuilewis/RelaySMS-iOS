@@ -7,14 +7,14 @@
 
 import MessageUI
 import SwiftUI
+import CoreData
 
 struct TextComposeView: View {
     @Environment(\.dismiss) var dismiss
     @Environment(\.managedObjectContext) var context
     @Environment(\.presentationMode) var presentationMode
-    
-    @FetchRequest var platforms: FetchedResults<PlatformsEntity>
-    @FetchRequest var storedPlatforms: FetchedResults<StoredPlatformsEntity>
+    @EnvironmentObject private var storedPlatformStore: StoredPlatformStore
+    @EnvironmentObject private var platformStore: PlatformStore
     
 #if DEBUG
     private var defaultGatewayClientMsisdn: String =
@@ -57,14 +57,6 @@ struct TextComposeView: View {
         _platformName = platformName
         _message = message
         let platformNameWrapped = platformName.wrappedValue
-        _storedPlatforms = FetchRequest<StoredPlatformsEntity>(
-            sortDescriptors: [],
-            predicate: NSPredicate(format: "name == %@", platformNameWrapped))
-        
-        _platforms = FetchRequest<PlatformsEntity>(
-            sortDescriptors: [],
-            predicate: NSPredicate(format: "name == %@", platformNameWrapped))
-        
         print("Searching platform: \(platformNameWrapped)")
     }
     
@@ -125,7 +117,7 @@ struct TextComposeView: View {
             }
         }
         .task {
-            if storedPlatforms.count > 0 {
+            if storedPlatformStore.storedPlatforms.count > 0 {
                 DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
                     requestToChooseAccount = true
                 }
@@ -134,16 +126,16 @@ struct TextComposeView: View {
         .toolbar(content: {
             ToolbarItem(placement: .navigationBarTrailing) {
                 Button("Post") {
-                    let platform = platforms.first!
+                    let platform = platformStore.platforms.first!
                     isPosting = true
                     DispatchQueue.background(background: {
                         do {
                             let messageComposer = try Publisher.publish(context: context)
                             var shortcode: UInt8? = nil
-                            shortcode = platform.shortcode!.bytes[0]
+                            shortcode = platform.shortcode.bytes[0]
                             
                             // Get the stored platform and use the tokens if the platform tokens exist
-                            let storedPlatformEntity = storedPlatforms.first {
+                            let storedPlatformEntity = storedPlatformStore.storedPlatforms.first {
                                 $0.account == fromAccount
                             }  // Gets the speciic account that matches the currently selected `fromAccount`
                             
@@ -152,8 +144,8 @@ struct TextComposeView: View {
                                 platform_letter: shortcode!,
                                 sender: fromAccount,
                                 text: textBody,
-                                accessToken: storedPlatformEntity?.access_token ?? nil,
-                                refreshToken: storedPlatformEntity?.refresh_token ?? nil
+                                accessToken: storedPlatformEntity?.accessToken ?? nil,
+                                refreshToken: storedPlatformEntity?.refreshToken ?? nil
                             )
                             
                             print("Transmitting to sms app: \(encryptedFormattedContent)")

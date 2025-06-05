@@ -16,22 +16,8 @@ enum PlatformsRequestedType: CaseIterable {
 
 struct PlatformsView: View {
     @Environment(\.managedObjectContext) var context
-
-    //    @FetchRequest(sortDescriptors: [NSSortDescriptor(
-    //        keyPath: \PlatformsEntity.name,
-    //        ascending: true)]
-    //    ) var platforms: FetchedResults<PlatformsEntity>
-
-    // @StateObject private var platformStore: PlatformStore
-
-    @StateObject private var platformStore: PlatformStore
-
-    @FetchRequest(sortDescriptors: [
-        NSSortDescriptor(
-            keyPath: \StoredPlatformsEntity.name,
-            ascending: true)
-    ]
-    ) var storedPlatforms: FetchedResults<StoredPlatformsEntity>
+    @EnvironmentObject private var storedPlatformStore: StoredPlatformStore
+    @EnvironmentObject private var platformStore: PlatformStore
 
     @State private var id = UUID()
     @State private var refreshRequested = false
@@ -58,7 +44,6 @@ struct PlatformsView: View {
         composeTextRequested: Binding<Bool>,
         composeMessageRequested: Binding<Bool>,
         composeEmailRequested: Binding<Bool>,
-        managedObjectContext: NSManagedObjectContext,
         callback: (() -> Void)? = nil
     ) {
         self._requestType = requestType
@@ -68,10 +53,7 @@ struct PlatformsView: View {
         self._composeMessageRequested = composeMessageRequested
         self._composeEmailRequested = composeEmailRequested
         self.callback = callback
-
-        self._platformStore = StateObject(
-            wrappedValue: PlatformStore(context: managedObjectContext))
-    }
+}
 
     var body: some View {
         NavigationView {
@@ -190,8 +172,21 @@ struct PlatformsView: View {
         let serviceType = item.serviceType.rawValue
         let composeBinding = getBindingComposeVariable(type: serviceType)
         let platformServiceType = getServiceType(type: serviceType)
+        
+        // Check if paltform is publishable
+        var isEnabled: Bool = false
+   
+        let storedPlatform = storedPlatformStore.publishablePlatforms.first {
+            $0.name == item.name
+        }
+        if let storedAccount = storedPlatform {
+            isEnabled = true
+            print("create platform card, is platform enabled: \(isEnabled)")
+        }
+    
 
         return PlatformCard(
+            isEnabled: isEnabled,
             composeNewMessageRequested: $composeNewMessageRequested,
             platformRequestType: $requestType,
             composeViewRequested: composeBinding,
@@ -207,7 +202,7 @@ struct PlatformsView: View {
         var _storedPlatforms: [Platform] = []
 
         for platform in platformStore.platforms {
-            if storedPlatforms.contains(where: { $0.name == platform.name }) {
+            if storedPlatformStore.publishablePlatforms.contains(where: { $0.name == platform.name }) {
                 _storedPlatforms.append(platform)
             }
         }
@@ -275,8 +270,7 @@ struct Platforms_Preview: PreviewProvider {
             composeNewMessageRequested: $composeNewMessage,
             composeTextRequested: $composeTextRequested,
             composeMessageRequested: $composeMessageRequested,
-            composeEmailRequested: $composeEmailRequested,
-            managedObjectContext: container.viewContext
+            composeEmailRequested: $composeEmailRequested
         )
         .environment(\.managedObjectContext, container.viewContext)
     }

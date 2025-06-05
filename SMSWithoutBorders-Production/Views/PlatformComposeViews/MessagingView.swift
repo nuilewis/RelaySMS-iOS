@@ -244,10 +244,11 @@ struct MessagingView: View {
                     filter: platformName,
                     fromAccount: $fromAccount,
                     dismissParent: $dissmissRequested,
-                    isSendingMessage: true
-                ) {
-                    requestToChooseAccount.toggle()
-                }
+                    isSendingMessage: true,
+                    callback: {
+                        requestToChooseAccount.toggle()
+                    }
+                )
                 .applyPresentationDetentsIfAvailable()
                 .interactiveDismissDisabled(true)
             }

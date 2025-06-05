@@ -11,6 +11,7 @@ import CountryPicker
 struct RecoverySheetView: View {
     @Environment(\.dismiss) var dismiss
     @Environment(\.managedObjectContext) var context
+    @EnvironmentObject var storedPlatformStore: StoredPlatformStore
 
     @State private var country: Country? = Country(isoCode: "CM")
     
@@ -67,7 +68,7 @@ struct RecoverySheetView: View {
                         try vault.refreshStoredTokens(
                             llt: llt,
                             context: context,
-                            storedTokenEntities: nil
+                            storedPlatformStore: storedPlatformStore
                         )
                     } catch {
                         print("Error refreshing tokens: \(error)")

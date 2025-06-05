@@ -61,6 +61,7 @@ struct CountryPicker: UIViewControllerRepresentable {
 struct SignupSheetView: View {
     @Environment(\.dismiss) var dismiss
     @Environment(\.managedObjectContext) var context
+    @EnvironmentObject var storedPlatformStore: StoredPlatformStore
 
     @State var country: Country? = Country(isoCode: "CM")
     #if DEBUG
@@ -117,7 +118,7 @@ struct SignupSheetView: View {
                         try vault.refreshStoredTokens(
                             llt: llt,
                             context: context,
-                            storedTokenEntities: nil
+                            storedPlatformStore: storedPlatformStore
                         )
                     } catch {
                         print("Error refreshing tokens: \(error)")

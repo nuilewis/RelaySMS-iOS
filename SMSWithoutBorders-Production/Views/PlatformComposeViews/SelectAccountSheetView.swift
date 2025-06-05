@@ -9,7 +9,7 @@ import CoreData
 import SwiftUI
 
 struct AccountListItem: View {
-    var platform: StoredPlatformsEntity? = nil
+    var platform: StoredPlatform? = nil
     private var platformIsTwitter: Bool
     private var accountName: String
     private var platformName: String
@@ -17,7 +17,8 @@ struct AccountListItem: View {
     private var missing: Bool = false
 
 
-    init(platform: StoredPlatformsEntity?,
+    init(
+        platform: StoredPlatform?,
          context: NSManagedObjectContext,
          platformsVault: Vault_V1_Token? = nil,
          missing: Bool = false
@@ -53,7 +54,7 @@ struct AccountListItem: View {
                         .foregroundStyle(.gray)
                 }
                 .padding()
-                if !missing {
+                if !(platform?.isMissing ?? true) {
                     Image(systemName: "checkmark.circle").foregroundStyle(
                         Color.green)
                 } else {
@@ -68,11 +69,12 @@ struct AccountListItem: View {
 struct SelectAccountSheetView: View {
     @Environment(\.dismiss) var dismiss
     @Environment(\.managedObjectContext) var context
+    @EnvironmentObject private var storedPlatformStore: StoredPlatformStore
+    @EnvironmentObject private var platformStore: PlatformStore
+//    @State private var publishablePlatforms: [StoredPlatform] = []
+//    @State private var allStoredPlatforms: [StoredPlatform] = []
+    @State private var publishableAccountsForPlatformName: [StoredPlatform] = []
 
-    @FetchRequest var storedPlatforms: FetchedResults<StoredPlatformsEntity>
-    @FetchRequest var platforms: FetchedResults<PlatformsEntity>
-    @State private var publishablePlatforms: [StoredPlatformsEntity] = []
-    @State private var allStoredPlatforms: [StoredPlatformsEntity] = []
 
     @Binding var fromAccount: String
     @Binding var dissmissParent: Bool
@@ -85,16 +87,10 @@ struct SelectAccountSheetView: View {
         filter: String,
         fromAccount: Binding<String>,
         dismissParent: Binding<Bool>,
-        callback: @escaping () -> Void = {},
-        isSendingMessage: Bool = false
+        isSendingMessage: Bool = false,
+        callback: @escaping () -> Void = {}
     ) {
-        _storedPlatforms = FetchRequest<StoredPlatformsEntity>(
-            sortDescriptors: [],
-            predicate: NSPredicate(format: "name == %@", filter))
-
-        _platforms = FetchRequest<PlatformsEntity>(
-            sortDescriptors: [],
-            predicate: NSPredicate(format: "name == %@", filter))
+        
         self.isSendingMessage = isSendingMessage
 
         self.platformName = filter
@@ -102,28 +98,16 @@ struct SelectAccountSheetView: View {
         _dissmissParent = dismissParent
 
         self.callback = callback
-    }
 
-    // Only show accounts which can publish
-    func getPublishablePlatorms(
-        storedPlatforms: FetchedResults<StoredPlatformsEntity>,
-        context: NSManagedObjectContext
-    ) -> [StoredPlatformsEntity] {
-        print("Searching for platforms which can publish")
-        var publishableAccounts: [StoredPlatformsEntity] = []
-        for account in storedPlatforms {
-            publishableAccounts.append(account)
-        }
-        return publishableAccounts
     }
 
     var body: some View {
         NavigationView {
             VStack(alignment: .leading) {
-                List(storedPlatforms, id: \.self) { platform in
+                List(publishableAccountsForPlatformName, id: \.self.id) { platform in
                     Button(action: {
                         if fromAccount != nil {
-                            fromAccount = platform.account!
+                            fromAccount = platform.account
                         }
                         callback()
                     }) {
@@ -144,15 +128,10 @@ struct SelectAccountSheetView: View {
                     }
                 }
             }
-//            .onAppear {
-//                publishablePlatforms = getPublishablePlatorms(
-//                        storedPlatforms: storedPlatforms, context: context)
-//                
-//                allStoredPlatforms = []
-//                for platform in storedPlatforms {
-//                    allStoredPlatforms.append(platform)
-//                }
-//            }
+            .onAppear {
+                // Filter the publishable platforms only for accounts for the same platform
+                self.publishableAccountsForPlatformName = storedPlatformStore.storedPlatforms.filter { $0.name == platformName }
+            }
         }
     }
 }

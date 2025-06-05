@@ -6,6 +6,7 @@
 //
 
 import SwiftUI
+import CoreData
 
 struct SettingsKeys {
     public static let SETTINGS_MESSAGE_WITH_PHONENUMBER: String =
@@ -28,14 +29,14 @@ struct SecuritySettingsView: View {
     @State private var deleteProcessing = false
 
     @State private var isShowingRevoke = false
-    @State var showIsLoggingOut: Bool = false
-    @State var showIsDeleting: Bool = false
-    @State var isPerformingAccountAction: Bool = false
+    @State private var showIsLoggingOut: Bool = false
+    @State private var showIsDeleting: Bool = false
+    @State private var isPerformingAccountAction: Bool = false
     
-    @State var showAlert: Bool = false
-    @State var activeAlertType: SecurityAlertType? = nil
-    @State var migrationSuccessful: Bool = false
-    @State var revokingSuccessful: Bool = false
+    @State private var showAlert: Bool = false
+    @State private var activeAlertType: SecurityAlertType? = nil
+    @State private var migrationSuccessful: Bool = false
+    @State private var revokingSuccessful: Bool = false
     
     @State private var isLoading = false
     @State private var loadingMessage: String?
@@ -47,10 +48,8 @@ struct SecuritySettingsView: View {
 
     @Environment(\.dismiss) var dismiss
     @Environment(\.managedObjectContext) var viewContext
-    @FetchRequest(sortDescriptors: []) var storedPlatforms:
-        FetchedResults<StoredPlatformsEntity>
-    @FetchRequest(sortDescriptors: []) var platforms:
-        FetchedResults<PlatformsEntity>
+    @EnvironmentObject private var storedPlatformStore: StoredPlatformStore
+    @EnvironmentObject private var platformStore: PlatformStore
     
     func migratePlatforms() {
         // Trigger a refresh
@@ -64,7 +63,7 @@ struct SecuritySettingsView: View {
             try vault.refreshStoredTokens(
                 llt: llt,
                 context: viewContext,
-                storedTokenEntities: storedPlatforms
+                storedPlatformStore: storedPlatformStore
             )
             
             viewContext.refreshAllObjects()
@@ -97,8 +96,8 @@ struct SecuritySettingsView: View {
                         if newValue {
                             migratePlatforms()
                         } else {
-                            let migrationAttemptedPreviously = storedPlatforms.contains {
-                                !$0.access_token!.isEmpty}
+                            let migrationAttemptedPreviously = storedPlatformStore.storedPlatforms.contains {
+                                !$0.accessToken!.isEmpty}
                             if migrationAttemptedPreviously {
                                 activeAlertType = .disableLocalTokenStorageConfirmation
                                 showAlert = true
@@ -237,9 +236,7 @@ struct SecuritySettingsView: View {
                     let llt = try Vault.getLongLivedToken()
                     try Vault.completeDeleteEntity(
                         context: viewContext,
-                        longLiveToken: llt,
-                        storedTokenEntities: storedPlatforms,
-                        platforms: platforms)
+                        longLiveToken: llt)
                     // Delete all stored tokens when logging out
 //                    StoredTokensEntityManager(context: viewContext).deleteAllStoredTokens()
                 } catch {
@@ -267,7 +264,11 @@ struct SecuritySettingsView_Preview: PreviewProvider {
     @State static var codeVerifier: String = ""
 
     static var previews: some View {
+        
         @State var isLoggedIn = true
-        SecuritySettingsView(isLoggedIn: $isLoggedIn)
+        let container = createInMemoryPersistentContainer()
+        populateMockData(container: container)
+        
+       return SecuritySettingsView(isLoggedIn: $isLoggedIn)
     }
 }

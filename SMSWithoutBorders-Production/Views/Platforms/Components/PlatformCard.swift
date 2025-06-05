@@ -5,15 +5,12 @@
 //  Created by Nui Lewis on 25/03/2025.
 //
 
+import CoreData
 import SwiftUI
 
 struct PlatformCard: View {
     @Environment(\.managedObjectContext) var context
-
-    @FetchRequest(sortDescriptors: [NSSortDescriptor(
-        keyPath: \StoredPlatformsEntity.name,
-        ascending: true)]
-    ) var storedPlatforms: FetchedResults<StoredPlatformsEntity>
+    @EnvironmentObject private var storedPlatformStore: StoredPlatformStore
 
     @State var sheetIsPresented: Bool = false
     @State var isEnabled: Bool = false
@@ -24,7 +21,6 @@ struct PlatformCard: View {
     @Binding var parentRefreshRequested: Bool
     @Binding var requestedPlatformName: String
 
-   // let platform: PlatformsEntity?
     let platform: Platform?
     let serviceType: Publisher.ServiceTypes
 
@@ -43,22 +39,23 @@ struct PlatformCard: View {
                         VStack {
                             if let imageData = platform?.imageData {
                                 Image(uiImage: UIImage(data: imageData)!)
-                                   .resizable()
-                                   .renderingMode(isEnabled ? .none : .template)
-                                   .foregroundColor(isEnabled ? .clear : .gray)
-                                   .scaledToFit()
-                                   .frame(width: 75, height: 75)
-                                   .padding()
+                                    .resizable()
+                                    .renderingMode(isEnabled ? .none : .template)
+                                    .foregroundColor(isEnabled ? .clear : .gray)
+                                    .scaledToFit()
+                                    .frame(width: 75, height: 75)
+                                    .padding()
                             } else {
                                 Image("Logo")
-                                   .resizable()
-                                   .renderingMode(isEnabled ? .none : .template)
-                                   .foregroundColor(isEnabled ? .clear : .gray)
-                                   .scaledToFit()
-                                   .frame(width: 75, height: 75)
-                                   .padding()
+                                    .resizable()
+                                    .renderingMode(
+                                        isEnabled ? .none : .template
+                                    )
+                                    .foregroundColor(isEnabled ? .clear : .gray)
+                                    .scaledToFit()
+                                    .frame(width: 75, height: 75)
+                                    .padding()
                             }
-                             
 
                             Text(platform != nil ? (platform!.name) : "")
                                 .font(.caption2)
@@ -72,22 +69,26 @@ struct PlatformCard: View {
                             description: getServiceTypeDescriptions(
                                 serviceType: serviceType
                             ),
-                            composeDescription: getServiceTypeComposeDescriptions(
-                                serviceType: serviceType
-                            ),
+                            composeDescription:
+                                getServiceTypeComposeDescriptions(
+                                    serviceType: serviceType
+                                ),
                             platform: platform,
                             isEnabled: $isEnabled,
-                            composeNewMessageRequested: $composeNewMessageRequested,
+                            composeNewMessageRequested:
+                                $composeNewMessageRequested,
                             platformRequestedType: $platformRequestType,
                             composeViewRequested: $composeViewRequested,
                             refreshParent: $parentRefreshRequested,
                             callback: callback
+
                         )
                         .applyPresentationDetentsIfAvailable(
-                            canLarge: platform?.protocolType == Publisher.ProtocolTypes.PNBA)
+                            canLarge: platform?.protocolType
+                                == Publisher.ProtocolTypes.PNBA)
                     }
                 }
-                if(isEnabled) {
+                if isEnabled {
                     Circle()
                         .fill(Color.green)
                         .frame(width: 12, height: 12)
@@ -100,8 +101,10 @@ struct PlatformCard: View {
         }
     }
 
-    func getServiceTypeDescriptions(serviceType: Publisher.ServiceTypes) -> String {
-        switch(serviceType) {
+    func getServiceTypeDescriptions(serviceType: Publisher.ServiceTypes)
+        -> String
+    {
+        switch serviceType {
         case .EMAIL:
             return Publisher.ServiceTypeDescriptions.EMAIL.localizedValue()
         case .MESSAGE:
@@ -113,23 +116,32 @@ struct PlatformCard: View {
         }
     }
 
-    func getServiceTypeComposeDescriptions(serviceType: Publisher.ServiceTypes) -> String {
-        switch(serviceType) {
+    func getServiceTypeComposeDescriptions(serviceType: Publisher.ServiceTypes)
+        -> String
+    {
+        switch serviceType {
         case .EMAIL:
-            return Publisher.ServiceComposeTypeDescriptions.EMAIL.localizedValue()
+            return Publisher.ServiceComposeTypeDescriptions.EMAIL
+                .localizedValue()
         case .MESSAGE:
-            return Publisher.ServiceComposeTypeDescriptions.MESSAGE.localizedValue()
+            return Publisher.ServiceComposeTypeDescriptions.MESSAGE
+                .localizedValue()
         case .TEXT:
-            return Publisher.ServiceComposeTypeDescriptions.TEXT.localizedValue()
+            return Publisher.ServiceComposeTypeDescriptions.TEXT
+                .localizedValue()
         case .BRIDGE:
-            return Publisher.ServiceComposeTypeDescriptions.BRIDGE.localizedValue()
+            return Publisher.ServiceComposeTypeDescriptions.BRIDGE
+                .localizedValue()
         }
     }
 
     func isStored(platform: Platform) -> Bool {
-        return storedPlatforms.contains(where: { $0.name == platform.name })
+        print("checking stored platforms and publishabe accounts: \(storedPlatformStore.storedPlatforms)")
+        print("checking stored platforms and publishable accounts count: \(storedPlatformStore.storedPlatforms.count)")
+        return storedPlatformStore.publishablePlatforms.contains(where: {
+            print("is enabled from platform card: \($0.name == platform.name) ")
+           return $0.name == platform.name
+        })
     }
 
-
 }
-

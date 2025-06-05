@@ -19,6 +19,7 @@ public func logoutAccount(context: NSManagedObjectContext) {
 
 struct SettingsView: View {
     @Binding var isLoggedIn: Bool
+    @Environment(\.managedObjectContext) private var context
     
     @AppStorage(SettingsKeys.SETTINGS_MESSAGE_WITH_PHONENUMBER)
     private var messageWithPhoneNumber = false

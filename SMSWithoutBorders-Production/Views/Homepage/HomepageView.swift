@@ -17,6 +17,7 @@ enum HomepageTabs {
 
 struct HomepageView: View {
     @Environment(\.managedObjectContext) var context
+    @EnvironmentObject private var storedPlatformStore: StoredPlatformStore
 
     @State var selectedTab: HomepageTabs = .recents
     @State var platformRequestType: PlatformsRequestedType = .available
@@ -27,19 +28,6 @@ struct HomepageView: View {
         [Vault_V1_Token] = []
     @State private var showMissingTokensSheet: Bool = false
     @State private var showMissingTokensAlert: Bool = false
-    @FetchRequest(sortDescriptors: [
-        NSSortDescriptor(
-            keyPath: \PlatformsEntity.name,
-            ascending: true)
-    ]
-    ) var platforms: FetchedResults<PlatformsEntity>
-
-    @FetchRequest(sortDescriptors: [
-        NSSortDescriptor(
-            keyPath: \StoredPlatformsEntity.name,
-            ascending: true)
-    ]
-    ) var storedPlatforms: FetchedResults<StoredPlatformsEntity>
 
     @State var composeNewMessageRequested: Bool = false
     @State var composeTextRequested: Bool = false
@@ -58,6 +46,7 @@ struct HomepageView: View {
     @State var requestedMessage: Messages?
 
     @Binding var isLoggedIn: Bool
+    
 
     var body: some View {
         NavigationView {
@@ -217,8 +206,7 @@ struct HomepageView: View {
                                 $composeNewMessageRequested,
                             composeTextRequested: $composeTextRequested,
                             composeMessageRequested: $composeMessageRequested,
-                            composeEmailRequested: $composeEmailRequested,
-                            managedObjectContext: context
+                            composeEmailRequested: $composeEmailRequested
                         )
                         .tabItem {
                             Image(systemName: "apps.iphone")
@@ -346,7 +334,7 @@ struct HomepageView: View {
             storedPlatformsWithMissingTokens = try vault.refreshStoredTokens(
                 llt: llt,
                 context: context,
-                storedTokenEntities: storedPlatforms
+                storedPlatformStore: storedPlatformStore
             )
             if !storedPlatformsWithMissingTokens.isEmpty {
                 print("Platforms with missing tokens found.")
