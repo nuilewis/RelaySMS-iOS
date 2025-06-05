@@ -374,23 +374,25 @@ struct Vault {
 
     public static func completeDeleteEntity(
         context: NSManagedObjectContext,
-        longLiveToken: String,
-        storedTokenEntities: FetchedResults<StoredPlatformsEntity>,
-        platforms: FetchedResults<PlatformsEntity>
+        longLiveToken: String
     ) throws {
         let vault = Vault()
+        let platformStore = PlatformStore(context: context)
+        let storedTokenStore = StoredPlatformStore(context: context)
+        platformStore.getPlatforms()
+        storedTokenStore.getStoredPlatforms()
 
         do {
             let publisher = Publisher()
-            for storedTokenEntity in storedTokenEntities {
-                print("[Vault] [+] Revoking \(storedTokenEntity.name!)")
+            for storedTokenEntity in storedTokenStore.storedPlatforms {
+                print("[Vault] [+] Revoking \(storedTokenEntity.name)")
                 try publisher.revokePlatform(
                     llt: longLiveToken,
-                    platform: storedTokenEntity.name!,
-                    account: storedTokenEntity.account!,
+                    platform: storedTokenEntity.name,
+                    account: storedTokenEntity.account,
                     protocolType: Publisher.getProtocolTypeForPlatform(
                         storedPlatform: storedTokenEntity,
-                        platforms: platforms
+                        platforms: platformStore.platforms
                     )
                 )
             }
@@ -477,70 +479,36 @@ struct Vault {
     func refreshStoredTokens(
         llt: String,
         context: NSManagedObjectContext,
-        storedTokenEntities: FetchedResults<StoredPlatformsEntity>?
+        storedPlatformStore: StoredPlatformStore
     ) throws -> [Vault_V1_Token] {
         print("[Vault] Refreshing stored platforms...")
         let vault = Vault()
         var missingTokens: [Vault_V1_Token] = []
         do {
-            let addedPlatforms = try vault.listStoredEntityToken(
+            let serverPlatformAccounts = try vault.listStoredEntityToken(
                 longLiveToken: llt, migrateToDevice: shouldStorePlatformsOnDevice)
+            // Get the stored paltform store
+            storedPlatformStore.getStoredPlatforms()
             
-            var platformsToSave: [Vault_V1_Token] = []
-            print(storedTokenEntities)
-
-            for platform in addedPlatforms.storedTokens {
+            //var platformsToSave: [Vault_V1_Token] = []
+            for platform in serverPlatformAccounts.storedTokens {
                 let platformId = Vault.deriveUniqueKey(
                     platformName: platform.platform,
                     accountIdentifier: platform.accountIdentifier
                 )
 
-                let accessToken = platform.accountTokens["access_token"] ?? ""
-                let refreshToken = platform.accountTokens["refresh_token"] ?? ""
-                
-                let isStoredOnDevice = platform.isStoredOnDevice
-                if isStoredOnDevice &&
-                    accessToken.isEmpty &&
-                    storedTokenEntities != nil &&
-                    !storedTokenEntities!.contains(where: { $0.id == platformId }){
-                    missingTokens.append(platform)
-                }
-                else {
-                    if storedTokenEntities == nil || !storedTokenEntities!.contains(where: { $0.id == platformId }){
-                        platformsToSave.append(platform)
-                    }
-                }
+                print("Vault. is platform \(platform.accountIdentifier) stored on device: \(platform.isStoredOnDevice)")
+                let platformAccountToStore: StoredPlatform = StoredPlatform(
+                                    id: platformId,
+                                    name: platform.platform,
+                                    account: platform.accountIdentifier,
+                                    isStoredOnDevice: platform.isStoredOnDevice,
+                                    accessToken: platform.accountTokens["access_token"] ?? "",
+                                    refreshToken: platform.accountTokens["refresh_token"] ?? ""
+                                )
+                storedPlatformStore.putStoredPlatform(platformAccountToStore)
             }
             
-            
-            if !platformsToSave.isEmpty {
-                try Vault.clear(context: context)
-            }
-//            context.reset()
-            
-            print("[Vault] [+] platforms to save: ", platformsToSave)
-            for platform in platformsToSave {
-                let platformId = Vault.deriveUniqueKey(
-                    platformName: platform.platform,
-                    accountIdentifier: platform.accountIdentifier
-                )
-                let storedPlatformEntity = StoredPlatformsEntity(context: context)
-                storedPlatformEntity.id = platformId
-                storedPlatformEntity.name = platform.platform
-                storedPlatformEntity.account = platform.accountIdentifier
-                storedPlatformEntity.access_token = platform.accountTokens["access_token"] ?? ""
-                storedPlatformEntity.refresh_token = platform.accountTokens["refresh_token"] ?? ""
-            }
-
-            DispatchQueue.main.async {
-                do {
-                    if context.hasChanges {
-                        try context.save()
-                    }
-                } catch {
-                    print("[Vault] Failed to save context after refreshing entities: \(error)")
-                }
-            }
         } catch Exceptions.unauthenticatedLLT(let status) {
             print("[Vault] Should delete invalid llt: \(String(describing: status.message))")
             try Vault.resetKeystore(context: context)
@@ -551,6 +519,82 @@ struct Vault {
         }
         return missingTokens
     }
+    
+//    func refreshStoredTokens(
+//        llt: String,
+//        context: NSManagedObjectContext,
+//        storedPlatformStore: StoredPlatformStore
+//    ) throws -> [Vault_V1_Token] {
+//        print("[Vault] Refreshing stored platforms...")
+//        let vault = Vault()
+//        var missingTokens: [Vault_V1_Token] = []
+//        do {
+//            let addedPlatforms = try vault.listStoredEntityToken(
+//                longLiveToken: llt, migrateToDevice: shouldStorePlatformsOnDevice)
+//        
+//            // Get the stored paltform store
+//            storedPlatformStore.getStoredPlatforms()
+//            
+//            var platformsToSave: [Vault_V1_Token] = []
+//            //print(storedTokenEntities)
+//
+//            for platform in addedPlatforms.storedTokens {
+//                let platformId = Vault.deriveUniqueKey(
+//                    platformName: platform.platform,
+//                    accountIdentifier: platform.accountIdentifier
+//                )
+//
+//                let accessToken = platform.accountTokens["access_token"] ?? ""
+//                let refreshToken = platform.accountTokens["refresh_token"] ?? ""
+//                
+//                let isStoredOnDevice = platform.isStoredOnDevice
+//                if isStoredOnDevice &&
+//                    accessToken.isEmpty &&
+//                    !storedPlatformStore.storedPlatforms.isEmpty &&
+//                    !storedPlatformStore.storedPlatforms.contains(where: { $0.id == platformId }){
+//                    missingTokens.append(platform)
+//                }
+//                else {
+//                    platformsToSave.append(platform)
+////                    if storedPlatformStore.storedPlatforms.isEmpty || !storedPlatformStore.storedPlatforms.contains(where: { $0.id == platformId }){
+////                        platformsToSave.append(platform)
+////                    }
+//                }
+//            }
+//            
+//            
+//            if !platformsToSave.isEmpty {
+//                try Vault.clear(context: context)
+//            }
+//    
+//            print("[Vault] [+] platforms to save: ", platformsToSave)
+//            for platform in platformsToSave {
+//                let platformId = Vault.deriveUniqueKey(
+//                    platformName: platform.platform,
+//                    accountIdentifier: platform.accountIdentifier
+//                )
+//                
+//                var platformAccountToStore: StoredPlatform = StoredPlatform(
+//                    id: platformId,
+//                    name: platform.platform,
+//                    account: platform.accountIdentifier,
+//                    accessToken: platform.accountTokens["access_token"] ?? "",
+//                    refreshToken: platform.accountTokens["refresh_token"] ?? ""
+//                ) // TODO: Consider saving the is_stored_on_device
+//                
+//                storedPlatformStore.putStoredPlatform(platformAccountToStore)
+//
+//          }
+//        } catch Exceptions.unauthenticatedLLT(let status) {
+//            print("[Vault] Should delete invalid llt: \(String(describing: status.message))")
+//            try Vault.resetKeystore(context: context)
+//            try DataController.resetDatabase(context: context)
+//        } catch {
+//            print("[Vault] Error fetching stored tokens: \(error)")
+//            throw error
+//        }
+//        return missingTokens
+//    }
     
 
     static func clear(context: NSManagedObjectContext) throws {
