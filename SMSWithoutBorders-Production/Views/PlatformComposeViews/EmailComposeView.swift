@@ -264,10 +264,7 @@ struct EmailComposeView: View {
             // Get the stored platform and use the tokens if the platform tokens exist
             let storedPlatform = storedPlatformStore.storedPlatforms.first {
                 $0.account == fromAccount
-            } // Gets the speciic account that matches the currently selected fromAccount
-//            let storedPlatformEntity = storedPlatforms.first {
-//                $0.account == fromAccount
-//            }
+            } // Gets the specific account that matches the currently selected fromAccount
             
             return try messageComposer.emailComposerV1(
                 platform_letter: shortcode,

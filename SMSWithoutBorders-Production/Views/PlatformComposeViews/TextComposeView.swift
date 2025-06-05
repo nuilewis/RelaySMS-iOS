@@ -126,7 +126,7 @@ struct TextComposeView: View {
         .toolbar(content: {
             ToolbarItem(placement: .navigationBarTrailing) {
                 Button("Post") {
-                    let platform = platformStore.platforms.first!
+                    let platform = platformStore.platforms.first(where: { $0.name == platformName })!
                     isPosting = true
                     DispatchQueue.background(background: {
                         do {

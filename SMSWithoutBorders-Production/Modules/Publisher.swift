@@ -292,6 +292,7 @@ class Publisher {
         context: NSManagedObjectContext
     ) {
         print("[Publisher] Storing Platform Icon: \(platform.name)")
+        print("[Publisher] Storing Platform shortcode: \(platform.shortcode)")
 
         let task = URLSession.shared.dataTask(with: url) { data, response, error in
             guard let data = data, error == nil else {
