@@ -136,8 +136,6 @@ struct PlatformCard: View {
     }
 
     func isStored(platform: Platform) -> Bool {
-        print("checking stored platforms and publishabe accounts: \(storedPlatformStore.storedPlatforms)")
-        print("checking stored platforms and publishable accounts count: \(storedPlatformStore.storedPlatforms.count)")
         return storedPlatformStore.publishablePlatforms.contains(where: {
             print("is enabled from platform card: \($0.name == platform.name) ")
            return $0.name == platform.name
