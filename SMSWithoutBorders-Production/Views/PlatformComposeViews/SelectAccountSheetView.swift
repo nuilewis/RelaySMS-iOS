@@ -20,7 +20,7 @@ struct AccountListItem: View {
     init(platform: StoredPlatformsEntity?,
          context: NSManagedObjectContext,
          platformsVault: Vault_V1_Token? = nil,
-         missing: Bool = false,
+         missing: Bool = false
     ) {
         if platformsVault != nil {
             self.accountName = platformsVault?.accountIdentifier ?? "Unknown account"
@@ -109,18 +109,21 @@ struct SelectAccountSheetView: View {
         storedPlatforms: FetchedResults<StoredPlatformsEntity>,
         context: NSManagedObjectContext
     ) -> [StoredPlatformsEntity] {
-        print("Searching for platforms which can publish")
+        print("[SelectAccountSheetView] Searching for platforms which can publish")
         var publishableAccounts: [StoredPlatformsEntity] = []
         for account in storedPlatforms {
-            publishableAccounts.append(account)
+            if !account.isMissing{
+                publishableAccounts.append(account)
+            }
         }
         return publishableAccounts
     }
+    
 
     var body: some View {
         NavigationView {
             VStack(alignment: .leading) {
-                List(storedPlatforms, id: \.self) { platform in
+                List(publishablePlatforms, id: \.self) { platform in
                     Button(action: {
                         if fromAccount != nil {
                             fromAccount = platform.account!
@@ -144,15 +147,15 @@ struct SelectAccountSheetView: View {
                     }
                 }
             }
-//            .onAppear {
-//                publishablePlatforms = getPublishablePlatorms(
-//                        storedPlatforms: storedPlatforms, context: context)
-//                
-//                allStoredPlatforms = []
-//                for platform in storedPlatforms {
-//                    allStoredPlatforms.append(platform)
-//                }
-//            }
+            .onAppear {
+                allStoredPlatforms = []
+                for platform in storedPlatforms {
+                    allStoredPlatforms.append(platform)
+                }
+                
+                publishablePlatforms = getPublishablePlatorms(
+                        storedPlatforms: storedPlatforms, context: context)
+            }
         }
     }
 }
