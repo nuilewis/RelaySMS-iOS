@@ -25,6 +25,8 @@ struct PlatformsView: View {
         keyPath: \StoredPlatformsEntity.name,
         ascending: true)]
     ) var storedPlatforms: FetchedResults<StoredPlatformsEntity>
+    
+    @State private var publishablePlatforms: [StoredPlatformsEntity] = []
 
     @State private var id = UUID()
     @State private var refreshRequested = false
@@ -71,38 +73,23 @@ struct PlatformsView: View {
                             .padding(.bottom, 10)
                     }
 
-                    if platforms.isEmpty {
-                        Text("No online platforms saved yet...")
+                   if platforms.isEmpty {
+                       Text("No online platforms saved yet...")
+                       Button("Load Platforms") {
+                           Publisher.refreshPlatforms(context: context)
+                       }.buttonStyle(.relayButton(variant: .text))
+                       
+          
                     } else {
                         LazyVGrid(columns: columns, alignment: .leading, spacing: 20) {
                             if requestType == .compose {
                                 ForEach(filterForStoredPlatforms(), id: \.name) { item in
-                                    PlatformCard(
-                                        composeNewMessageRequested: $composeNewMessageRequested,
-                                        platformRequestType: $requestType,
-                                        composeViewRequested: getBindingComposeVariable(
-                                            type: item.service_type ?? "Unknown"),
-                                        parentRefreshRequested: $refreshRequested,
-                                        requestedPlatformName: $requestedPlatformName,
-                                        platform: item,
-                                        serviceType: getServiceType(type: item.service_type ?? "Unknown"),
-                                        callback: callback
-                                    )
+                                    createPlatformCard(for: item)
                                 }
                             }
                             else {
                                 ForEach(platforms, id: \.name) { item in
-                                    PlatformCard(
-                                        composeNewMessageRequested: $composeNewMessageRequested,
-                                        platformRequestType: $requestType,
-                                        composeViewRequested: getBindingComposeVariable(
-                                            type: item.service_type ?? "Unkown"),
-                                        parentRefreshRequested: $refreshRequested,
-                                        requestedPlatformName: $requestedPlatformName,
-                                        platform: item,
-                                        serviceType: getServiceType(type: item.service_type ?? "Unkown"),
-                                        callback: callback
-                                    )
+                                    createPlatformCard(for: item)
                                 }
                             }
                         }
@@ -136,6 +123,8 @@ struct PlatformsView: View {
             if platforms.count == 0 {
                 print("[PlatformsView - onAppear]: No platforms found, refreshing....")
                 Publisher.refreshPlatforms(context: context)
+            } else {
+                getPublishablePlatforms()
             }
         }
         .task {
@@ -147,12 +136,41 @@ struct PlatformsView: View {
         var _storedPlatforms: Set<PlatformsEntity> = []
 
         for platform in platforms {
-            if storedPlatforms.contains(where: { $0.name == platform.name }) {
+            if publishablePlatforms.contains(where: { $0.name == platform.name }) {
                 _storedPlatforms.insert(platform)
             }
         }
         return Array(_storedPlatforms)
     }
+    
+    private func createPlatformCard(for item: PlatformsEntity) -> some View {
+        let serviceType = item.service_type ?? ""
+         let composeBinding = getBindingComposeVariable(type: serviceType)
+         let platformServiceType = getServiceType(type: serviceType)
+         
+         // Check if paltform is publishable
+         var isEnabled: Bool = false
+    
+         let storedPlatform = publishablePlatforms.first {
+             $0.name == item.name
+         }
+         if let account = storedPlatform {
+             isEnabled = true
+         }
+        print("[create platform card], is platform enabled: \(isEnabled) for \(storedPlatform)")
+
+         return PlatformCard(
+             isEnabled: isEnabled,
+             composeNewMessageRequested: $composeNewMessageRequested,
+             platformRequestType: $requestType,
+             composeViewRequested: composeBinding,
+             parentRefreshRequested: $refreshRequested,
+             requestedPlatformName: $requestedPlatformName,
+             platform: item,
+             serviceType: platformServiceType,
+             callback: callback
+         )
+     }
 
     func getBindingComposeVariable(type: String) -> Binding<Bool> {
         @State var defaultNil : Bool? = false
@@ -165,6 +183,15 @@ struct PlatformsView: View {
             return $composeTextRequested
         default:
             return $composeEmailRequested
+        }
+    }
+    
+    func getPublishablePlatforms(){
+        publishablePlatforms.removeAll()
+        for account in storedPlatforms {
+            if !account.isMissing {
+                publishablePlatforms.append(account)
+            }
         }
     }
 

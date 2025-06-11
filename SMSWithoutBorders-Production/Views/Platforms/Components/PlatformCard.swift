@@ -14,6 +14,7 @@ struct PlatformCard: View {
         keyPath: \StoredPlatformsEntity.name,
         ascending: true)]
     ) var storedPlatforms: FetchedResults<StoredPlatformsEntity>
+    @State private var publishablePlatforms: [StoredPlatformsEntity] = []
 
     @State var sheetIsPresented: Bool = false
     @State var isEnabled: Bool = false
@@ -86,6 +87,7 @@ struct PlatformCard: View {
             }
         }
         .onAppear {
+            getPublishablePlatforms()
             isEnabled = platform != nil ? isStored(platformEntity: platform!) : true
         }
     }
@@ -115,11 +117,22 @@ struct PlatformCard: View {
             return Publisher.ServiceComposeTypeDescriptions.BRIDGE.localizedValue()
         }
     }
-
-    func isStored(platformEntity: PlatformsEntity) -> Bool {
-        return storedPlatforms.contains(where: { $0.name == platformEntity.name })
+    
+    func getPublishablePlatforms(){
+        publishablePlatforms.removeAll()
+        for account in storedPlatforms {
+            if !account.isMissing {
+                publishablePlatforms.append(account)
+            }
+        }
     }
-
+    
+    func isStored(platformEntity: PlatformsEntity) -> Bool {
+        return publishablePlatforms.contains(where: {
+            print("is enabled from platform card: \($0.name == platform?.name) ")
+            return $0.name == platform?.name
+        })
+    }
 
 }
 
