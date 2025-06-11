@@ -153,10 +153,7 @@ struct DecryptMessageView: View {
         .navigationTitle("Decrypt Message")
     }
 
-    //Might move
-
     func retirieveTwitterTokens(reply: String) {
-
         alertTitle = "Error"
         alertMessage = "Failed to process request"
 
@@ -166,14 +163,21 @@ struct DecryptMessageView: View {
             print("Successfully decoded the twitter reply: \(decodedString)")
 
             do {
-                //Extract the refresh tokens
-                let refreshToken = decodedString
-                let platformName = "twitter"
+                // Extract the refresh tokens
+                // Format for the returned string is like so
+                // accountIdentifier:refreshToken
+                let platformName: String  = "twitter"
+                let refreshToken: String = String(decodedString.split(separator: ":")[1])
+                let accountIdentifier: String = String(decodedString.split(separator: ":")[0])
 
                 let fetchRequest: NSFetchRequest<StoredPlatformsEntity> = StoredPlatformsEntity.fetchRequest()
                 fetchRequest.predicate = NSPredicate(format: "name == %@", platformName)
 
-                let existingEntity = try context.fetch(fetchRequest).first
+                let accountsForPlatform: [StoredPlatformsEntity] = try context.fetch(fetchRequest)
+                
+                let existingEntity = accountsForPlatform.first {$0.account ?? "" == accountIdentifier}
+                
+                print("Existing Twitter account before refresh token update: \(existingEntity)")
 
                 if let entityToUpdate = existingEntity {
                     do {
@@ -189,17 +193,18 @@ struct DecryptMessageView: View {
                         print("Successfully updated the Twitter refresh token")
                         alertTitle = "Success"
                         alertMessage = "Successfully updated the Twitter refresh token"
+                        textBody = ""
+                        dismiss()
+                        
 
                     } catch {
                         alertTitle = "Failed"
                         alertMessage = "Unable to update the refresh token for Twitter"
                         print("Unable to update the refresh token for twitter: \(error)")
-
                     }
                 } else {
                     alertTitle = "Failed"
                     alertMessage = "Twitter platform not found, please add it first"
-
                 }
             } catch {
                 alertTitle = "Error"
@@ -211,7 +216,6 @@ struct DecryptMessageView: View {
             alertTitle = "Error"
             alertMessage = "Failed to decode the message"
         }
-
         showAlert = true
     }
 }

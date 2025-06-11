@@ -543,9 +543,7 @@ struct Vault {
                 let platformId = Vault.deriveUniqueKey(
                     platformName: platform.platform,
                     accountIdentifier: platform.accountIdentifier
-                )
-                print("Vault. is platform \(platform.accountIdentifier) stored on device: \(platform.isStoredOnDevice)")
-                
+                )                
                 do {
                     try Vault.saveStoredPlatform(
                          context: context,
