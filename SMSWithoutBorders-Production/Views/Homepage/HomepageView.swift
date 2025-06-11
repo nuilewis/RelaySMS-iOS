@@ -23,8 +23,14 @@ struct HomepageView: View {
 
     @AppStorage(SettingsKeys.SETTINGS_DO_NOT_NOTIFY_OF_MISSING_TOKENS)
     private var doNotNotifyOfMissingTokens: Bool = false
-    @State private var storedPlatformsWithMissingTokens:
-        [Vault_V1_Token] = []
+    
+    @AppStorage(SettingsKeys.SETTINGS_NOTIFY_OF_NEW_FEATURE)
+    var notifyOfNewFeature: Bool = true
+    @State private var showNewFeatureAlert: Bool = false
+    var newFeatureAlertTitle: String = "New Feature Alert!"
+    var newFeatureAlertMessage: String = "You can now request for tokens of your OAuth2.0 accounts to be stored on your device by going to Settings > Security"
+
+    @State private var storedPlatformsWithMissingTokens: [Vault_V1_Token] = []
     @State private var showMissingTokensSheet: Bool = false
     @State private var showMissingTokensAlert: Bool = false
     @FetchRequest(sortDescriptors: [
@@ -40,6 +46,8 @@ struct HomepageView: View {
             ascending: true)
     ]
     ) var storedPlatforms: FetchedResults<StoredPlatformsEntity>
+    
+    @State var missingPlatforms: [StoredPlatformsEntity] = []
 
     @State var composeNewMessageRequested: Bool = false
     @State var composeTextRequested: Bool = false
@@ -277,18 +285,30 @@ struct HomepageView: View {
 
             }
             .task {
-                DispatchQueue.background(background: {
-                    searchForPlatformsWithMissingTokens()
-                }, completion: {
-                    
-                })
-            }
+                if notifyOfNewFeature {
+                    showNewFeatureAlert = true
+                }
+                
+                DispatchQueue.background(
+                    background: {
+                        searchForPlatformsWithMissingTokens()
+                    },
+                    completion: {
+
+                    })
+            } .alert(
+                newFeatureAlertTitle, isPresented: $showNewFeatureAlert,
+                actions: {
+                    Button("Got it",
+                        action: {
+                            notifyOfNewFeature = false
+                        })
+                }, message: { Text(newFeatureAlertMessage) }
+            )
             .alert(isPresented: $showMissingTokensAlert) {
                 Alert(
                     title: Text("Missing Tokens"),
-                    message: Text(
-                        "Some for the following platforms could not be found, please revoke these accounts and add them again"
-                    ),
+                    message: Text("Some for the following platforms could not be found, please revoke these accounts and add them again"),
                     primaryButton: .default(
                         Text("OK"),
                         action: {
@@ -313,13 +333,12 @@ struct HomepageView: View {
                         .padding(16)
                         .padding(.top, 16)
                     List(
-                        storedPlatformsWithMissingTokens.removeDuplicates,
+                        missingPlatforms.removeDuplicates,
                         id: \.self
                     ) { platform in
                         AccountListItem(
-                            platform: nil,
+                            platform: platform,
                             context: context,
-                            platformsVault: platform,
                             missing: true
                         )
                     }.listStyle(.plain)
@@ -338,25 +357,22 @@ struct HomepageView: View {
     }
 
     func searchForPlatformsWithMissingTokens() {
-        print("Searching for platforms with missing tokens...")
-        let vault = Vault()
-        do {
-            let llt = try Vault.getLongLivedToken()
-            storedPlatformsWithMissingTokens = try vault.refreshStoredTokens(
-                llt: llt,
-                context: context,
-                storedTokenEntities: storedPlatforms
-            )
-            if !storedPlatformsWithMissingTokens.isEmpty {
-                print("Platforms with missing tokens found.")
-                if !doNotNotifyOfMissingTokens {
-                    showMissingTokensAlert = true
-                }
-            } else {
-                print("All stored platforms have tokens.")
+        print("[Missing Tokens] Searching for platforms with missing tokens...")
+        missingPlatforms.removeAll()
+        
+        for account in storedPlatforms {
+            if account.isMissing {
+                missingPlatforms.append(account)
             }
-        } catch {
-            print(error)
+        }
+        
+        if missingPlatforms.isEmpty {
+            print("[Missing Tokens] All stored platforms have tokens.")
+        } else {
+            print("[Missing Tokens] Platforms with missing tokens found.")
+            if !doNotNotifyOfMissingTokens {
+                showMissingTokensAlert = true
+            }
         }
     }
 }

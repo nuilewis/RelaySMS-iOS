@@ -19,18 +19,11 @@ struct AccountListItem: View {
 
     init(platform: StoredPlatformsEntity?,
          context: NSManagedObjectContext,
-         platformsVault: Vault_V1_Token? = nil,
          missing: Bool = false
     ) {
-        if platformsVault != nil {
-            self.accountName = platformsVault?.accountIdentifier ?? "Unknown account"
-            self.platformName = platformsVault?.platform ?? ""
-        }
-        else {
             self.platform = platform
             self.accountName = platform?.account ?? "Unknown account"
             self.platformName = platform?.name ?? "Unknown platform"
-        }
         self.platformIsTwitter = platformName == "twitter"
         self.context = context
         self.missing = missing

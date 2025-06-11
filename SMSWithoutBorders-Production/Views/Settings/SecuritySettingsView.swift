@@ -13,6 +13,8 @@ struct SettingsKeys {
     public static let SETTINGS_STORE_PLATFORMS_ON_DEVICE: String =
         "SETTINGS_STORE_PLATFORMS_ON_DEVICE"
     public static let SETTINGS_DO_NOT_NOTIFY_OF_MISSING_TOKENS: String = "SETTINGS_DO_NOT_NOTIFY_OF_MISSING_TOKENS"
+    
+    public static let SETTINGS_NOTIFY_OF_NEW_FEATURE: String = "SETTINGS_NOTIFY_OF_NEW_FEATURE"
 }
 
 enum SecurityAlertType {
