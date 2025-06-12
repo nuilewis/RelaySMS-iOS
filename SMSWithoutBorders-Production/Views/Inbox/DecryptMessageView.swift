@@ -157,11 +157,12 @@ struct DecryptMessageView: View {
         alertTitle = "Error"
         alertMessage = "Failed to process request"
 
-        let decodedReply = String(
-            data: Data(base64Encoded: reply) ?? Data(), encoding: .utf8)
-        if let decodedString = decodedReply, !decodedString.isEmpty {
-            print("Successfully decoded the twitter reply: \(decodedString)")
 
+            
+        let extractedBase64String = extractEncryptedText(from: reply);
+
+        if let base64String = extractedBase64String, !base64String.isEmpty {
+            let decodedString = decodeBase64String(from: base64String)
             do {
                 // Extract the refresh tokens
                 // Format for the returned string is like so
@@ -192,7 +193,7 @@ struct DecryptMessageView: View {
                         )
                         print("Successfully updated the Twitter refresh token")
                         alertTitle = "Success"
-                        alertMessage = "Successfully updated the Twitter refresh token"
+                        alertMessage = "Successfully updated the Twitter refresh token for @\(accountIdentifier)"
                         textBody = ""
                         dismiss()
                         
@@ -204,14 +205,13 @@ struct DecryptMessageView: View {
                     }
                 } else {
                     alertTitle = "Failed"
-                    alertMessage = "Twitter platform not found, please add it first"
+                    alertMessage = "Twitter account for identifier \(accountIdentifier) not found, please add it first"
                 }
             } catch {
                 alertTitle = "Error"
                 alertMessage = "Failed to fetch Twitter platform: \(error.localizedDescription)"
                 print(error)
             }
-
         } else {
             alertTitle = "Error"
             alertMessage = "Failed to decode the message"
