@@ -27,6 +27,7 @@ struct PlatformDetailsBottomsheet: View {
     @State var errorMessage: String = ""
 
     var platform: PlatformsEntity?
+    
     @FetchRequest(sortDescriptors: [NSSortDescriptor(
         keyPath: \StoredPlatformsEntity.name,
         ascending: true)]

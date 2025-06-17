@@ -61,9 +61,11 @@ struct AccountListItem: View {
 struct SelectAccountSheetView: View {
     @Environment(\.dismiss) var dismiss
     @Environment(\.managedObjectContext) var context
+    @FetchRequest(sortDescriptors: []) private var platforms: FetchedResults<PlatformsEntity>
+    @FetchRequest(sortDescriptors: []) private var storedPlatforms: FetchedResults<StoredPlatformsEntity>
 
-    @FetchRequest var storedPlatforms: FetchedResults<StoredPlatformsEntity>
-    @FetchRequest var platforms: FetchedResults<PlatformsEntity>
+    
+    
     @State private var publishablePlatforms: [StoredPlatformsEntity] = []
     @State private var allStoredPlatforms: [StoredPlatformsEntity] = []
 
@@ -81,13 +83,6 @@ struct SelectAccountSheetView: View {
         callback: @escaping () -> Void = {},
         isSendingMessage: Bool = false
     ) {
-        _storedPlatforms = FetchRequest<StoredPlatformsEntity>(
-            sortDescriptors: [],
-            predicate: NSPredicate(format: "name == %@", filter))
-
-        _platforms = FetchRequest<PlatformsEntity>(
-            sortDescriptors: [],
-            predicate: NSPredicate(format: "name == %@", filter))
         self.isSendingMessage = isSendingMessage
 
         self.platformName = filter
@@ -104,7 +99,7 @@ struct SelectAccountSheetView: View {
     ) -> [StoredPlatformsEntity] {
         print("[SelectAccountSheetView] Searching for platforms which can publish")
         var publishableAccounts: [StoredPlatformsEntity] = []
-        for account in storedPlatforms {
+        for account in allStoredPlatforms {
             if !account.isMissing{
                 publishableAccounts.append(account)
             }
@@ -116,7 +111,7 @@ struct SelectAccountSheetView: View {
     var body: some View {
         NavigationView {
             VStack(alignment: .leading) {
-                List(publishablePlatforms, id: \.self) { platform in
+                List(isSendingMessage ? publishablePlatforms : allStoredPlatforms, id: \.self) { platform in
                     Button(action: {
                         if fromAccount != nil {
                             fromAccount = platform.account!
@@ -142,12 +137,15 @@ struct SelectAccountSheetView: View {
             }
             .onAppear {
                 allStoredPlatforms = []
-                for platform in storedPlatforms {
-                    allStoredPlatforms.append(platform)
-                }
-                
+                allStoredPlatforms =  storedPlatforms.filter { $0.name == platformName}
                 publishablePlatforms = getPublishablePlatorms(
-                        storedPlatforms: storedPlatforms, context: context)
+                            storedPlatforms: storedPlatforms, context: context)
+                if isSendingMessage {
+                    print("[SelectAccountSheetView] Is sending message, will only show publishable platforms")
+                } else {
+                    print("[SelectAccountSheetView] Is revoking, will show all platforms for that account")
+
+                }
             }
         }
     }

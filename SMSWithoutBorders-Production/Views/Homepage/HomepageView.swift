@@ -25,7 +25,8 @@ struct HomepageView: View {
     private var doNotNotifyOfMissingTokens: Bool = false
     
     @AppStorage(SettingsKeys.SETTINGS_NOTIFY_OF_NEW_FEATURE)
-    var notifyOfNewFeature: Bool = true
+    private var notifyOfNewFeature: Bool = true
+    
     @State private var showNewFeatureAlert: Bool = false
     var newFeatureAlertTitle: String = "New Feature Alert!"
     var newFeatureAlertMessage: String = "You can now request for tokens of your OAuth2.0 accounts to be stored on your device by going to Settings > Security"

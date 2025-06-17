@@ -99,8 +99,14 @@ struct SecuritySettingsView: View {
                         if newValue {
                             migratePlatforms()
                         } else {
-                            let migrationAttemptedPreviously = storedPlatforms.contains {
-                                !$0.access_token!.isEmpty}
+                            var migrationAttemptedPreviously = false
+                            for account in storedPlatforms {
+                                if account.is_stored_on_device {
+                                    migrationAttemptedPreviously = true
+                                    break
+                                }
+                            }
+                      
                             if migrationAttemptedPreviously {
                                 activeAlertType = .disableLocalTokenStorageConfirmation
                                 showAlert = true
@@ -221,8 +227,6 @@ struct SecuritySettingsView: View {
 
     func logout() {
         logoutAccount(context: viewContext)
-        // Delete all stored tokens when logging out
-//        StoredTokensEntityManager(context: viewContext).deleteAllStoredTokens()
         do {
             isLoggedIn = try !Vault.getLongLivedToken().isEmpty
         } catch {
@@ -242,8 +246,6 @@ struct SecuritySettingsView: View {
                         longLiveToken: llt,
                         storedTokenEntities: storedPlatforms,
                         platforms: platforms)
-                    // Delete all stored tokens when logging out
-//                    StoredTokensEntityManager(context: viewContext).deleteAllStoredTokens()
                 } catch {
                     print("Error deleting: \(error)")
                 }
