@@ -517,8 +517,15 @@ struct Vault {
                 entityToSave.refresh_token = refreshToken
             }
 
-            try context.save()
-            print("Successfully saved stored platform: \(name) (ID: \(id))")
+            DispatchQueue.main.async {
+                do {
+                    try context.save()
+                    print("Successfully saved stored platform: \(name) (ID: \(id))")
+                } catch {
+                    print(error)
+                }
+            }
+        
 
         } catch {
             print("Error saving stored platform (ID: \(id)): \(error)")
@@ -557,14 +564,6 @@ struct Vault {
                 } catch {
                     print("[Vault] Failed to store platform \(platform.accountIdentifier): \(error)")
                 }
-                
-                // Have this missingTokens thing still
-//                if platform.isStoredOnDevice &&
-//                    accessToken.isEmpty &&
-//                    storedTokenEntities != nil &&
-//                    !storedTokenEntities!.contains(where: { $0.id == platformId }){
-//                    missingTokens.append(platform)
-//                }
             }
 
         } catch Exceptions.unauthenticatedLLT(let status) {
@@ -580,91 +579,6 @@ struct Vault {
     
 
     
-//    func refreshStoredTokens(
-//        llt: String,
-//        context: NSManagedObjectContext,
-//        storedTokenEntities: FetchedResults<StoredPlatformsEntity>?
-//    ) throws -> [Vault_V1_Token] {
-//        print("[Vault] Refreshing stored platforms...")
-//        let vault = Vault()
-//        var missingTokens: [Vault_V1_Token] = []
-//        do {
-//            let addedPlatforms = try vault.listStoredEntityToken(
-//                longLiveToken: llt, migrateToDevice: shouldStorePlatformsOnDevice)
-//            
-//            var platformsToSave: [Vault_V1_Token] = []
-//            print(storedTokenEntities)
-//
-//            for platform in addedPlatforms.storedTokens {
-//                let platformId = Vault.deriveUniqueKey(
-//                    platformName: platform.platform,
-//                    accountIdentifier: platform.accountIdentifier
-//                )
-//
-//                let accessToken = platform.accountTokens["access_token"] ?? ""
-//                let refreshToken = platform.accountTokens["refresh_token"] ?? ""
-//                
-//                let isStoredOnDevice = platform.isStoredOnDevice
-//                if isStoredOnDevice &&
-//                    accessToken.isEmpty &&
-//                    storedTokenEntities != nil &&
-//                    !storedTokenEntities!.contains(where: { $0.id == platformId }){
-//                    missingTokens.append(platform)
-//                }
-//                else {
-//                    if storedTokenEntities == nil || !storedTokenEntities!.contains(where: { $0.id == platformId }){
-//                        platformsToSave.append(platform)
-//                    }
-//                }
-//            }
-//            
-//            
-//            if !platformsToSave.isEmpty {
-//                try Vault.clear(context: context)
-//            }
-////            context.reset()
-//            
-//            print("[+] platforms to save: ", platformsToSave)
-//            for platform in platformsToSave {
-//                let platformId = Vault.deriveUniqueKey(
-//                    platformName: platform.platform,
-//                    accountIdentifier: platform.accountIdentifier
-//                )
-//                
-//               let accessToken = platform.accountTokens["access_token"] ?? ""
-//               let refreshToken = platform.accountTokens["refresh_token"] ?? ""
-//                    
-//                print("Access token to be saved: \(accessToken)")
-//                print("Refresh token to be saved: \(refreshToken)")
-//                
-//                
-//                let storedPlatformEntity = StoredPlatformsEntity(context: context)
-//                storedPlatformEntity.id = platformId
-//                storedPlatformEntity.name = platform.platform
-//                storedPlatformEntity.account = platform.accountIdentifier
-//                storedPlatformEntity.access_token = accessToken
-//                storedPlatformEntity.refresh_token = refreshToken
-//            }
-//            DispatchQueue.main.async {
-//                do {
-//                    if context.hasChanges {
-//                        try context.save()
-//                    }
-//                } catch {
-//                    print("[Vault] Failed to save context after refreshing entities: \(error)")
-//                }
-//            }
-//        } catch Exceptions.unauthenticatedLLT(let status) {
-//            print("[Vault] Should delete invalid llt: \(String(describing: status.message))")
-//            try Vault.resetKeystore(context: context)
-//            try DataController.resetDatabase(context: context)
-//        } catch {
-//            print("[Vault] Error fetching stored tokens: \(error)")
-//            throw error
-//        }
-//        return missingTokens
-//    }
-//    
 
     static func clear(context: NSManagedObjectContext) throws {
         print("[Vault] Clearing platforms...")
