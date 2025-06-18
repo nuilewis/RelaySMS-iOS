@@ -13,8 +13,8 @@ struct TextComposeView: View {
     @Environment(\.managedObjectContext) var context
     @Environment(\.presentationMode) var presentationMode
     
-    @FetchRequest var platforms: FetchedResults<PlatformsEntity>
-    @FetchRequest var storedPlatforms: FetchedResults<StoredPlatformsEntity>
+    @FetchRequest(sortDescriptors: []) private var platforms: FetchedResults<PlatformsEntity>
+    @FetchRequest(sortDescriptors: []) private var storedPlatforms: FetchedResults<StoredPlatformsEntity>
     
 #if DEBUG
     private var defaultGatewayClientMsisdn: String =
@@ -57,14 +57,7 @@ struct TextComposeView: View {
         _platformName = platformName
         _message = message
         let platformNameWrapped = platformName.wrappedValue
-        _storedPlatforms = FetchRequest<StoredPlatformsEntity>(
-            sortDescriptors: [],
-            predicate: NSPredicate(format: "name == %@", platformNameWrapped))
-        
-        _platforms = FetchRequest<PlatformsEntity>(
-            sortDescriptors: [],
-            predicate: NSPredicate(format: "name == %@", platformNameWrapped))
-        
+    
         print("Searching platform: \(platformNameWrapped)")
     }
     
@@ -134,37 +127,40 @@ struct TextComposeView: View {
         .toolbar(content: {
             ToolbarItem(placement: .navigationBarTrailing) {
                 Button("Post") {
-                    let platform = platforms.first!
-                    isPosting = true
-                    DispatchQueue.background(background: {
-                        do {
-                            let messageComposer = try Publisher.publish(context: context)
-                            var shortcode: UInt8? = nil
-                            shortcode = platform.shortcode!.bytes[0]
-                            
-                            // Get the stored platform and use the tokens if the platform tokens exist
-                            let storedPlatformEntity = storedPlatforms.first {
-                                $0.account == fromAccount
-                            }  // Gets the speciic account that matches the currently selected `fromAccount`
-                            var tokensExists: Bool = false
-                            
-                            encryptedFormattedContent =
-                            try messageComposer.textComposerV1(
-                                platform_letter: shortcode!,
-                                sender: fromAccount,
-                                text: textBody,
-                                accessToken: storedPlatformEntity?.access_token ?? nil,
-                                refreshToken: storedPlatformEntity?.refresh_token ?? nil
-                            )
-                            
-                            print("Transmitting to sms app: \(encryptedFormattedContent)")
-                            
-                            isPosting = false
-                            isShowingMessages.toggle()
-                        } catch {
-                            print("Some error occured while sending: \(error)")
-                        }
-                    })
+                    let platform = platforms.first {$0.name == platformName}
+                    if let platformShortCode = platform?.shortcode {
+                        print("Platform shortcode is available: \(platformShortCode)")
+                        isPosting = true
+                        DispatchQueue.background(background: {
+                            do {
+                                let messageComposer = try Publisher.publish(context: context)
+                                var shortcode: UInt8? = nil
+                                shortcode = platformShortCode.bytes[0]
+                                
+                                // Get the stored platform and use the tokens if the platform tokens exist
+                                let storedPlatformEntity = storedPlatforms.first {
+                                    $0.account == fromAccount
+                                }  // Gets the speciic account that matches the currently selected `fromAccount`
+                                
+                                encryptedFormattedContent =
+                                try messageComposer.textComposerV1(
+                                    platform_letter: shortcode!,
+                                    sender: fromAccount,
+                                    text: textBody,
+                                    accessToken: storedPlatformEntity?.access_token ?? nil,
+                                    refreshToken: storedPlatformEntity?.refresh_token ?? nil
+                                )
+                                
+                                print("Transmitting to sms app: \(encryptedFormattedContent)")
+                                
+                                isPosting = false
+                                isShowingMessages.toggle()
+                            } catch {
+                                print("Some error occured while sending: \(error)")
+                            }
+                        })
+                    }
+ 
                 }
                 .disabled(isPosting || fromAccount.isEmpty)
                 .sheet(isPresented: $isShowingMessages) {
@@ -212,23 +208,23 @@ struct TextComposeView: View {
     }
 }
 
-struct TextView_Preview: PreviewProvider {
-    static var previews: some View {
-        let container = createInMemoryPersistentContainer()
-        populateMockData(container: container)
-
-        @State var message: Messages? = Messages(
-            id: UUID(),
-            subject: "Hello world",
-            data:"The scroll view displays its content within the scrollable content region. As the user performs platform-appropriate scroll gestures, the scroll view adjusts what portion of the underlying content is visible. ScrollView can scroll horizontally, vertically, or both, but does not provide zooming functionality.",
-            fromAccount: "@afkanerd",
-            toAccount: "toAccount@gmail.com",
-            platformName: "twitter",
-            date: Int(Date().timeIntervalSince1970))
-
-        @State var globalDismiss = false
-        @State var platformName = "twitter"
-        return TextComposeView(platformName: $platformName, message: $message)
-            .environment(\.managedObjectContext, container.viewContext)
-    }
-}
+//struct TextView_Preview: PreviewProvider {
+//    static var previews: some View {
+//        let container = createInMemoryPersistentContainer()
+//        populateMockData(container: container)
+//
+//        @State var message: Messages? = Messages(
+//            id: UUID(),
+//            subject: "Hello world",
+//            data:"The scroll view displays its content within the scrollable content region. As the user performs platform-appropriate scroll gestures, the scroll view adjusts what portion of the underlying content is visible. ScrollView can scroll horizontally, vertically, or both, but does not provide zooming functionality.",
+//            fromAccount: "@afkanerd",
+//            toAccount: "toAccount@gmail.com",
+//            platformName: "twitter",
+//            date: Int(Date().timeIntervalSince1970))
+//
+//        @State var globalDismiss = false
+//        @State var platformName = "twitter"
+//        return TextComposeView(platformName: $platformName, message: $message)
+//            .environment(\.managedObjectContext, container.viewContext)
+//    }
+//}

@@ -324,10 +324,12 @@ class Publisher {
 
                 // 4. Save changes (outside the if/else)
                 if context.hasChanges {
-                    do {
-                        try context.save()
-                    } catch {
-                        print("[Publisher] Failed save download image: \(error) \(error.localizedDescription)")
+                    DispatchQueue.main.async {
+                        do {
+                            try context.save()
+                        } catch {
+                            print("[Publisher] Failed save download image: \(error) \(error.localizedDescription)")
+                        }
                     }
                 }
 

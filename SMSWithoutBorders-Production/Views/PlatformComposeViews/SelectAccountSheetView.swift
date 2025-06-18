@@ -19,18 +19,11 @@ struct AccountListItem: View {
 
     init(platform: StoredPlatformsEntity?,
          context: NSManagedObjectContext,
-         platformsVault: Vault_V1_Token? = nil,
-         missing: Bool = false,
+         missing: Bool = false
     ) {
-        if platformsVault != nil {
-            self.accountName = platformsVault?.accountIdentifier ?? "Unknown account"
-            self.platformName = platformsVault?.platform ?? ""
-        }
-        else {
             self.platform = platform
             self.accountName = platform?.account ?? "Unknown account"
             self.platformName = platform?.name ?? "Unknown platform"
-        }
         self.platformIsTwitter = platformName == "twitter"
         self.context = context
         self.missing = missing
@@ -68,9 +61,11 @@ struct AccountListItem: View {
 struct SelectAccountSheetView: View {
     @Environment(\.dismiss) var dismiss
     @Environment(\.managedObjectContext) var context
+    @FetchRequest(sortDescriptors: []) private var platforms: FetchedResults<PlatformsEntity>
+    @FetchRequest(sortDescriptors: []) private var storedPlatforms: FetchedResults<StoredPlatformsEntity>
 
-    @FetchRequest var storedPlatforms: FetchedResults<StoredPlatformsEntity>
-    @FetchRequest var platforms: FetchedResults<PlatformsEntity>
+    
+    
     @State private var publishablePlatforms: [StoredPlatformsEntity] = []
     @State private var allStoredPlatforms: [StoredPlatformsEntity] = []
 
@@ -88,13 +83,6 @@ struct SelectAccountSheetView: View {
         callback: @escaping () -> Void = {},
         isSendingMessage: Bool = false
     ) {
-        _storedPlatforms = FetchRequest<StoredPlatformsEntity>(
-            sortDescriptors: [],
-            predicate: NSPredicate(format: "name == %@", filter))
-
-        _platforms = FetchRequest<PlatformsEntity>(
-            sortDescriptors: [],
-            predicate: NSPredicate(format: "name == %@", filter))
         self.isSendingMessage = isSendingMessage
 
         self.platformName = filter
@@ -109,18 +97,21 @@ struct SelectAccountSheetView: View {
         storedPlatforms: FetchedResults<StoredPlatformsEntity>,
         context: NSManagedObjectContext
     ) -> [StoredPlatformsEntity] {
-        print("Searching for platforms which can publish")
+        print("[SelectAccountSheetView] Searching for platforms which can publish")
         var publishableAccounts: [StoredPlatformsEntity] = []
-        for account in storedPlatforms {
-            publishableAccounts.append(account)
+        for account in allStoredPlatforms {
+            if !account.isMissing{
+                publishableAccounts.append(account)
+            }
         }
         return publishableAccounts
     }
+    
 
     var body: some View {
         NavigationView {
             VStack(alignment: .leading) {
-                List(storedPlatforms, id: \.self) { platform in
+                List(isSendingMessage ? publishablePlatforms : allStoredPlatforms, id: \.self) { platform in
                     Button(action: {
                         if fromAccount != nil {
                             fromAccount = platform.account!
@@ -144,15 +135,18 @@ struct SelectAccountSheetView: View {
                     }
                 }
             }
-//            .onAppear {
-//                publishablePlatforms = getPublishablePlatorms(
-//                        storedPlatforms: storedPlatforms, context: context)
-//                
-//                allStoredPlatforms = []
-//                for platform in storedPlatforms {
-//                    allStoredPlatforms.append(platform)
-//                }
-//            }
+            .onAppear {
+                allStoredPlatforms = []
+                allStoredPlatforms =  storedPlatforms.filter { $0.name == platformName}
+                publishablePlatforms = getPublishablePlatorms(
+                            storedPlatforms: storedPlatforms, context: context)
+                if isSendingMessage {
+                    print("[SelectAccountSheetView] Is sending message, will only show publishable platforms")
+                } else {
+                    print("[SelectAccountSheetView] Is revoking, will show all platforms for that account")
+
+                }
+            }
         }
     }
 }

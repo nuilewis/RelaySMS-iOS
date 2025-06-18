@@ -3563,6 +3563,58 @@
         }
       }
     },
+    "Got it" : {
+      "localizations" : {
+        "ar" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "حسناً"
+          }
+        },
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Verstanden"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Entendido"
+          }
+        },
+        "fa" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "متوجه شدم"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Compris"
+          }
+        },
+        "sn" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ndanzwisisa"
+          }
+        },
+        "sw" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Nimeelewa"
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Anladım"
+          }
+        }
+      }
+    },
     "Great!" : {
       "localizations" : {
         "ar" : {
@@ -4012,6 +4064,12 @@
             "value" : "Langue"
           }
         },
+        "sn" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Mutauro"
+          }
+        },
         "sw" : {
           "stringUnit" : {
             "state" : "translated",
@@ -4074,6 +4132,58 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Nasıl çalıştığını öğrenin"
+          }
+        }
+      }
+    },
+    "Load Platforms" : {
+      "localizations" : {
+        "ar" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "تحميل المنصات"
+          }
+        },
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Plattformen laden"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Cargar plataformas"
+          }
+        },
+        "fa" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "بارگیری پلتفرم‌ها"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Charger les plateformes"
+          }
+        },
+        "sn" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Rodha Mapuratifomu"
+          }
+        },
+        "sw" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Pakia Majukwaa"
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Platformları Yükle"
           }
         }
       }
@@ -4909,6 +5019,58 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Henüz kaydedilmiş çevrimiçi platform yok..."
+          }
+        }
+      }
+    },
+    "No online platforms saved yet... You can save more platforms below" : {
+      "localizations" : {
+        "ar" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : " لا توجد منصات محفوظة حتى الآن... يمكنك حفظ المزيد من المنصات أدناه"
+          }
+        },
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Noch keine Online-Plattformen gespeichert... Sie können weitere Plattformen unten speichern"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Aún no hay plataformas en línea guardadas... Puedes guardar más plataformas abajo"
+          }
+        },
+        "fa" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "هنوز هیچ پلتفرم آنلاینی ذخیره نشده... می‌توانید پلتفرم‌های بیشتری در زیر ذخیره کنید"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Aucune plateforme en ligne sauvegardée pour le moment... Vous pouvez sauvegarder plus de plateformes ci-dessous"
+          }
+        },
+        "sn" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Hapana mapuratifomu epamhepo akachengetwa... Unogona kuchengetedza mamwe mapuratifomu pazasi"
+          }
+        },
+        "sw" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Hakuna majukwaa ya mtandaoni yamehifadhiwa bado... Unaweza kuhifadhi majukwaa zaidi hapa chini"
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Henüz kaydedilmiş çevrimiçi platform yok... Aşağıda daha fazla platform kaydedebilirsiniz"
           }
         }
       }
@@ -8174,6 +8336,58 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Gateway Client Güncelle"
+          }
+        }
+      }
+    },
+    "Update Twitter" : {
+      "localizations" : {
+        "ar" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "تحديث تويتر"
+          }
+        },
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Twitter aktualisieren"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Actualizar Twitter"
+          }
+        },
+        "fa" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "به‌روزرسانی توییتر"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Mettre à jour Twitter"
+          }
+        },
+        "sn" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Gadzirisa Twitter"
+          }
+        },
+        "sw" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Sasisha Twitter"
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Twitter'ı Güncelle"
           }
         }
       }
