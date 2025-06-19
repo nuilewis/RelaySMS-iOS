@@ -6,7 +6,9 @@
 //
 
 import SwiftUI
+import CountryPicker
 
+//MARK: - RelayTextField
 struct RelayTextField: View {
     var label: String
     @Binding var text: String
@@ -39,6 +41,14 @@ struct RelayTextField: View {
     }
 }
 
+struct RelayTextFieldPreview: PreviewProvider {
+    static var previews: some View {
+        @State var text: String = ""
+        RelayTextField(label: "Text", text: $text)
+    }
+}
+
+//MARK: - RelayTextEditor
 struct RelayTextEditor: View {
     var label: String
     @Binding var text: String
@@ -71,6 +81,12 @@ struct RelayTextEditor: View {
 
     }
 }
+struct RelayTextEditorPreview: PreviewProvider {
+    static var previews: some View {
+        @State var text: String = ""
+        RelayTextEditor(label: "Text", text: $text)
+    }
+}
 
 public extension View {
     func transparentScrolling() -> some View {
@@ -85,19 +101,169 @@ public extension View {
 }
 
 
-struct RelayTextFieldPreview: PreviewProvider {
-    static var previews: some View {
-        @State var text: String = ""
-        RelayTextField(label: "Text", text: $text)
-    }
-}
-struct RelayTextEditorPreview: PreviewProvider {
-    static var previews: some View {
-        @State var text: String = ""
-        RelayTextEditor(label: "Text", text: $text)
+//MARK: - RelayPassword Field
+struct RelayPasswordField: View {
+    var label: String?
+    @Binding var text: String
+    @State private var showPassword: Bool = false
+    @FocusState private var focus1: Bool
+    @FocusState private var focus2: Bool
+
+
+    var body: some View {
+        VStack(alignment: .leading, spacing: 4) {
+            Text(label ?? "Password")
+                .font(RelayTypography.bodyMedium)
+            
+            ZStack(alignment: .trailing) {
+                TextField(label ?? "Password", text: $text)
+                    .textInputAutocapitalization(.never)
+                    .textContentType(.password)
+                    .autocorrectionDisabled(true)
+                    .focused($focus1)
+                    .padding(.horizontal, 16)
+                    .padding(.vertical, 12)
+                    .frame(maxWidth: .infinity)
+                    .background(
+                        focus1
+                            ? RelayColors.colorScheme.primaryContainer.opacity(0.5)
+                            : RelayColors.colorScheme.surfaceContainer
+                    )
+                    .cornerRadius(12)
+                    .overlay(
+                        RoundedRectangle(cornerRadius: 12)
+                            .stroke(
+                                focus1
+                                    ? RelayColors.colorScheme.primary.opacity(0.5)
+                                    : RelayColors.colorScheme.surface, lineWidth: 1)
+                    )
+                    .opacity(showPassword ? 1 : 0)
+                SecureField(label ?? "Password", text: $text)
+                    .textInputAutocapitalization(.never)
+                    .textContentType(.password)
+                    .focused($focus2)
+                    .padding(.horizontal, 16)
+                    .padding(.vertical, 12)
+                    .frame(maxWidth: .infinity)
+                    .background(
+                        focus2
+                            ? RelayColors.colorScheme.primaryContainer.opacity(0.5)
+                            : RelayColors.colorScheme.surfaceContainer
+                    )
+                    .cornerRadius(12)
+                    .overlay(
+                        RoundedRectangle(cornerRadius: 12)
+                            .stroke(
+                                focus2
+                                    ? RelayColors.colorScheme.primary.opacity(0.5)
+                                    : RelayColors.colorScheme.surface, lineWidth: 1)
+                    )
+                    .autocorrectionDisabled(true)
+                    .opacity(showPassword ? 0 : 1)
+            }.overlay(alignment: .trailing) {
+                Image(systemName: showPassword ? "eye.slash": "eye").onTapGesture {
+                    showPassword.toggle()
+                    if showPassword { focus1 = true}
+                    else {focus2 = true}
+                }.padding(.trailing, 16)
+            }
+        }
+        
+ 
     }
 }
 
+struct PasswordFieldPreview: PreviewProvider {
+    static var previews: some View {
+        @State var text = ""
+        RelayPasswordField(label: "Password", text: $text)
+    }
+}
+
+
+//MARK: - RelayContactPickerField
+
+struct RelayContactField: View {
+    var label: String
+    @Binding var text: String
+    @FocusState private var isFocused: Bool
+    @State private var fullPhoneNumber = ""
+    
+    @State private var country: Country? = Country.init(isoCode: "CM")
+    @State private var selectedCountryCodeText: String? = "CM".getFlag() + " " + Country.init(isoCode: "CM").localizedName
+    @State private var showCountryPicker: Bool = false
+    
+    let onPhoneNumberInputted: (_ fullNumber: String) -> Void
+    
+    
+    var body: some View {
+       return VStack(alignment: .leading, spacing: 4) {
+            Text(label)
+                .font(RelayTypography.bodyMedium)
+            
+            HStack {
+                //MARK: - Country Picker Button
+                Button {
+                    showCountryPicker = true
+                } label: {
+                    let flag = country!.isoCode
+                    Text(flag.getFlag() + "+" + (country!.phoneCode))
+                        .foregroundColor(RelayColors.colorScheme.onSurface)
+                        .padding(.vertical, 12)
+                        .padding(.horizontal, 8)
+                }.sheet(isPresented: $showCountryPicker) {
+                    CountryPicker(
+                        country: $country,
+                        selectedCountryCodeText: $selectedCountryCodeText)
+                }.background(RelayColors.colorScheme.surfaceContainer)
+                    .clipShape(RoundedRectangle(cornerRadius: 12, style: .continuous))
+                
+                TextField(label, text: $text)
+                .keyboardType(.numberPad)
+                .textInputAutocapitalization(.never)
+                .disableAutocorrection(true)
+                .focused($isFocused)
+                .padding(.horizontal, 16)
+                .padding(.vertical, 12)
+                .frame(maxWidth: .infinity)
+                .background(
+                    isFocused
+                        ? RelayColors.colorScheme.primaryContainer.opacity(0.5)
+                        : RelayColors.colorScheme.surfaceContainer
+                )
+                .cornerRadius(12)
+                .overlay(
+                    RoundedRectangle(cornerRadius: 12)
+                        .stroke(
+                            isFocused
+                                ? RelayColors.colorScheme.primary.opacity(0.5)
+                                : RelayColors.colorScheme.surface, lineWidth: 1)
+                )
+                .onSubmit(processPhoneNumber)
+                .onAppear(){
+                    processPhoneNumber()
+                }
+                .onChange(of: text) {text in
+                    processPhoneNumber()
+                }
+            }
+        }
+
+    }
+   
+
+    private func processPhoneNumber() {
+        guard !text.isEmpty, let country = country else {return}
+        let fullPhoneNumber = "+" + country.phoneCode + text
+        onPhoneNumberInputted(fullPhoneNumber)
+    }
+    
+}
+
+
+
+//MARK: - RelayTextFieldStyle (DEPRECATED)
+@available(*, deprecated, message: "RelayTextFieldStyle is deprecated and should not be used, please either use RelayPasswordField or RelayTextField or RelayTextEditor or RelayContactPicker")
 struct RelayTextFieldStyle: TextFieldStyle {
     private let focusedBorderWith: CGFloat = 1
     private let unfocusedBorderWidth: CGFloat = 0
@@ -134,55 +300,5 @@ struct RelayTextFieldStyleField: PreviewProvider {
         TextField("Sample Text", text: .constant("")).textFieldStyle(
             RelayTextFieldStyle()
         ).previewLayout(.sizeThatFits).padding()
-    }
-}
-
-struct RelayTextFieldStyleField2: PreviewProvider {
-    // Create a stateful wrapper view for the preview
-    struct PreviewWrapper: View {
-        @State private var sampleText: String = ""
-        @State private var focusedText: String = "Initially Focused"
-
-        // Define the FocusState variable
-        @FocusState private var isInputFocused: Bool
-        @FocusState private var isSecondInputFocused: Bool
-
-        var body: some View {
-            VStack(alignment: .leading, spacing: 20) {
-                Text("TextField Style Preview")
-                    .font(.headline)
-
-                Divider()
-
-                Text("Not Focused:")
-                TextField("Placeholder", text: $sampleText)
-                    .textFieldStyle(RelayTextFieldStyle())
-                    .focused($isInputFocused)  // Bind focus state
-                // Set the environment value based on the FocusState
-
-                Text("Tap to Focus:")
-                TextField("Another Placeholder", text: $focusedText)
-                    .textFieldStyle(RelayTextFieldStyle())
-                    .focused($isSecondInputFocused)  // Bind focus state for the second field
-
-                // You can also simulate the focused state visually without interaction
-                Text("Simulated Focused State:")
-                TextField("Visually Focused", text: .constant("Focused"))
-                    .textFieldStyle(RelayTextFieldStyle())
-                    .disabled(true)  // Disable interaction for visual preview only
-
-                // Example button to toggle focus programmatically
-                Button("Focus First Field") {
-                    isInputFocused = true
-                }
-                .padding(.top)
-            }
-            .padding()
-        }
-    }
-
-    static var previews: some View {
-        PreviewWrapper()
-            .previewLayout(.sizeThatFits)
     }
 }
