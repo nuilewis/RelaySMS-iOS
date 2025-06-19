@@ -10,7 +10,7 @@ import CryptoKit
 import MessageUI
 import SwiftUI
 
-struct EmailComposerView: View {
+struct EmailComposeForm: View {
     @Binding var composeTo: String
     @Binding var composeFrom: String
     @Binding var composeCC: String
@@ -22,83 +22,28 @@ struct EmailComposerView: View {
     var isBridge: Bool
 
     var body: some View {
-        VStack {
+        VStack(spacing: 12) {
             if !isBridge {
                 VStack {
-                    HStack {
-                        Text("From ")
-                            .foregroundColor(Color.secondary)
-                        Spacer()
-                        TextField(fromAccount, text: $composeFrom)
-                            .textContentType(.emailAddress)
-                            .autocapitalization(.none)
-                            .disabled(true)
-                    }
-                    .padding(.leading)
-                    Rectangle().frame(height: 1).foregroundColor(.secondary)
-                }
-                Spacer(minLength: 9)
-
-            }
-
-            VStack {
-                HStack {
-                    Text("To ")
-                        .foregroundColor(Color.secondary)
-                    Spacer()
-                    TextField("", text: $composeTo)
-                        .textContentType(.emailAddress)
+                    RelayTextField(label: "From", text: $fromAccount)
                         .autocapitalization(.none)
-                }
-                .padding(.leading)
-                Rectangle().frame(height: 1).foregroundColor(.secondary)
-            }
-            Spacer(minLength: 9)
-
-            VStack {
-                HStack {
-                    Text("Cc ")
-                        .foregroundColor(Color.secondary)
-                    Spacer()
-                    TextField("", text: $composeCC)
                         .textContentType(.emailAddress)
-                        .autocapitalization(.none)
+                        .disabled(true)
                 }
-                .padding(.leading)
-                Rectangle().frame(height: 1).foregroundColor(.secondary)
-            }
-            Spacer(minLength: 9)
 
-            VStack {
-                HStack {
-                    Text("Bcc ")
-                        .foregroundColor(Color.secondary)
-                    Spacer()
-                    TextField("", text: $composeBCC)
-                        .textContentType(.emailAddress)
-                        .autocapitalization(.none)
-                }
-                .padding(.leading)
-                Rectangle().frame(height: 1).foregroundColor(.secondary)
             }
-            Spacer(minLength: 9)
 
-            VStack {
-                HStack {
-                    Text("Subject ")
-                        .foregroundColor(Color.secondary)
-                    Spacer()
-                    TextField("", text: $composeSubject)
-                }
-                .padding(.leading)
-                Rectangle().frame(height: 1).foregroundColor(.secondary)
-            }
-            Spacer(minLength: 9)
-
-            VStack {
-                TextEditor(text: $composeBody)
-                    .accessibilityLabel("composeBody")
-            }
+            RelayTextField(label: "To", text: $composeTo)
+                .autocapitalization(.none)
+                .textContentType(.emailAddress)
+            RelayTextField(label: "Cc", text: $composeCC)
+                .autocapitalization(.none)
+                .textContentType(.emailAddress)
+            RelayTextField(label: "Bcc", text: $composeBCC)
+                .autocapitalization(.none)
+                .textContentType(.emailAddress)
+            RelayTextField(label: "Subject", text: $composeSubject)
+            RelayTextEditor(label: "Content", text: $composeBody)
         }
 
     }
@@ -109,48 +54,48 @@ struct EmailComposeView: View {
     @Environment(\.managedObjectContext) var context
     @FetchRequest var storedPlatforms: FetchedResults<StoredPlatformsEntity>
     @FetchRequest var platforms: FetchedResults<PlatformsEntity>
-    
-#if DEBUG
-    private var defaultGatewayClientMsisdn: String =
-    ProcessInfo.processInfo.environment["XCODE_RUNNING_FOR_PREVIEWS"]
-    == "1"
-    ? ""
-    : UserDefaults.standard.object(
-        forKey: GatewayClients.DEFAULT_GATEWAY_CLIENT_MSISDN) as? String
-    ?? ""
-#else
-    @AppStorage(GatewayClients.DEFAULT_GATEWAY_CLIENT_MSISDN)
-    private var defaultGatewayClientMsisdn: String = ""
-#endif
-    
+
+    #if DEBUG
+        private var defaultGatewayClientMsisdn: String =
+            ProcessInfo.processInfo.environment["XCODE_RUNNING_FOR_PREVIEWS"]
+                == "1"
+            ? ""
+            : UserDefaults.standard.object(
+                forKey: GatewayClients.DEFAULT_GATEWAY_CLIENT_MSISDN) as? String
+                ?? ""
+    #else
+        @AppStorage(GatewayClients.DEFAULT_GATEWAY_CLIENT_MSISDN)
+        private var defaultGatewayClientMsisdn: String = ""
+    #endif
+
     @AppStorage(SettingsKeys.SETTINGS_MESSAGE_WITH_PHONENUMBER)
     private var messageWithPhoneNumber = false
-    
+
     @State private var encryptedFormattedContent: String = ""
     @State var isShowingMessages: Bool = false
     @State var isSendingRequest: Bool = false
     @State var requestToChooseAccount: Bool = false
     @State var composeFrom: String = ""
     @State var fromAccount: String = ""
-    
+
     @State var dismissRequested = false
-    
+
     private var isBridge: Bool = false
-    
+
     @Binding var message: Messages?
     @Binding var platformName: String
-    
+
     @State var composeTo: String = ""
     @State var composeCC: String = ""
     @State var composeBCC: String = ""
     @State var composeSubject: String = ""
     @State var composeBody: String = ""
-    
+
     @State private var showAlert: Bool = false
     @State private var alertTitle: String = ""
     @State private var alertMessage: String = ""
     @State private var isLoading = false
-    
+
     init(
         platformName: Binding<String>,
         isBridge: Bool = false,
@@ -162,46 +107,88 @@ struct EmailComposeView: View {
             predicate: NSPredicate(
                 format: "name == %@", platformName.wrappedValue))
         _message = message
-        
+
         _platforms = FetchRequest<PlatformsEntity>(
             sortDescriptors: [],
-            predicate: NSPredicate(format: "name == %@", platformName.wrappedValue))
-        
+            predicate: NSPredicate(
+                format: "name == %@", platformName.wrappedValue))
+
         _platformName = platformName
         self.isBridge = isBridge
     }
-    
+
     var body: some View {
         NavigationView {
-            VStack {
-                EmailComposerView(
-                    composeTo: $composeTo,
-                    composeFrom: $composeFrom,
-                    composeCC: $composeCC,
-                    composeBCC: $composeBCC,
-                    composeSubject: $composeSubject,
-                    composeBody: $composeBody,
-                    fromAccount: $fromAccount,
-                    isBridge: isBridge
-                )
+            ScrollView {
+                VStack {
+                    EmailComposeForm(
+                        composeTo: $composeTo,
+                        composeFrom: $composeFrom,
+                        composeCC: $composeCC,
+                        composeBCC: $composeBCC,
+                        composeSubject: $composeSubject,
+                        composeBody: $composeBody,
+                        fromAccount: $fromAccount,
+                        isBridge: isBridge
+                    )
+                    Spacer(minLength: 24)
+
+                    Button(
+                        action: {
+                            isSendingRequest = true
+                            DispatchQueue.background(background: {
+                                do {
+                                    encryptedFormattedContent =
+                                        try getEncryptedContent(
+                                            isBridge: self.isBridge)
+                                } catch {
+                                    print(
+                                        "Some error occured while sending: \(error)"
+                                    )
+                                }
+                                isShowingMessages.toggle()
+                                isSendingRequest = false
+                            })
+                        },
+                        label: {
+                            if isSendingRequest {
+                                ProgressView()
+                            } else {
+                                Text("Send")
+                            }
+                        }
+                    )
+                    .buttonStyle(.relayButton(variant: .secondary))
+                    .disabled(!isBridge && fromAccount.isEmpty)
+                    .sheet(isPresented: $isShowingMessages) {
+                        SMSComposeMessageUIView(
+                            recipients: [defaultGatewayClientMsisdn],
+                            body: $encryptedFormattedContent,
+                            completion: handleCompletion(_:)
+                        )
+                        .ignoresSafeArea()
+                    }
+                }
+                .padding()
             }
-            .padding()
+
             .sheet(isPresented: $requestToChooseAccount) {
                 SelectAccountSheetView(
                     filter: platformName,
                     fromAccount: $fromAccount,
                     dismissParent: $dismissRequested,
+                    callback:  {
+                        requestToChooseAccount.toggle()
+                        if self.message != nil {
+                            composeTo = self.message!.toAccount
+                            composeCC = self.message!.cc
+                            composeBCC = self.message!.bcc
+                            composeSubject = self.message!.subject
+                            composeBody = self.message!.data
+                        }
+                    },
                     isSendingMessage: true
-                ) {
-                    requestToChooseAccount.toggle()
-                    if self.message != nil {
-                        composeTo = self.message!.toAccount
-                        composeCC = self.message!.cc
-                        composeBCC = self.message!.bcc
-                        composeSubject = self.message!.subject
-                        composeBody = self.message!.data
-                    }
-                }
+                )
                 .applyPresentationDetentsIfAvailable()
                 .interactiveDismissDisabled(true)
             }
@@ -228,52 +215,18 @@ struct EmailComposeView: View {
             }
         }
         .navigationTitle("Compose email")
-        .toolbar(content: {
-            ToolbarItem(placement: .navigationBarTrailing) {
-                if isSendingRequest {
-                    ProgressView()
-                } else {
-                    Button("Send") {
-                        isSendingRequest = true
-                        //                    let platform = platforms.first!
-                        DispatchQueue.background(background: {
-                            do {
-                                encryptedFormattedContent =
-                                try getEncryptedContent(
-                                    isBridge: self.isBridge)
-                            } catch {
-                                print(
-                                    "Some error occured while sending: \(error)"
-                                )
-                            }
-                            isShowingMessages.toggle()
-                            isSendingRequest = false
-                        })
-                    }
-                    .disabled(!isBridge && fromAccount.isEmpty)
-                    .sheet(isPresented: $isShowingMessages) {
-                        SMSComposeMessageUIView(
-                            recipients: [defaultGatewayClientMsisdn],
-                            body: $encryptedFormattedContent,
-                            completion: handleCompletion(_:)
-                        )
-                        .ignoresSafeArea()
-                    }
-                }
-            }
-        })
     }
-    
+
     func getEncryptedContent(isBridge: Bool = false) throws -> String {
         if !isBridge {
             let messageComposer = try Publisher.publish(context: context)
             let shortcode: UInt8 = "g".data(using: .utf8)!.first!
-            
+
             // Get the stored platform and use the tokens if the platform tokens exist
             let storedPlatformEntity = storedPlatforms.first {
                 $0.account == fromAccount
             }  // Gets the speciic account that matches the currently selected fromAccount
-            
+
             return try messageComposer.emailComposerV1(
                 platform_letter: shortcode,
                 from: fromAccount,
@@ -306,20 +259,20 @@ struct EmailComposeView: View {
             }
         }
     }
-    
+
     func handleCompletion(_ result: MessageComposeResult) {
         switch result {
         case .cancelled:
             print("Yep cancelled")
-#if DEBUG
-            saveMessageEntity()
-#endif
+            #if DEBUG
+                saveMessageEntity()
+            #endif
             break
         case .failed:
             print("Yep failed")
-#if DEBUG
-            saveMessageEntity()
-#endif
+            #if DEBUG
+                saveMessageEntity()
+            #endif
             break
         case .sent:
             saveMessageEntity()
@@ -330,10 +283,10 @@ struct EmailComposeView: View {
             break
         }
     }
-    
+
     private func saveMessageEntity() {
         DispatchQueue.background(background: {
-            var messageEntities = MessageEntity(context: context)
+            let messageEntities = MessageEntity(context: context)
             messageEntities.id = UUID()
             messageEntities.platformName = platformName
             messageEntities.fromAccount = fromAccount
@@ -343,11 +296,11 @@ struct EmailComposeView: View {
             messageEntities.subject = composeSubject
             messageEntities.body = composeBody
             messageEntities.date = Int32(Date().timeIntervalSince1970)
-            
+
             if isBridge {
                 messageEntities.type = Bridges.SERVICE_NAME
             }
-            
+
             DispatchQueue.main.async {
                 do {
                     try context.save()
@@ -358,23 +311,23 @@ struct EmailComposeView: View {
             }
         })
     }
-    
+
     func formatEmailForViewing(decryptedData: String) -> (
         platformLetter: String, to: String, cc: String, bcc: String,
         subject: String, body: String
     ) {
         let splitString = decryptedData.components(separatedBy: ":")
-        
+
         let platformLetter: String = splitString[0]
         let to: String = splitString[1]
         let cc: String = splitString[2]
         let bcc: String = splitString[3]
         let subject: String = splitString[4]
         let body: String = splitString[5]
-        
+
         return (platformLetter, to, cc, bcc, subject, body)
     }
-    
+
 }
 
 struct EmailView_Preview: PreviewProvider {
@@ -406,7 +359,7 @@ struct EmailCompose_Preview: PreviewProvider {
         @State var composeBody: String = ""
         @State var fromAccount: String = ""
 
-        return EmailComposerView(
+        return EmailComposeForm(
             composeTo: $composeTo,
             composeFrom: $composeFrom,
             composeCC: $composeCC,
