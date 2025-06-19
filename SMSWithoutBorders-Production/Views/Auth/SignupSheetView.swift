@@ -230,7 +230,7 @@ struct SignupSheetView: View {
                             }
                         } label: {
                             if self.isLoading {
-                                ProgressView()
+                                ProgressView().tint(.white)
                             } else {
                                 Text("Create account")
                             }

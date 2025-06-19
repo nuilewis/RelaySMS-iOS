@@ -10,11 +10,6 @@ import ContactsUI
 import CountryPicker
 import SwiftUI
 
-enum FormFieldFocus {
-    case phoneNumber
-    case alias
-}
-
 
 struct AddEditGatewayClientView: View {
     //Core data context
@@ -38,7 +33,7 @@ struct AddEditGatewayClientView: View {
 
     @Binding var defaultMsisdnStorage: String
     @State private var contactPickerService = ContactPickerService()
-    @FocusState private var focus: FormFieldFocus?
+
     let onDismiss: () -> Void
 
     init(gatewayClient: GatewayClients? = nil, defaultMsisdnStorage: Binding<String>, onDismissed: @escaping () -> Void) {
@@ -100,13 +95,8 @@ struct AddEditGatewayClientView: View {
                 .textInputAutocapitalization(.never)
                 .disableAutocorrection(true)
                 .textFieldStyle(RelayTextFieldStyle())
-                .focused($focus, equals: .phoneNumber)
-                .onAppear {
-                    focus = FormFieldFocus.phoneNumber
-                }.onSubmit {
-                    focus = FormFieldFocus.alias
-                }
 
+                
                 // Contact Picker Button
                 Button {
                     contactPickerService.openContactPicker()
@@ -139,15 +129,7 @@ struct AddEditGatewayClientView: View {
 
             }
             Spacer().frame(height: 16)
-            Text("Alias").font(RelayTypography.bodyMedium)
-            TextField(
-                "Operator Alias", text: $operatorAlias
-            )
-            .textInputAutocapitalization(.never)
-            .disableAutocorrection(true)
-            .textFieldStyle(RelayTextFieldStyle())
-            .focused($focus, equals: .alias)
-
+            RelayTextField(label: "Alias", text: $operatorAlias)
             Spacer().frame(height: 32)
             Spacer()
 
@@ -219,7 +201,7 @@ struct AddEditGatewayClientView: View {
                     showAlert = true
                 }
             }.buttonStyle(.relayButton(variant: .primary))
-            Spacer().frame(height: 64)
+            Spacer().frame(height: 48)
 
         }.padding([.leading, .trailing], 16)
             .navigationTitle(isEditing ? "Edit Gateway Client" : "Add Gateway Client")

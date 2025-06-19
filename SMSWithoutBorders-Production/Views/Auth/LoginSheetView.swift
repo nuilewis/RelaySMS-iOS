@@ -155,7 +155,7 @@ struct LoginSheetView: View {
                             }
                         } label: {
                             if isLoading {
-                                ProgressView()
+                                ProgressView().tint(.white)
                             } else {
                                 Text("Login").font(RelayTypography.bodyMedium).bold()
                             }
