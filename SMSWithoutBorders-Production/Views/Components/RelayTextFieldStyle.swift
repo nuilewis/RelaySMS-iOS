@@ -7,9 +7,98 @@
 
 import SwiftUI
 
+struct RelayTextField: View {
+    var label: String
+    @Binding var text: String
+    
+    @FocusState private var isFocused: Bool
+    var body: some View {
+        VStack(alignment: .leading, spacing: 4) {
+            Text(label)
+                .font(RelayTypography.bodyMedium)
+            TextField(label, text: $text)
+                .focused($isFocused)
+                .padding(.horizontal, 16)
+                .padding(.vertical, 12)
+                .frame(maxWidth: .infinity)
+                .background(
+                    isFocused
+                        ? RelayColors.colorScheme.primaryContainer.opacity(0.5)
+                        : RelayColors.colorScheme.surfaceContainer
+                )
+                .cornerRadius(12)
+                .overlay(
+                    RoundedRectangle(cornerRadius: 12)
+                        .stroke(
+                            isFocused
+                                ? RelayColors.colorScheme.primary.opacity(0.5)
+                                : RelayColors.colorScheme.surface, lineWidth: 1)
+                )
+        }
+
+    }
+}
+
+struct RelayTextEditor: View {
+    var label: String
+    @Binding var text: String
+    
+    @FocusState private var isFocused: Bool
+    var body: some View {
+        VStack(alignment: .leading, spacing: 4) {
+            Text(label)
+                .font(RelayTypography.bodyMedium)
+            TextEditor(text: $text)
+                .focused($isFocused)
+                .transparentScrolling()
+                .padding(.horizontal, 16)
+                .padding(.vertical, 12)
+                .frame(maxWidth: .infinity, minHeight: 200)
+                .background(
+                    isFocused
+                        ? RelayColors.colorScheme.primaryContainer.opacity(0.5)
+                        : RelayColors.colorScheme.surfaceContainer
+                )
+                .cornerRadius(16)
+                .overlay(
+                    RoundedRectangle(cornerRadius: 16)
+                        .stroke(
+                            isFocused
+                                ? RelayColors.colorScheme.primary.opacity(0.5)
+                                : RelayColors.colorScheme.surface, lineWidth: 1)
+                )
+        }
+
+    }
+}
+
+public extension View {
+    func transparentScrolling() -> some View {
+        if #available(iOS 16.0, *) {
+            return scrollContentBackground(.hidden)
+        } else {
+            return onAppear {
+                UITextView.appearance().backgroundColor = .clear
+            }
+        }
+    }
+}
+
+
+struct RelayTextFieldPreview: PreviewProvider {
+    static var previews: some View {
+        @State var text: String = ""
+        RelayTextField(label: "Text", text: $text)
+    }
+}
+struct RelayTextEditorPreview: PreviewProvider {
+    static var previews: some View {
+        @State var text: String = ""
+        RelayTextEditor(label: "Text", text: $text)
+    }
+}
+
 struct RelayTextFieldStyle: TextFieldStyle {
-
-
     private let focusedBorderWith: CGFloat = 1
     private let unfocusedBorderWidth: CGFloat = 0
 
@@ -22,13 +111,18 @@ struct RelayTextFieldStyle: TextFieldStyle {
             .background(
                 RoundedRectangle(cornerRadius: 12, style: .continuous)
                     .fill(
-                        isFocused ? RelayColors.colorScheme.primaryContainer.opacity(0.5) : RelayColors.colorScheme.surfaceContainer)
+                        isFocused
+                            ? RelayColors.colorScheme.primaryContainer.opacity(
+                                0.5) : RelayColors.colorScheme.surfaceContainer)
 
             ).overlay(
                 RoundedRectangle(cornerRadius: 12, style: .continuous)
                     .stroke(
-                        isFocused ? RelayColors.colorScheme.primary : RelayColors.colorScheme.surfaceContainer,
-                        lineWidth: isFocused ? focusedBorderWith : unfocusedBorderWidth
+                        isFocused
+                            ? RelayColors.colorScheme.primary
+                            : RelayColors.colorScheme.surfaceContainer,
+                        lineWidth: isFocused
+                            ? focusedBorderWith : unfocusedBorderWidth
                     )
             )
             .animation(.default, value: isFocused)
@@ -37,7 +131,9 @@ struct RelayTextFieldStyle: TextFieldStyle {
 
 struct RelayTextFieldStyleField: PreviewProvider {
     static var previews: some View {
-        TextField("Sample Text", text: .constant("")).textFieldStyle(RelayTextFieldStyle()).previewLayout(.sizeThatFits).padding()
+        TextField("Sample Text", text: .constant("")).textFieldStyle(
+            RelayTextFieldStyle()
+        ).previewLayout(.sizeThatFits).padding()
     }
 }
 
@@ -62,7 +158,7 @@ struct RelayTextFieldStyleField2: PreviewProvider {
                 TextField("Placeholder", text: $sampleText)
                     .textFieldStyle(RelayTextFieldStyle())
                     .focused($isInputFocused)  // Bind focus state
-                    // Set the environment value based on the FocusState
+                // Set the environment value based on the FocusState
 
                 Text("Tap to Focus:")
                 TextField("Another Placeholder", text: $focusedText)
@@ -74,7 +170,6 @@ struct RelayTextFieldStyleField2: PreviewProvider {
                 TextField("Visually Focused", text: .constant("Focused"))
                     .textFieldStyle(RelayTextFieldStyle())
                     .disabled(true)  // Disable interaction for visual preview only
-
 
                 // Example button to toggle focus programmatically
                 Button("Focus First Field") {
