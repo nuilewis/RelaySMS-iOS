@@ -51,14 +51,7 @@ struct PhoneNumberCodeEntryView: View {
                 )
             
             if havePassword {
-                PasswordField(placeholder: "Enter password", text: $password)
-                    .padding()
-                    .controlSize(.large)
-                    .overlay(
-                        RoundedRectangle(cornerRadius: 4)
-                            .stroke(lineWidth: 1)
-                            .foregroundColor(.gray)
-                    )
+                RelayPasswordField(label: "Enter password", text: $password)
             }
 
             if loading {

@@ -5,22 +5,23 @@
 //  Created by sh3rlock on 14/06/2024.
 //
 
-import SwiftUI
 import CountryPicker
-
+import SwiftUI
 
 struct LoginSheetView: View {
     @Environment(\.dismiss) var dismiss
     @Environment(\.managedObjectContext) var context
 
     #if DEBUG
-    @State var phoneNumber = "1123457528"
-    @State var password: String = "dMd2Kmo9#"
+        @State private var phoneNumber = "1123457528"
+        @State private var password: String = "dMd2Kmo9#"
     #else
         @State private var phoneNumber: String = ""
         @State private var password: String = ""
     #endif
-    
+
+    @State private var fullPhoneNumber = ""
+
     @Binding var isLoggedIn: Bool
     @Binding var createAccountRequested: Bool
     @Binding var passwordRecoveryRequired: Bool
@@ -38,193 +39,173 @@ struct LoginSheetView: View {
     
     @State var callbackText = "Welcome back!"
     @State var completedSuccessfully = false
-    
+
     @State var type = OTPAuthType.TYPE.AUTHENTICATE
 
-    @State private var selectedCountryCodeText: String? = "CM".getFlag() + " " + Country.init(isoCode: "CM").localizedName
+    //@State private var selectedCountryCodeText: String? = "CM".getFlag() + " " + Country.init(isoCode: "CM").localizedName
 
     var body: some View {
-        VStack {
-            NavigationLink(
-                destination:
-                    OTPSheetView(
-                        countryCode: $countryCode,
-                        phoneNumber: $phoneNumber,
-                        password: $password,
-                        failed: $failed,
-                        completedSuccessfully: $completedSuccessfully,
-                        type: $type
-                    ),
-                isActive: $otpRequired
-            ) {
-                EmptyView()
-            }
-            
+        ScrollView {
             VStack {
-                if(completedSuccessfully) {
-                    SuccessAnimations( callbackText: $callbackText ) {
-                        do {
-                            let vault = Vault()
-                            let llt = try Vault.getLongLivedToken()
-                            try vault.refreshStoredTokens(
-                                llt: llt,
-                                context: context,
-                                storedTokenEntities: nil
-                            )
-                        } catch {
-                            print("Error refreshing tokens: \(error)")
-                            failed = true
-                            errorMessage = error.localizedDescription
+                NavigationLink(
+                    destination:
+                        OTPSheetView(
+                            countryCode: $countryCode,
+                            phoneNumber: $phoneNumber,
+                            password: $password,
+                            failed: $failed,
+                            completedSuccessfully: $completedSuccessfully,
+                            type: $type
+                        ),
+                    isActive: $otpRequired
+                ) {
+                    EmptyView()
+                }
+                VStack {
+                    if completedSuccessfully {
+                        SuccessAnimations(callbackText: $callbackText) {
+                            do {
+                                let vault = Vault()
+                                let llt = try Vault.getLongLivedToken()
+                                try vault.refreshStoredTokens(
+                                    llt: llt,
+                                    context: context,
+                                    storedTokenEntities: nil
+                                )
+                            } catch {
+                                print("Error refreshing tokens: \(error)")
+                                failed = true
+                                errorMessage = error.localizedDescription
+                            }
+                        } callback: {
+                            isLoggedIn = true
+                            dismiss()
                         }
-                    } callback: {
-                        isLoggedIn = true
-                        dismiss()
-                    }
-                } else {
-                    VStack {
-                        Image("Logo")
-                            .resizable()
-                            .aspectRatio(contentMode: .fit)
-                            .frame(width: 75, height: 75)
-                            .padding()
+                    } else {
+                        VStack {
+                            Image("Logo")
+                                .resizable()
+                                .aspectRatio(contentMode: .fit)
+                                .frame(width: 75, height: 75)
+                                .padding()
 
-                        Text("Login")
-                            .font(RelayTypography.titleLarge)
-                            .padding()
-                        
-                        Group {
-                            Text("Welcome back")
-                            Text("Sign in to continue with existing account")
-                        }
-                        .foregroundStyle(.secondary)
-                        .font(.subheadline)
-                    }
-                    .padding(.bottom, 30)
+                            Text("Login")
+                                .font(RelayTypography.titleLarge)
+                                .padding()
 
-                    VStack {
-                         HStack {
-                             Button {
-                                 showCountryPicker = true
-                             } label: {
-                                 let flag = country?.isoCode ?? Country.init(isoCode: "CM").isoCode
-                                 Text(flag.getFlag() + "+" + (country?.phoneCode ?? Country.init(isoCode: "CM").phoneCode))
-                                    .foregroundColor(Color.secondary)
-                             }.sheet(isPresented: $showCountryPicker) {
-                                 CountryPicker(country: $country,
-                                               selectedCountryCodeText: $selectedCountryCodeText)
-                             }
-                             Spacer()
-                             TextField("Phone Number", text: $phoneNumber)
-                                 .keyboardType(.numberPad)
-                                 .textContentType(.emailAddress)
-                                 .autocapitalization(.none)
+                            Group {
+                                Text("Welcome back")
+                                Text("Sign in to continue with existing account")
+                            }
+                            .foregroundStyle(.secondary)
+                            .font(RelayTypography.bodyMedium)
                         }
-                        .padding(.leading)
-                        .padding(.bottom, 10)
-                        Rectangle().frame(height: 1).foregroundColor(.secondary)
-                        
+                        .padding(.bottom, 30)
+
+                        RelayContactField(
+                            label: "Phone Number", text: $phoneNumber,
+                            onPhoneNumberInputted: { completeNumber in
+                                print(
+                                    "Phone number received from contact field callback: \(completeNumber)"
+                                )
+                                self.fullPhoneNumber = completeNumber
+                            }
+                        )
+
                         Button {
                             passwordRecoveryRequired = true
                         } label: {
                             Text("Forgot password?")
-                                .bold()
                         }
                         .padding(.top, 25)
-                        .font(.subheadline)
+                        .font(RelayTypography.bodyMedium)
                         .frame(maxWidth: .infinity, alignment: .trailing)
-                    
-                        PasswordField(text: $password)
-                        Rectangle().frame(height: 1).foregroundColor(.secondary)
-                    }
-                    .padding()
-                    Spacer()
 
-                    VStack{
-                        if(isLoading) {
-                            ProgressView()
-                        }
-                        else {
-                            Button {
-                                isLoading = true
-                                Task {
-                                    do {
-                                        self.otpRetryTimer = try await signupAuthenticateRecover(
-                                            phoneNumber: getPhoneNumber(),
+                        RelayPasswordField(text: $password)
+
+                        Spacer(minLength: 24)
+
+                        Button {
+                            isLoading = true
+                            Task {
+                                do {
+                                    self.otpRetryTimer =
+                                        try await signupAuthenticateRecover(
+                                            phoneNumber: fullPhoneNumber,
                                             countryCode: "",
                                             password: password,
                                             type: OTPAuthType.TYPE.AUTHENTICATE,
                                             context: context
                                         )
-                                        
-                                        self.phoneNumber = getPhoneNumber()
-                                        self.otpRequired = true
-                                    } catch Vault.Exceptions.requestNotOK(let status){
-                                        print("Something went wrong authenticating: \(status)")
-                                        isLoading = false
-                                        failed = true
-                                        errorMessage = status.message!
-                                    } catch {
-                                        isLoading = false
-                                        failed = true
-                                        errorMessage = error.localizedDescription
-                                    }
-                                }
-                            } label: {
-                                Text("Login")
-                                    .bold()
-                                    .frame(maxWidth: .infinity, maxHeight: 35)
-        //                                .frame(width: 200 , height: 50, alignment: .center)
-                            }
-                            .buttonStyle(.borderedProminent)
-                            .alert("Error", isPresented: $failed) {
-                                Button(role: .destructive) {
-                                    failed = false
-                                } label: {
-                                    Text("Okay!")
-                                }
-                            } message: {
-                                Text(errorMessage)
-                            }
-                            
-                            Button {
-                                self.otpRequired = true
-                            } label: {
-                                Text("Already got code")
-                            }
-                            .padding(.top, 10)
-                            .font(.subheadline)
-                            .disabled(phoneNumber.isEmpty)
-                            
-                            HStack {
-                                Text("Don't have an account?")
-                                    .foregroundStyle(.secondary)
-                                Button {
-                                    createAccountRequested = true
-                                } label: {
-                                    Text("Create account")
-                                        .bold()
+                                    self.otpRequired = true
+                                } catch Vault.Exceptions.requestNotOK(
+                                    let status)
+                                {
+                                    print(
+                                        "Something went wrong authenticating: \(status)"
+                                    )
+                                    isLoading = false
+                                    failed = true
+                                    errorMessage = status.message!
+                                } catch {
+                                    isLoading = false
+                                    failed = true
+                                    errorMessage = error.localizedDescription
                                 }
                             }
-                            .font(.subheadline)
-                            .padding()
+                        } label: {
+                            if isLoading {
+                                ProgressView()
+                            } else {
+                                Text("Login").font(RelayTypography.bodyMedium).bold()
+                            }
                         }
+                        .buttonStyle(.relayButton(variant: .primary))
+                        .alert("Error", isPresented: $failed) {
+                            Button(role: .destructive) {
+                                failed = false
+                            } label: {
+                                Text("Okay!")
+                            }
+                        } message: {
+                            Text(errorMessage)
+                        }
+
+                        Button {
+                            self.otpRequired = true
+                        } label: {
+                            Text("Already got code")
+                        }
+                        .padding(.top, 10)
+                        .font(RelayTypography.bodyMedium)
+                        .disabled(phoneNumber.isEmpty)
+
+                        HStack {
+                            Text("Don't have an account?")
+                                .foregroundStyle(.secondary)
+                            Button {
+                                createAccountRequested = true
+                            } label: {
+                                Text("Create account")
+                                    .bold()
+                            }
+                        }
+                        .font(RelayTypography.bodyMedium)
+                        .padding()
                     }
-                    .padding()
+
                 }
-                
-            }
-            .onChange(of: failed) { v in
-                if v {
-                    isLoading = false
-                    otpRequired = false
+                .padding([.leading, .trailing], 16)
+                .onChange(of: failed) { v in
+                    if v {
+                        isLoading = false
+                        otpRequired = false
+                    }
                 }
             }
         }
-        
-    }
-    
-    private func getPhoneNumber() -> String {
-        return "+" + (country?.phoneCode ?? Country(isoCode: "CM").phoneCode) + phoneNumber
+
+
     }
 }
 
@@ -240,8 +221,3 @@ struct LoginSheetView_Preview: PreviewProvider {
         )
     }
 }
-
-
-
-
-
