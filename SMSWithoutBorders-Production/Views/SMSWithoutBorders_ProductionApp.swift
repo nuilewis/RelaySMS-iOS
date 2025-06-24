@@ -68,7 +68,15 @@ struct SMSWithoutBorders_ProductionApp: App {
                     }
                 }
                 .onAppear {
-                    Publisher.refreshPlatforms(context: dataController.container.viewContext)
+                    
+                    Publisher.refreshPlatforms(context: dataController.container.viewContext) { success in
+                        DispatchQueue.main.async {
+                            if success {
+                                print("[App Init]: Successfully fetched platforms")
+                            }
+                        }
+                    }
+                    
 
                     Task {
                         if(ProcessInfo.processInfo.environment["XCODE_RUNNING_FOR_PREVIEWS"] != "1") {
