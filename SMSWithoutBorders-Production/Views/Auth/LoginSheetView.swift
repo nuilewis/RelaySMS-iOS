@@ -20,8 +20,6 @@ struct LoginSheetView: View {
         @State private var password: String = ""
     #endif
 
-    @State private var fullPhoneNumber = ""
-
     @Binding var isLoggedIn: Bool
     @Binding var createAccountRequested: Bool
     @Binding var passwordRecoveryRequired: Bool
@@ -103,12 +101,11 @@ struct LoginSheetView: View {
                         .padding(.bottom, 30)
 
                         RelayContactField(
-                            label: "Phone Number", text: $phoneNumber,
-                            onPhoneNumberInputted: { completeNumber in
-                                print(
-                                    "Phone number received from contact field callback: \(completeNumber)"
-                                )
-                                self.fullPhoneNumber = completeNumber
+                            label: "Phone Number",
+                            initialValue: phoneNumber,
+                            onPhoneNumberInputted: { relayContact in
+                                print("Phone number received from contact field callback: \(relayContact.rawValue)")
+                                self.phoneNumber = relayContact.internationalPhoneNumber
                             }
                         )
 
@@ -131,7 +128,7 @@ struct LoginSheetView: View {
                                 do {
                                     self.otpRetryTimer =
                                         try await signupAuthenticateRecover(
-                                            phoneNumber: fullPhoneNumber,
+                                            phoneNumber: phoneNumber,
                                             countryCode: "",
                                             password: password,
                                             type: OTPAuthType.TYPE.AUTHENTICATE,

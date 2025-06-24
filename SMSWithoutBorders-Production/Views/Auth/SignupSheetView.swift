@@ -80,8 +80,6 @@ struct SignupSheetView: View {
         @State var selectedCountryCodeText: String? = "Select country"
     #endif
 
-    @State private var fullPhoneNumber = ""
-
     @State var countryCode: String = Country(isoCode: "CM").isoCode
     @State var isLoading = false
     @State var otpRequired = false
@@ -157,12 +155,11 @@ struct SignupSheetView: View {
                         .padding(.bottom, 24)
 
                         RelayContactField(
-                            label: "Phone Number", text: $phoneNumber,
-                            onPhoneNumberInputted: { completeNumber in
-                                print(
-                                    "Phone number received from contact field callback: \(completeNumber)"
-                                )
-                                self.fullPhoneNumber = completeNumber
+                            label: "Phone Number",
+                            initialValue: phoneNumber,
+                            onPhoneNumberInputted: { relayContact in
+                                print("Phone number received from contact field callback: \(relayContact.rawValue)")
+                                self.phoneNumber = relayContact.internationalPhoneNumber
                             }
                         ).padding(.bottom, 8)
 
@@ -203,7 +200,7 @@ struct SignupSheetView: View {
                                 do {
                                     self.otpRetryTimer =
                                         try await signupAuthenticateRecover(
-                                            phoneNumber: fullPhoneNumber,
+                                            phoneNumber: phoneNumber,
                                             countryCode: countryCode,
                                             password: password,
                                             type: OTPAuthType.TYPE.CREATE,
