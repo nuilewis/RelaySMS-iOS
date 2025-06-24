@@ -81,7 +81,6 @@ struct GatewayClientsView: View {
                     gatewayClients: gatewayClients,  // Pass the fetched results
                     defaultGatewayClientMsisdn: defaultGatewayClientMsisdn,  // Pass the default ID
                     onSetDefault: { client in  // Closure implementations
-
                         self.showDefaultClientChangeConfirm = true
                         self.clientToSetAsDefault = client
 
