@@ -135,109 +135,116 @@ struct MessagingView: View {
 
     var body: some View {
         NavigationView {
-            VStack {
-                Text("Select a contact to send a message")
-                    .font(.caption)
-                    .foregroundStyle(.secondary)
-                Text("Make sure phone code e.g +237 is included in the selected number")
-                    .font(.caption2)
-                    .foregroundStyle(.secondary)
+            ScrollView {
                 VStack {
-                    Text("From: \(fromAccount)")
-                        .frame(maxWidth: .infinity, alignment: .leading)
-                        .font(.subheadline)
-                        .foregroundStyle(.secondary)
-                    TextInputField(
-                        placeHolder: "To: ",
-                        textValue: $messageContact,
-                        endIcon: Image("Phonebook"), function: {
-                            openContactPicker()
-                        })
-                    .keyboardType(.phonePad)
-                    
-                }
-                .padding()
-                
-                if messages.isEmpty {
-                    Spacer()
-                    Text("No messages sent")
-                        .font(.title)
-                    Spacer()
-                }
-                else {
-                    VStack {
-                        Text("Click the message to re-use for sending...")
-                        .font(.caption)
+                    Text("Select a contact to send a message, Make sure phone code e.g +237 is included in the selected number")
+                        .font(RelayTypography.bodyMedium)
                         .multilineTextAlignment(.leading)
-                        .frame(maxWidth: .infinity, alignment: .trailing)
+                        .foregroundStyle(.secondary)
+                        .padding([.horizontal, .bottom], 16)
                     
-                        List(messages, id: \.id) { inbox in
-                            Button {
-                                messageBody = inbox.body ?? ""
-                            } label: {
-                                VStack {
-                                    Text(inbox.body!)
-                                        .frame(maxWidth: .infinity, alignment: .trailing)
-                                    Text(Date(timeIntervalSince1970: TimeInterval(inbox.date)), style: .time)
-                                        .font(.caption)
-                                        .foregroundStyle(.secondary)
-                                        .frame(maxWidth: .infinity, alignment: .trailing)
+                    VStack {
+                        Text("From: \(fromAccount)")
+                            .frame(maxWidth: .infinity, alignment: .leading)
+                            .font(RelayTypography.bodyMedium)
+                            .foregroundStyle(RelayColors.colorScheme.primary)
+                            .padding(.bottom, 16)
+                        
+                        RelayContactField(
+                            label: "To",
+                            showContactPicker: true,
+                            onPhoneNumberInputted: {
+                            contact in
+                            self.pickedNumber = contact.internationalPhoneNumber
+                            }).keyboardType(.phonePad)
+                        
+                    }
+                    .padding()
+                    
+                    if messages.isEmpty {
+                        Spacer(minLength: 100)
+                        Text("No messages sent")
+                            .font(RelayTypography.bodyMedium)
+                            .foregroundStyle(.secondary)
+                        Spacer(minLength: 100)
+                    }
+                    else {
+                        VStack {
+                            Text("Click the message to re-use for sending...")
+                            .font(.caption)
+                            .multilineTextAlignment(.leading)
+                            .frame(maxWidth: .infinity, alignment: .trailing)
+                        
+                            List(messages, id: \.id) { inbox in
+                                Button {
+                                    messageBody = inbox.body ?? ""
+                                } label: {
+                                    VStack {
+                                        Text(inbox.body!)
+                                            .frame(maxWidth: .infinity, alignment: .trailing)
+                                        Text(Date(timeIntervalSince1970: TimeInterval(inbox.date)), style: .time)
+                                            .font(.caption)
+                                            .foregroundStyle(.secondary)
+                                            .frame(maxWidth: .infinity, alignment: .trailing)
+                                    }
+                                    .padding()
                                 }
-                                .padding()
                             }
                         }
-                    }
-                    .padding()
-                }
-                
-                HStack {
-                    FieldMultiEntryTextDynamic(text: $messageBody)
                         .padding()
-                        .multilineTextAlignment(.leading)
-                        .keyboardType(.alphabet)
-                        .focused($isFocused)
-
-                    Button {
-                        isMessaging = true
-                        let platform = platforms.first!
-                        DispatchQueue.background(background: {
-                            do {
-                                let messageComposer = try Publisher.publish(
-                                    context: context)
-                                var shortcode: UInt8? = nil
-                                shortcode = platform.shortcode!.bytes[0]
-                                
-                                messageContact = messageContact.filter{ $0.isWholeNumber }
-                                encryptedFormattedContent = try messageComposer.messageComposerV1(
-                                    platform_letter: shortcode!,
-                                    sender: fromAccount,
-                                    receiver: messageContact,
-                                    message: messageBody)
-                                
-                                isMessaging = false
-                                isShowingMessages.toggle()
-                            } catch {
-                                print("Some error occured while sending: \(error)")
-                            }
-                        })
-                    } label: {
-                        Image("MessageSend")
-                            .resizable()
-                            .frame(width: 25.0, height: 25.0)
                     }
-                    .disabled(isMessaging || fromAccount.isEmpty || messageBody.isEmpty)
-                    .sheet(isPresented: $isShowingMessages) {
-                        SMSComposeMessageUIView(
-                            recipients: [defaultGatewayClientMsisdn],
-                            body: $encryptedFormattedContent,
-                            completion: handleCompletion(_:))
-                        .ignoresSafeArea()
+                    
+                    HStack (alignment: .bottom) {
+                
+                        RelayTextEditor(label: "Message", text: $messageBody, height: 52, showLabel: false)
+//                        FieldMultiEntryTextDynamic(text: $messageBody)
+//                            .padding()
+//                            .multilineTextAlignment(.leading)
+//                            .keyboardType(.alphabet)
+//                            .focused($isFocused)
+
+                        Button {
+                            isMessaging = true
+                            let platform = platforms.first!
+                            DispatchQueue.background(background: {
+                                do {
+                                    let messageComposer = try Publisher.publish(
+                                        context: context)
+                                    var shortcode: UInt8? = nil
+                                    shortcode = platform.shortcode!.bytes[0]
+                                    
+                                    messageContact = messageContact.filter{ $0.isWholeNumber }
+                                    encryptedFormattedContent = try messageComposer.messageComposerV1(
+                                        platform_letter: shortcode!,
+                                        sender: fromAccount,
+                                        receiver: messageContact,
+                                        message: messageBody)
+                                    
+                                    isMessaging = false
+                                    isShowingMessages.toggle()
+                                } catch {
+                                    print("Some error occured while sending: \(error)")
+                                }
+                            })
+                        } label: {
+                            Image(systemName: "paperplane")
+                                .symbolRenderingMode(.hierarchical)
+                                .foregroundStyle(RelayColors.colorScheme.primary)
+                
+                        }
+                        .disabled(isMessaging || fromAccount.isEmpty || messageBody.isEmpty)
+                        .sheet(isPresented: $isShowingMessages) {
+                            SMSComposeMessageUIView(
+                                recipients: [defaultGatewayClientMsisdn],
+                                body: $encryptedFormattedContent,
+                                completion: handleCompletion(_:))
+                            .ignoresSafeArea()
+                        }
+                        .padding()
                     }
                     .padding()
+                    .padding(.bottom, 24)
                 }
-                .overlay(RoundedRectangle(cornerRadius: 10)
-                    .stroke(lineWidth: 1))
-                .padding()
             }
             .sheet(isPresented: $requestToChooseAccount) {
                 SelectAccountSheetView(

@@ -79,15 +79,20 @@ struct OTPView: View {
                 .padding()
                 .font(.subheadline)
             
-            TextField("OTP Code", text: $otpCode)
-                .textFieldStyle(.plain)
-                .frame(height: 20)
-                .clipShape(Capsule())
+            RelayTextField(
+                label: "OTP Code", text: $otpCode
+            ).disabled(loading)
                 .padding()
-                .overlay(RoundedRectangle(cornerRadius:10.0)
-                    .strokeBorder(Color.blue, style: StrokeStyle(lineWidth: 1.0)))
-                .padding()
-                .disabled(loading)
+            
+//            TextField("OTP Code", text: $otpCode)
+//                .textFieldStyle(.plain)
+//                .frame(height: 20)
+//                .clipShape(Capsule())
+//                .padding()
+//                .overlay(RoundedRectangle(cornerRadius:10.0)
+//                    .strokeBorder(Color.blue, style: StrokeStyle(lineWidth: 1.0)))
+//                .padding()
+//                .disabled(loading)
         
         }
     }
@@ -164,7 +169,7 @@ struct OTPSheetView: View {
                     .alert(isPresented: $failed) {
                         Alert(title: Text("Error"), message: Text(errorMessage))
                     }
-                    .buttonStyle(.borderedProminent)
+                    .buttonStyle(.relayButton(variant: .primary))
                     .padding(.bottom, 32)
 
                     HStack {
