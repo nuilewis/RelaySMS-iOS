@@ -199,12 +199,13 @@ struct EmailComposeView: View {
             }
         }
         .task {
-            if storedPlatforms.count > 0 {
+            if storedPlatforms.count > 0 && !isBridge {
                 DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
                     requestToChooseAccount = true
                 }
             }
             if isBridge {
+                requestToChooseAccount = false
                 if self.message != nil {
                     composeTo = self.message!.toAccount
                     composeCC = self.message!.cc
