@@ -30,6 +30,7 @@ struct AvailablePlatformView: View {
     var body: some View {
         VStack(alignment:.center) {
             Spacer()
+            Spacer().frame(minHeight: 32)
 
             (platform != nil && platform!.image != nil ?
              Image(uiImage: UIImage(data: platform!.image!)!) : Image("Logo")
@@ -51,7 +52,7 @@ struct AvailablePlatformView: View {
                     .padding()
             }
 
-            Spacer().frame(maxHeight: 120)
+            Spacer().frame(maxHeight: 64)
             if phoneNumberAuthenticationRequested {
                 PhoneNumberSheetView(
                     completed: $parentIsEnabled,
@@ -128,8 +129,8 @@ struct AvailablePlatformView: View {
 #Preview {
     var platform: PlatformsEntity? = nil
     @State var platformRequestedType: PlatformsRequestedType = .available
-    var description: String = ""
-    var composeDescription: String = ""
+    var description: String = "This is a sample description"
+    var composeDescription: String = "This is a smaple compose description"
     @State var phoneNumberAuthenticationRequested: Bool = false
     @State var parentIsEnabled: Bool = false
     @State var composeNewMessageRequested: Bool = false

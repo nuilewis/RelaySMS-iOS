@@ -139,25 +139,18 @@ struct PhoneNumberCodeEntryView: View {
 
 struct PhoneNumberEntryView: View {
     @Environment(\.dismiss) var dismiss
-
-    @State private var selectedCountryCodeText: String? =
-        "CM".getFlag() + " " + Country.init(isoCode: "CM").localizedName
-
     @State private var errorMessage: String = ""
-
     @State var platformName: String
-    @State private var showCountryPicker = false
     @State private var submittingCode = false
     @State private var isLoading = false
     @State private var failed = false
-    @State private var country: Country?
 
     @Binding var codeRequested: Bool
     @Binding var phoneNumber: String
 
     var body: some View {
         VStack {
-            Spacer()
+            Spacer().frame(height: 32)
             RelayContactField(
                 label: "\(platformName.localizedCapitalized) phone number",
                 onPhoneNumberInputted: { contact in
@@ -168,7 +161,7 @@ struct PhoneNumberEntryView: View {
             .disabled(isLoading)
             .padding(.horizontal, 16)
 
-            Spacer()
+            Spacer().frame(height: 32)
 
             Button {
                 phoneNumberAuthRequest()
