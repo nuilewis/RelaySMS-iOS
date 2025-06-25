@@ -59,8 +59,9 @@ struct LoginSheetView: View {
                 ) {
                     EmptyView()
                 }
-                VStack {
+                VStack(alignment: .center) {
                     if completedSuccessfully {
+                        Spacer()
                         SuccessAnimations(callbackText: $callbackText) {
                             do {
                                 let vault = Vault()
@@ -192,7 +193,7 @@ struct LoginSheetView: View {
                     }
 
                 }
-                .padding([.leading, .trailing], 16)
+                .padding([.horizontal], 16)
                 .onChange(of: failed) { v in
                     if v {
                         isLoading = false
@@ -209,6 +210,19 @@ struct LoginSheetView: View {
 struct LoginSheetView_Preview: PreviewProvider {
     static var previews: some View {
         @State var completed: Bool = false
+        @State var failed: Bool = false
+        @State var createAccountRequested: Bool = false
+        LoginSheetView(
+            isLoggedIn: $completed,
+            createAccountRequested: $createAccountRequested,
+            passwordRecoveryRequired: $createAccountRequested
+        )
+    }
+}
+
+struct LoginSheetViewSuccess_Preview: PreviewProvider {
+    static var previews: some View {
+        @State var completed: Bool = true
         @State var failed: Bool = false
         @State var createAccountRequested: Bool = false
         LoginSheetView(
