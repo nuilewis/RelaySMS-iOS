@@ -61,7 +61,8 @@ struct RelayTextEditor: View {
                 Text(label)
                     .font(RelayTypography.bodyMedium)
             }
-            TextEditor(text: $text)
+            
+            TextEditor(text:  !isFocused && text.isEmpty ? .constant(label) : $text)
                 .focused($isFocused)
                 .transparentScrolling()
                 .padding(.horizontal, 16)
@@ -79,6 +80,10 @@ struct RelayTextEditor: View {
                             isFocused
                                 ? RelayColors.colorScheme.primary.opacity(0.5)
                                 : RelayColors.colorScheme.surface, lineWidth: 1)
+                )
+                .foregroundStyle(
+                    !isFocused && text.isEmpty ? RelayColors.colorScheme.onSurface.opacity(0.3) : RelayColors.colorScheme.onSurface
+
                 )
         }
 
