@@ -165,6 +165,7 @@ struct PlatformDetailsBottomsheet: View {
                     description: description,
                     composeDescription: composeDescription
                 )
+                Spacer()
             }
         }
         .onOpenURL { url in
