@@ -31,9 +31,8 @@ struct PlatformsView: View {
     ) var storedPlatforms: FetchedResults<StoredPlatformsEntity>
 
     @State private var publishablePlatforms: [StoredPlatformsEntity] = []
-
-    @State private var id = UUID()
-    @State private var refreshRequested = false
+    @State private var isRefreshing = false
+    @State private var hasInitiallyLoaded = false
 
     @Binding var requestType: PlatformsRequestedType
     @Binding var requestedPlatformName: String
@@ -64,7 +63,7 @@ struct PlatformsView: View {
                         platformRequestType: $requestType,
                         composeViewRequested: getBindingComposeVariable(
                             type: "email"),
-                        parentRefreshRequested: $refreshRequested,
+                        parentRefreshRequested: .constant(false),
                         requestedPlatformName: $requestedPlatformName,
                         platform: nil,
                         serviceType: Publisher.ServiceTypes.BRIDGE,
@@ -77,8 +76,16 @@ struct PlatformsView: View {
                             .frame(maxWidth: .infinity, alignment: .leading)
                             .padding(.bottom, 10)
                     }
-
-                    if requestType == .compose && publishablePlatforms.isEmpty {
+                    
+                    if isRefreshing {
+                        HStack {
+                            ProgressView()
+                                .progressViewStyle(CircularProgressViewStyle())
+                            Text("Loading Platforms...")
+                                .font(RelayTypography.bodyMedium)
+                        }.frame(maxWidth: .infinity)
+                            .padding()
+                    } else if requestType == .compose && publishablePlatforms.isEmpty {
                         VStack(alignment: .center) {
                             Spacer().frame(height: 32)
                             Image(systemName: "folder.badge.questionmark")
@@ -93,30 +100,28 @@ struct PlatformsView: View {
                                 .frame(alignment: Alignment.center)
                         }
 
-                    }
-                    if platforms.isEmpty {
+                    } else if platforms.isEmpty && !isRefreshing {
                         VStack(alignment: .center, spacing: 16) {
-                            Text("No online platforms saved yet...").font(
-                                RelayTypography.bodyMedium
-                            ).multilineTextAlignment(.center).frame(
+                            Text("No online platforms saved yet...")
+                                .font(RelayTypography.bodyMedium)
+                                .multilineTextAlignment(.center).frame(
                                 alignment: Alignment.center)
                             Button("Load Platforms") {
-                                Publisher.refreshPlatforms(context: context)
-                            }.buttonStyle(.relayButton(variant: .text)).frame(
+                                refreshPlatforms()
+                            }.buttonStyle(.relayButton(variant: .text))
+                                .frame(
                                 alignment: .center)
                         }
 
                     } else {
-                        LazyVGrid(
-                            columns: columns, alignment: .leading, spacing: 20
+                        LazyVGrid(columns: columns, alignment: .leading, spacing: 20
                         ) {
                             if requestType == .compose {
-                                ForEach(filterForStoredPlatforms(), id: \.name)
-                                { item in
+                                ForEach(filterForStoredPlatforms(), id: \.objectID) { item in
                                     createPlatformCard(for: item)
                                 }
                             } else {
-                                ForEach(platforms, id: \.name) { item in
+                                ForEach(platforms, id: \.objectID) { item in
                                     createPlatformCard(for: item)
                                 }
                             }
@@ -124,13 +129,6 @@ struct PlatformsView: View {
                     }
 
                 }.padding([.leading, .trailing], 16)
-                    .id(id)
-                    .onChange(of: refreshRequested) { refresh in
-                        if refresh {
-                            print("refreshing....")
-                            id = UUID()
-                        }
-                    }
 
                 Button {
                     requestType =
@@ -148,17 +146,35 @@ struct PlatformsView: View {
             }
             .navigationTitle(getRequestTypeText(type: requestType))
         }.onAppear {
-            if platforms.count == 0 {
-                print(
-                    "[PlatformsView - onAppear]: No platforms found, refreshing...."
-                )
-                Publisher.refreshPlatforms(context: context)
-            } else {
-                getPublishablePlatforms()
+            
+            if !hasInitiallyLoaded {
+                hasInitiallyLoaded = true
+                
+                if platforms.isEmpty {
+                    refreshPlatforms()
+                } else {
+                    getPublishablePlatforms()
+                }
             }
+        }.onChange(of: platforms.count) { _ in
+            getPublishablePlatforms()
+        }.onChange(of: storedPlatforms.count) { _ in
+            getPublishablePlatforms()
         }
-        .task {
-            print("Number of platforms: \(platforms.count)")
+    }
+    
+    
+    
+    public func refreshPlatforms() {
+        guard !isRefreshing else { return }
+        isRefreshing = true
+        Publisher.refreshPlatforms(context: context) { success in
+            DispatchQueue.main.async {
+                self.isRefreshing = false
+                if success {
+                    self.getPublishablePlatforms()
+                }
+            }
         }
     }
 
@@ -193,7 +209,7 @@ struct PlatformsView: View {
             composeNewMessageRequested: $composeNewMessageRequested,
             platformRequestType: $requestType,
             composeViewRequested: composeBinding,
-            parentRefreshRequested: $refreshRequested,
+            parentRefreshRequested: .constant(false),
             requestedPlatformName: $requestedPlatformName,
             platform: item,
             serviceType: platformServiceType,
@@ -276,6 +292,14 @@ struct Platforms_Preview: PreviewProvider {
         .environment(\.managedObjectContext, container.viewContext)
     }
 }
+
+
+
+
+
+
+
+
 
 //struct PlatformsCompose_Preview: PreviewProvider {
 //    static var previews: some View {

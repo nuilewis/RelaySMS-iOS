@@ -40,36 +40,42 @@ struct DecryptMessageView: View {
                     .foregroundStyle(.secondary)
                 }
                 .padding(.bottom, 24)
+                
+//                VStack {
+//                    ZStack {
+//                        
+//                  
+//                        
+//                        if self.textBody.isEmpty {
+//                            TextEditor(text: $placeHolder)
+//                                .font(.caption)
+//                                .foregroundColor(.secondary)
+//                                .disabled(true)
+//                                .frame(height: 200)
+//                        }
+//                        TextEditor(text: $textBody)
+//                            .font(.caption)
+//                            .opacity(self.textBody.isEmpty ? 0.25 : 1)
+//                            .textFieldStyle(PlainTextFieldStyle())
+//                            .frame(height: 200)
+//
+//                    }
+//                    .padding()
+//                    .overlay(
+//                        RoundedRectangle(cornerRadius: 16)
+//                            .stroke(
+//                                textBody.isEmpty
+//                                    ? RelayColors.colorScheme.onSurface.opacity(
+//                                        0.1) : RelayColors.colorScheme.primary,
+//                                lineWidth: 1)
+//                    )
+//                    .padding(.bottom, 24)
+//                 
+//
+//                }
 
-                VStack {
-                    ZStack {
-                        if self.textBody.isEmpty {
-                            TextEditor(text: $placeHolder)
-                                .font(.caption)
-                                .foregroundColor(.secondary)
-                                .disabled(true)
-                                .frame(height: 200)
-                        }
-                        TextEditor(text: $textBody)
-                            .font(.caption)
-                            .opacity(self.textBody.isEmpty ? 0.25 : 1)
-                            .textFieldStyle(PlainTextFieldStyle())
-                            .frame(height: 200)
-
-                    }
-                    .padding()
-                    .overlay(
-                        RoundedRectangle(cornerRadius: 16)
-                            .stroke(
-                                textBody.isEmpty
-                                    ? RelayColors.colorScheme.onSurface.opacity(
-                                        0.1) : RelayColors.colorScheme.primary,
-                                lineWidth: 1)
-                    )
-                    .padding(.bottom, 24)
-                 
-
-                }.alert(alertTitle, isPresented: $showAlert) {
+                RelayTextEditor(label: "Content", text: $textBody).padding(.bottom, 24)
+           .alert(alertTitle, isPresented: $showAlert) {
                 } message: {
                     Text(alertMessage)
                 }

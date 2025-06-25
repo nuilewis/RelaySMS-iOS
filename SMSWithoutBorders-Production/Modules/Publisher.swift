@@ -252,90 +252,120 @@ class Publisher {
         let icon_svg: String
         let icon_png: String
     }
-    
-    public static func refreshPlatforms(context: NSManagedObjectContext ) {
+        
+    public static func refreshPlatforms(context: NSManagedObjectContext, completion: @escaping (Bool) -> Void) {
+        
         print("[Publisher] Publisher refreshing platforms...")
+
         Publisher.getPlatforms() { result in
             switch result {
             case .success(let data):
-                print("[Publisher]Success: \(data)")
+                print("[Publisher] Success: \(data)")
                 
-//                do {
-//                    try Publisher.clear(context: context, shouldSave: true)
-//                } catch {
-//                    print(error)
-//                    return
-//                }
+                // Use a dispatch group to track all downloads
+                let downloadGroup = DispatchGroup()
+                var downloadErrors: [Error] = []
+                
                 for platform in data {
+                    downloadGroup.enter()
                     downloadAndSaveIcons(
                         url: URL(string: platform.icon_png)!,
                         platform: platform,
                         context: context
-                    )
-                }
-                    
-//                group.notify(queue: .main) { // Notify when all tasks are done
-//
-//                }
-                                   
-            case .failure(let error):
-                print("[Publisher] Failed to load JSON data: \(error)")
-            }
-        }
-    }
-
-    private static func downloadAndSaveIcons(
-        url: URL,
-        platform: Publisher.PlatformsData,
-        context: NSManagedObjectContext
-    ) {
-        print("[Publisher] Storing Platform Icon: \(platform.name)")
-
-        let task = URLSession.shared.dataTask(with: url) { data, response, error in
-            guard let data = data, error == nil else { return }
-
-            // 1. Fetch existing entity
-            let fetchRequest = PlatformsEntity.fetchRequest()
-            fetchRequest.predicate = NSPredicate(format: "name == %@", platform.name)
-
-            do {
-                let existingPlatforms = try context.fetch(fetchRequest)
-                print(existingPlatforms.count)
-
-                if let existingPlatform = existingPlatforms.first {
-                    // 2. Update existing entity
-                    print("[Publisher] Updating existing Platform Icon: \(platform.name)")
-                    existingPlatform.image = data
-                    existingPlatform.protocol_type = platform.protocol_type
-                    existingPlatform.service_type = platform.service_type
-                    existingPlatform.shortcode = platform.shortcode
-                    existingPlatform.support_url_scheme = platform.support_url_scheme
-                } else {
-                    // 3. Create new entity
-                    print("[Publisher] Creating new Platform Icon: \(platform.name)")
-                    let platformsEntity = PlatformsEntity(context: context)
-                    platformsEntity.image = data
-                    platformsEntity.name = platform.name
-                    platformsEntity.protocol_type = platform.protocol_type
-                    platformsEntity.service_type = platform.service_type
-                    platformsEntity.shortcode = platform.shortcode
-                    platformsEntity.support_url_scheme = platform.support_url_scheme
-                }
-
-                // 4. Save changes (outside the if/else)
-                if context.hasChanges {
-                    DispatchQueue.main.async {
-                        do {
-                            try context.save()
-                        } catch {
-                            print("[Publisher] Failed save download image: \(error) \(error.localizedDescription)")
+                    ) { error in
+                        if let error = error {
+                            downloadErrors.append(error)
                         }
+                        downloadGroup.leave()
                     }
                 }
+                
+                //Notify when all dowanlods complete
+                downloadGroup.notify(queue: .main) {
+                    let success = downloadErrors.isEmpty
+                    print("[Publisher] All platforms refreshed. Success: \(success)")
+                                     completion(success)
+                }
+                
+                
+            case .failure(let error):
+                print("[Publisher] Failed to load JSON data: \(error)")
+                              DispatchQueue.main.async {
+                                  completion(false)
+                              }
+                
 
-            } catch {
-                print("[Publisher] Error fetching Platform: \(error) \(error.localizedDescription)")
             }
+            
+        }
+        
+    }
+
+    static func downloadAndSaveIcons(
+        url: URL,
+        platform: Publisher.PlatformsData,
+        context: NSManagedObjectContext,
+        completion: @escaping (Error?) -> Void
+    ) {
+        print("[Publisher] Downloading platform icon and saving platform for: \(platform.name)")
+
+        let task = URLSession.shared.dataTask(with: url) { data, response, error in
+            guard let data = data, error == nil else {
+                completion(error ?? NSError(domain: "DownloadError", code: -1, userInfo: nil))
+                return
+                
+            }
+            
+  
+            
+            
+            // Perfome Core Data operations on the main queue since we're using the view context
+            DispatchQueue.main.async {
+                // 1. Fetch existing entity
+                let fetchRequest = PlatformsEntity.fetchRequest()
+                fetchRequest.predicate = NSPredicate(format: "name == %@", platform.name)
+                
+                
+                do {
+                    let existingPlatforms = try context.fetch(fetchRequest)
+                    if let existingPlatform = existingPlatforms.first {
+                        // 2. Update existing entity
+                        print("[Publisher] Updating existing Platform: \(platform.name)")
+                        existingPlatform.image = data
+                        existingPlatform.protocol_type = platform.protocol_type
+                        existingPlatform.service_type = platform.service_type
+                        existingPlatform.shortcode = platform.shortcode
+                        existingPlatform.support_url_scheme = platform.support_url_scheme
+                    } else {
+                        // 3. Create new entity
+                        print("[Publisher] Creating new Platform: \(platform.name)")
+                        let platformsEntity = PlatformsEntity(context: context)
+                        platformsEntity.image = data
+                        platformsEntity.name = platform.name
+                        platformsEntity.protocol_type = platform.protocol_type
+                        platformsEntity.service_type = platform.service_type
+                        platformsEntity.shortcode = platform.shortcode
+                        platformsEntity.support_url_scheme = platform.support_url_scheme
+                    }
+
+                    // 4. Save changes after each platform
+                    
+                    if context.hasChanges {
+                        try context.save()
+                        print("[Publisher] Successfully saved platform: \(platform.name)")
+                    }
+                    
+                    completion(nil)
+
+                } catch {
+                    print("[Publisher] Error saving Platform \(platform.name): \(error)")
+                    completion(error)
+                }
+                
+            }
+
+
+
         }
         task.resume()
     }

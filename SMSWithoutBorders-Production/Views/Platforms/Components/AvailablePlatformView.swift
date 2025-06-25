@@ -28,30 +28,31 @@ struct AvailablePlatformView: View {
     var composeDescription: String
 
     var body: some View {
-        VStack(alignment:.center) {
+        VStack {
             Spacer()
-
             (platform != nil && platform!.image != nil ?
              Image(uiImage: UIImage(data: platform!.image!)!) : Image("Logo")
             )
                 .resizable()
                 .scaledToFit()
                 .frame(width: 75, height: 75)
-                .padding()
+                .padding(.bottom, 16)
 
             if platformRequestedType == .compose {
                 Text(composeDescription)
-                    .multilineTextAlignment(.center)
+                    .multilineTextAlignment(.leading)
+                    .fixedSize(horizontal: false, vertical: true)
                     .font(.caption)
-                    .padding()
+                    .padding(.horizontal, 16)
             } else {
                 Text(description)
-                    .multilineTextAlignment(.center)
+                    .multilineTextAlignment(.leading)
+                    .fixedSize(horizontal: false, vertical: true)
                     .font(.body)
-                    .padding()
+                    .padding(.horizontal, 16)
             }
 
-            Spacer().frame(maxHeight: 120)
+            Spacer()
             if phoneNumberAuthenticationRequested {
                 PhoneNumberSheetView(
                     completed: $parentIsEnabled,
@@ -128,8 +129,8 @@ struct AvailablePlatformView: View {
 #Preview {
     var platform: PlatformsEntity? = nil
     @State var platformRequestedType: PlatformsRequestedType = .available
-    var description: String = ""
-    var composeDescription: String = ""
+    var description: String = "Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book"
+    var composeDescription: String = "Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book"
     @State var phoneNumberAuthenticationRequested: Bool = false
     @State var parentIsEnabled: Bool = false
     @State var composeNewMessageRequested: Bool = false
