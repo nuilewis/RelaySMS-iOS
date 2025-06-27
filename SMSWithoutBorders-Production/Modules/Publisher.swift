@@ -71,6 +71,19 @@ class Publisher {
                                                              defaultCallOptions: callOptions!)
     }
     
+    private func getBase64EncodedPublisherPublicKey() -> String {
+        if  let publisherPublicKeyBytes = UserDefaults.standard.object(forKey: Publisher.PUBLISHER_SERVER_PUBLIC_KEY) as? [UInt8] {
+            let data = Data(publisherPublicKeyBytes)
+            let base64String = data.base64EncodedString()
+            print("[Publisher]: Base64 ecoded Publisher Public Key: \(base64String)")
+            return base64String
+        } else {
+            print("[Publisher]: No public key found or wrong type")
+            return ""
+            //throw NSError(domain: "Publisher", code: -1, userInfo: [NSLocalizedDescriptionKey : "No public key found or wrong type"])
+        }
+    }
+    
     func getRedirectUrl(platformName: String) -> String{
         return "https://oauth.afkanerd.com/platforms/\(platformName)/protocols/oauth2/redirect_codes/ios/"
     }
@@ -81,17 +94,15 @@ class Publisher {
                      supportsUrlSchemes: Bool = true) throws -> Publisher_V1_GetOAuth2AuthorizationUrlResponse {
         
         print("[Publisher] Getting OAuth URL....")
-
-        
         let publishingUrlRequest: Publisher_V1_GetOAuth2AuthorizationUrlRequest = .with {
             $0.platform = platform
             $0.state = ((platform + "," + (supportsUrlSchemes ? "true" : "false")).data(using: .utf8)?.base64EncodedString())!
             $0.redirectURL = supportsUrlSchemes ? Publisher.REDIRECT_URL_SCHEME : getRedirectUrl(platformName: platform)
             $0.autogenerateCodeVerifier = autogenerateCodeVerifier
+            $0.requestIdentifier = getBase64EncodedPublisherPublicKey()
         }
         
         print("[Publisher] GetOAuthURLRequest: \(publishingUrlRequest)")
-        
         let call = publisherStub!.getOAuth2AuthorizationUrl(publishingUrlRequest)
         let response: Publisher_V1_GetOAuth2AuthorizationUrlResponse
         
@@ -127,6 +138,7 @@ class Publisher {
         
         print("[Publisher] Sending OAuth Authorization Code Request with paramaters...")
         print("[Publisher] llt: \(llt) \nplatform: \(platform) \ncode: \(code) \ncodeVerifier: \(String(describing: codeVerifier)) \nstoreOnDevice: \(storeOnDevice), \nsupportsUrlSchemes: \(supportsUrlSchemes)")
+                
         let authorizationRequest: Publisher_V1_ExchangeOAuth2CodeAndStoreRequest = .with {
             $0.platform = platform
             $0.authorizationCode = code
@@ -134,6 +146,7 @@ class Publisher {
             $0.storeOnDevice = storeOnDevice
             $0.codeVerifier = codeVerifier
             $0.redirectURL = supportsUrlSchemes ? Publisher.REDIRECT_URL_SCHEME : getRedirectUrl(platformName: platform)
+            $0.requestIdentifier = getBase64EncodedPublisherPublicKey()
         }
         
         print("[Publisher] Authorization Request: \(authorizationRequest)")
@@ -254,7 +267,6 @@ class Publisher {
     }
         
     public static func refreshPlatforms(context: NSManagedObjectContext, completion: @escaping (Bool) -> Void) {
-        
         print("[Publisher] Publisher refreshing platforms...")
 
         Publisher.getPlatforms() { result in
@@ -315,10 +327,7 @@ class Publisher {
                 return
                 
             }
-            
-  
-            
-            
+
             // Perfome Core Data operations on the main queue since we're using the view context
             DispatchQueue.main.async {
                 // 1. Fetch existing entity
@@ -349,7 +358,6 @@ class Publisher {
                     }
 
                     // 4. Save changes after each platform
-                    
                     if context.hasChanges {
                         try context.save()
                         print("[Publisher] Successfully saved platform: \(platform.name)")
@@ -392,18 +400,52 @@ class Publisher {
 
     private static func getPlatforms(completion: @escaping (Result<[PlatformsData], Error>) -> Void) {
         print("[Publisher] Getting platforms...")
-        let platformsUrl = "https://raw.githubusercontent.com/smswithoutborders/SMSWithoutBorders-Publisher/staging/resources/platforms.json"
         
+        let url: URL = URL(string: "https://publisher.staging.smswithoutborders.com/v1/platforms")!
+        
+        var request: URLRequest = URLRequest(url: url)
+        request.httpMethod = "GET"
+        request.setValue("application/json", forHTTPHeaderField: "Content-Type")
+
         Task {
             do {
-                let (data, _) = try await URLSession.shared.data(from: URL(string: platformsUrl)!)
-                let decodedData = try JSONDecoder().decode([PlatformsData].self, from: data)
-                completion(.success(decodedData))
+                let (data, response) = try await URLSession.shared.data(for: request)
+                
+                guard let httpResponse = response as? HTTPURLResponse, 200...299 ~= httpResponse.statusCode else {
+                    completion(.failure(NSError(domain: "HTTPError", code: -1, userInfo: [NSLocalizedDescriptionKey: "HTTP Error: \((response as? HTTPURLResponse)?.statusCode ?? -1)"])))
+                    return
+                }
+                
+                //Print the raw response
+                if let json = try? JSONSerialization.jsonObject(with: data, options: []) {
+                    print(["[Publisher]: [Get Platforms Resonse]: \(json)"])
+                }
+                
+                let decodedPlatformsData = try JSONDecoder().decode([PlatformsData].self, from: data)
+                completion(.success(decodedPlatformsData))
             } catch {
+                print("[Publisher] Error fetching platforms: \(error)")
                 completion(.failure(error))
             }
         }
     }
+    
+//    private static func getPlatforms(completion: @escaping (Result<[PlatformsData], Error>) -> Void) {
+//        print("[Publisher] Getting platforms...")
+//        let platformsUrl = "https://raw.githubusercontent.com/smswithoutborders/SMSWithoutBorders-Publisher/staging/resources/platforms.json"
+//        
+//        Task {
+//            do {
+//                let (data, _) = try await URLSession.shared.data(from: URL(string: platformsUrl)!)
+//                let decodedData = try JSONDecoder().decode([PlatformsData].self, from: data)
+//                completion(.success(decodedData))
+//            } catch {
+//                completion(.failure(error))
+//            }
+//        }
+//    }
+    
+    
     
     public func phoneNumberBaseAuthenticationRequest(phoneNumber: String, platform: String) throws -> Publisher_V1_GetPNBACodeResponse {
         let pnbaRequest: Publisher_V1_GetPNBACodeRequest = .with {
