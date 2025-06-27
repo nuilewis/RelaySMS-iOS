@@ -401,12 +401,17 @@ class Publisher {
     private static func getPlatforms(completion: @escaping (Result<[PlatformsData], Error>) -> Void) {
         print("[Publisher] Getting platforms...")
         
-        let url: URL = URL(string: "https://publisher.staging.smswithoutborders.com/v1/platforms")!
+        var url: URL = URL(string: "https://publisher.smswithoutborders.com/v1/platforms")!
+        
+#if DEBUG
+        url = URL(string: "https://publisher.staging.smswithoutborders.com/v1/platforms")!
+#endif
         
         var request: URLRequest = URLRequest(url: url)
         request.httpMethod = "GET"
         request.setValue("application/json", forHTTPHeaderField: "Content-Type")
 
+        
         Task {
             do {
                 let (data, response) = try await URLSession.shared.data(for: request)
